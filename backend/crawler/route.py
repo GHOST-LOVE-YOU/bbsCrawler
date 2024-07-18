@@ -1,9 +1,12 @@
 from crawler.utils import add_posts, get_detail, handle_auth
 from crawlee.basic_crawler import Router
 from crawlee.playwright_crawler import PlaywrightCrawlingContext
+from typing import List, Dict
 import re
 
 router = Router[PlaywrightCrawlingContext]()
+
+crawl_results: List[Dict] = []
 
 # --------------------------------- DEFAULT ---------------------------------
 @router.default_handler
@@ -40,6 +43,7 @@ async def detail_handler(context: PlaywrightCrawlingContext) -> None:
     # 提取内容信息
     posts = await get_detail(page)
     post_datas['帖子内容'] = posts
+    crawl_results.append(post_datas)
 
     await context.enqueue_links(
         selector='li.page-normal a, li.page-select a',
