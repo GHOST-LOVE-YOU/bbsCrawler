@@ -18,7 +18,7 @@ from crawler.route import router
 async def main() -> None:
     crawler = PlaywrightCrawler(
         # max_requests_per_crawl=50,
-        headless=False,
+        # headless=False,
         request_handler=router,
     )
 
