@@ -43,6 +43,7 @@ async def detail_handler(context: PlaywrightCrawlingContext) -> None:
     # 提取内容信息
     posts = await get_detail(page)
     post_datas['帖子内容'] = posts
+    
     crawl_results.append(post_datas)
 
     await context.enqueue_links(

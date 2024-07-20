@@ -1,32 +1,76 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// 定义枚举类型
+enum UserTag {
+  bot
+  user // 用户
+  developer // 开发
+  manager // 管理
+}
+
 model User {
-  id        String   @unique
-  name      String   @unique
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  Post      Post[]
+  id        String    @id @default(uuid())
+  kinde_id  String?   @unique
+  name      String
+  tag       UserTag[]
+  createdAt DateTime  @default(now())
+
+  posts Post[]
 }
 
 model Post {
   id        String   @id @default(uuid())
+  byr_id    String?  @unique
   topic     String
-  URL       String
-  imageUrl  String
-  age       Int
-  notes     String
-  postUser      User     @relation(fields: [postUserId], references: [id])
-  postUserId    String
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  updatedAt DateTime
+  createdAt DateTime
+
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+}
+
+model Comment {
+  id       String   @id @default(uuid())
+  sequence Int
+  content  String?
+  like     Int
+  dislike  Int
+  time     DateTime
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+}
+
+enum TaskStatus {
+  pending
+  running
+}
+
+enum LastTaskStatus {
+  completed
+  error
+}
+
+model ScheduledTask {
+  id         Int             @id @default(autoincrement())
+  name       String
+  cron       String
+  status     TaskStatus
+  lastStatus LastTaskStatus?
+  lastRun    DateTime?
+  nextRun    DateTime?
 }

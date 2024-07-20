@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="w-full pt-4 bg-nodedark justify-center">
+    <footer className="w-full pt-4 bg-nodedark justify-center fixed bottom-0">
       <div className="block justify-center mx-auto max-w-5xl">
         <div className="text-center border-b-2 border-black shadow-sm pb-2">
           UI完全

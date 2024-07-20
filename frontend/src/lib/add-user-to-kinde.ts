@@ -1,3 +1,5 @@
+// 调用api的示例, 实际并没有用到
+
 type FetchResponse = Response;
 type Token = string;
 

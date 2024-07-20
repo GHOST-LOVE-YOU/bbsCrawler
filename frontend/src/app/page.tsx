@@ -5,7 +5,7 @@ import SideBar from "@components/sidebar";
 
 export default function Home() {
   return (
-    <div className="flex flex-col justify-between grid-background min-h-screen">
+    <div className="justify-between">
       <div className="container mx-auto max-w-5xl bg-nodedark border-black border-2 rounded-xl shadow-2xl my-4 px-6 ">
         <div className="flex flex-row py-4">
           <div className="flex-1">
@@ -29,6 +29,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-    // </div>
   );
 }

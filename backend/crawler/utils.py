@@ -11,6 +11,16 @@ load_dotenv()
 USERNAME = os.getenv("USERNMAE")
 PASSWORD = os.getenv("PASSWORD")
 
+# 时间字符串转换函数
+def convert_to_datetime(time_str):
+    try:
+        time_format = "%a %b %d %H:%M:%S %Y"
+        datetime_obj = datetime.strptime(time_str, time_format)
+        return datetime_obj
+    except ValueError as e:
+        print(f"Error converting time string: {e}")
+        return None
+
 # 定义时间格式解析函数
 def parse_time(time_str):
     try:
@@ -121,6 +131,9 @@ async def get_detail(page):
         wrap_element = await wrap_element.inner_html()
         author = re.search(r'发信人: (.+?) \(', wrap_element).group(1)
         section = re.search(r'信区: (\w+)', wrap_element).group(1)
+        time_str = re.search(r'发信站: .*? \((.*?)\)', wrap_element).group(1)
+        time = convert_to_datetime(time_str)
+        
         content_element = re.search(r'<br><br>(.+?)<br>--', wrap_element)
         if content_element:
             content = content_element.group(1)
@@ -158,6 +171,7 @@ async def get_detail(page):
             '内容': content,
             '赞': likes,
             '踩': dislikes,
+            '时间': time,
         }
         posts.append(post_data)
     return posts
