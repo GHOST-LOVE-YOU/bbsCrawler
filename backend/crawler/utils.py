@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 import re
+from crawlee.playwright_crawler import PlaywrightCrawlingContext
 
 # 保存和加载 Cookies 的文件路径
 COOKIES_FILE_PATH = 'cookies.json'
@@ -68,7 +69,7 @@ async def handle_auth(context):
         await save_cookies_to_file(page)
         await page.goto(context.request.url)
 
-async def add_posts(context):
+async def add_posts(context:PlaywrightCrawlingContext):
     # 获取当前时间
     current_time = datetime.now()
     overpage = False
@@ -94,12 +95,13 @@ async def add_posts(context):
                 
                 time_difference = current_time - post_time
                 print(f"回复时间: {post['replyTimeText']}, URL: {post['url']}, 时间差: {time_difference}")
-                if time_difference <= timedelta(minutes=60):
+                if time_difference <= timedelta(minutes=8):
                     print(f"最近60分钟的内容: 回复时间: {post['replyTimeText']}, URL: {post['url']}")
                     # 将帖子详情页面加入队列
                     await context.enqueue_links(
                         selector=f"a[href='{post['url']}']",
                         label='DETAIL',
+                        strategy='all',
                     )
                 else:
                     overpage = True

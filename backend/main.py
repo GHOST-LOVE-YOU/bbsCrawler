@@ -17,7 +17,8 @@ async def crawl(auth_data: AuthData):
     if not authenticate(auth_data.username, auth_data.password):
         raise HTTPException(status_code=401, detail="Unauthorized")
     try:
-        crawl_results.clear()
+        # crawl_results.clear()
+        # print(crawl_results)
         await run_crawler()
         return {"status": "success", "results": crawl_results}
     except Exception as e:

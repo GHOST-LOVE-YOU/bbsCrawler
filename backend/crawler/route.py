@@ -7,7 +7,6 @@ import re
 router = Router[PlaywrightCrawlingContext]()
 
 crawl_results: List[Dict] = []
-
 # --------------------------------- DEFAULT ---------------------------------
 @router.default_handler
 async def default_handler(context: PlaywrightCrawlingContext) -> None:

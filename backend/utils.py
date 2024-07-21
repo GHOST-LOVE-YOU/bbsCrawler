@@ -1,4 +1,7 @@
+# import uuid
+import uuid
 from crawlee.playwright_crawler import PlaywrightCrawler
+from crawlee.models import BaseRequestData
 from crawler.route import router
 from dotenv import load_dotenv
 import os
@@ -16,5 +19,9 @@ async def run_crawler():
         max_requests_per_crawl=500,
         request_handler=router,
     )
-    await crawler.run(['https://bbs.byr.cn/#!board/IWhisper'])
-    return
+    unique_key = str(uuid.uuid4())
+    # print(unique_key)
+    # await crawler.run([{'url': 'https://bbs.byr.cn/#!board/IWhisper', 'uniqueKey': "145"}])
+    # await crawler.run([f'https://bbs.byr.cn/#!board/IWhisper/{unique_key}'])
+    request = BaseRequestData(url='https://bbs.byr.cn/#!board/IWhisper', unique_key=unique_key)
+    await crawler.run([request])
