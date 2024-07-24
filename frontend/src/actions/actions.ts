@@ -1,8 +1,15 @@
 "use server";
 
 import prisma from "@lib/db";
+import { autoPostSchema, commentSchema } from "@lib/validations";
 
-
-export async function getScheduledTask(){
-    return await prisma.scheduledTask.findMany();
+// ----- Scheduled Task -----
+export async function getScheduledTask() {
+  return await prisma.scheduledTask.findMany();
 }
+
+// ----- Post Task -----
+
+
+
+

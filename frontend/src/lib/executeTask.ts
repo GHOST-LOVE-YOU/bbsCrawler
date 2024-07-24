@@ -1,5 +1,5 @@
+import { updateTaskStatus } from "./scheduleds/server-utils";
 import handleCrawlTask from "./tasks/crawlTask";
-import { updateTaskStatus } from "./server-utils";
 import handleHellolTask from "./tasks/helloTask";
 
 async function executeTask(task: any) {
@@ -27,7 +27,7 @@ async function executeTask(task: any) {
   // 执行任务并处理结果
   const result = await taskHandler();
   if (result.success) {
-    console.log(`任务 ${task.name} 执行成功:`, result.data);
+    console.log(`任务 ${task.name} 执行成功:`);
   } else {
     console.error(`任务 ${task.name} 执行失败:`, result.error);
   }

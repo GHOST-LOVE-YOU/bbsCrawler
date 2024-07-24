@@ -1,13 +1,19 @@
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { cn } from "@lib/utils";
 
 type PageinationProps = {
   maxPage: number;
   currentPage: number;
+  postId: string;
 };
 
-export default function Pagination({ maxPage, currentPage }: PageinationProps) {
+export default function PostPagination({
+  maxPage,
+  currentPage,
+  postId,
+}: PageinationProps) {
   const getPages = () => {
     let pages = [];
     if (maxPage <= 5) {
@@ -40,9 +46,15 @@ export default function Pagination({ maxPage, currentPage }: PageinationProps) {
       aria-label="Pagination"
     >
       <a
-        href="#"
-        className="relative inline-flex items-center rounded-md px-2 py-2 text-gray-400 ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0"
-        aria-disabled={currentPage === 1}
+        href={
+          currentPage === 1 ? "#" : `/post/${postId}?page=${currentPage - 1}`
+        }
+        className={cn(
+          "relative inline-flex items-center rounded-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0",
+          {
+            "text-gray-400": currentPage === 1,
+          }
+        )}
       >
         <span className="sr-only">Previous</span>
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -50,7 +62,7 @@ export default function Pagination({ maxPage, currentPage }: PageinationProps) {
       {getPages().map((page, index) => (
         <a
           key={index}
-          href="#"
+          href={`/post/${postId}?page=${page}`}
           aria-current={page === currentPage ? "page" : undefined}
           className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold rounded-md text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
             page === currentPage
@@ -64,7 +76,11 @@ export default function Pagination({ maxPage, currentPage }: PageinationProps) {
         </a>
       ))}
       <a
-        href="#"
+        href={
+          currentPage === maxPage
+            ? "#"
+            : `/post/${postId}?page=${currentPage + 1}`
+        }
         className="relative inline-flex items-center rounded-r-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0"
         aria-disabled={currentPage === maxPage}
       >

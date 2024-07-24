@@ -1,16 +1,20 @@
 import "server-only";
 
 import axios from "axios";
+import { autoGetPost } from "@lib/posts/server-utils";
+import { autoAddComment } from "@lib/comments/server-utils";
 
 const data = JSON.stringify({
   username: process.env.AUTH_BACKEND_USERNAME,
   password: process.env.AUTH_BACKEND_PASSWORD,
 });
 
+const CRAWLEE_BACKEND_URL = process.env.CRAWLEE_BACKEND_URL;
+
 const config = {
   method: "post",
   maxBodyLength: Infinity,
-  url: "http://127.0.0.1:8000/crawl",
+  url: `${CRAWLEE_BACKEND_URL}/crawl`,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,16 +22,44 @@ const config = {
 };
 
 async function handleCrawlTask() {
-  try {
-    const response = await axios.request(config);
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error("Error executing crawl task:", error);
+  const response = await axios.request(config);
+
+  if (response.status !== 200) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: "Crawl failed",
     };
   }
+
+  // 处理返回的数据
+  const posts = response.data["data"];
+  console.log(posts);
+  for (const data of posts) {
+    const result = await autoGetPost({
+      byr_id: data.byr_id,
+      topic: data.topic,
+      createdAt: data.time,
+      userName: data.author,
+    });
+
+    const post = result.post;
+    const comments = data.comments;
+
+    for (const comment of comments) {
+      await autoAddComment(
+        {
+          userName: comment.author,
+          content: comment.content,
+          floor: comment.floor,
+          like: comment.like,
+          dislike: comment.dislike,
+          time: comment.time,
+        },
+        post.id
+      );
+    }
+  }
+  return { success: true };
 }
 
 export default handleCrawlTask;

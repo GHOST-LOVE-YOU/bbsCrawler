@@ -103,6 +103,9 @@ async def add_posts(context:PlaywrightCrawlingContext):
                         label='DETAIL',
                         strategy='all',
                     )
+                    # addUrl = str("https://bbs.byr.cn"+post['url'])
+                    # await context.add_requests(addUrl)
+
                 else:
                     overpage = True
                     break
@@ -167,13 +170,13 @@ async def get_detail(page):
             print('dislike error')
 
         post_data = {
-            '楼层': floor,
-            '发信人': author,
-            '信区': section,
-            '内容': content,
-            '赞': likes,
-            '踩': dislikes,
-            '时间': time,
+            'floor': floor,
+            'author': author,
+            'section': section,
+            'content': content,
+            'like': int(likes),
+            'dislike': int(dislikes),
+            'time': time,
         }
         posts.append(post_data)
     return posts

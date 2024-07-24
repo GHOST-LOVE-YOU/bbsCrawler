@@ -32,20 +32,24 @@ async def detail_handler(context: PlaywrightCrawlingContext) -> None:
     post_datas = {}
 
     post_id = re.search(r'/article/IWhisper/(\d+)', context.request.url).group(1)
+    post_page = re.search(r'/article/IWhisper/\d+\?p=(\d+)', context.request.url)
+    post_page = post_page.group(1) if post_page else '1'
     post_topic_text = await (await page.query_selector('div.b-head.corner span.n-left')).inner_text()
     post_topic = re.search(r'文章主题: (.+)', post_topic_text).group(1)
     
-    post_datas['ID'] = post_id
-    post_datas['主题'] = post_topic
-    post_datas['URL'] = context.request.url
+    post_datas['byr_id'] = post_id
+    post_datas['topic'] = post_topic
+    post_datas['page'] = post_page
 
     # 提取内容信息
     posts = await get_detail(page)
-    post_datas['帖子内容'] = posts
-    
+    post_datas['author'] = post_page=='1' and posts[0]['author'] or 'unknow'
+    post_datas['time'] = post_page=='1' and posts[0]['time'] or 'unknow'
+    post_datas['comments'] = posts
+
     crawl_results.append(post_datas)
 
     await context.enqueue_links(
-        selector='li.page-normal a, li.page-select a',
+        selector='li.page-normal a[title="下一页"]',
         label='DETAIL',
     )
