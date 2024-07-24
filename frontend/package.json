@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
+    "postinstall": "prisma generate --schema=app/prisma/schema.prisma"
   },
   "dependencies": {
     "@dicebear/collection": "^9.1.0",
