@@ -13,6 +13,10 @@ AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 
 # 简单的认证函数
 def authenticate(username: str, password: str) -> bool:
+    print('username:',username)
+    print('password:',password)
+    print('AUTH_USERNAME:',AUTH_USERNAME)
+    print('AUTH_PASSWORD:',AUTH_PASSWORD)
     return username == AUTH_USERNAME and password == AUTH_PASSWORD
 
 async def run_crawler():
