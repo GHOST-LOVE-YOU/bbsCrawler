@@ -3,22 +3,6 @@ import ReplyList from "@components/reply_list";
 import SideBar from "@components/sidebar";
 import { getCommentsByPage } from "@lib/server-utils";
 
-// interface Comment {
-//   sequence: number;
-//   content: string | null;
-//   like: number;
-//   dislike: number;
-//   time: Date;
-//   userName: string;
-// }
-
-// interface HomeProps {
-//   comments: Comment[];
-//   postTitle: string;
-//   maxPage: number;
-//   currentPage: number;
-// }
-
 type postPageProps = {
   params: {
     postId: string;
@@ -34,8 +18,8 @@ export default async function PostPage({
   const page = parseInt(searchParams.page || "1");
   const result = await getCommentsByPage(postId, page);
   return (
-    <div className="justify-between pt-4">
-      <div className="container mx-auto max-w-5xl bg-nodedark border-black border-2 rounded-xl shadow-2xl px-6 ">
+    <div className="justify-between">
+      <div className="container mx-auto max-w-5xl bg-nodedark border-black border-2 rounded-xl shadow-2xl px-6 my-4 ">
         <div className="flex flex-row py-4">
           <div className="flex-1">
             <div className="flex flex-row">

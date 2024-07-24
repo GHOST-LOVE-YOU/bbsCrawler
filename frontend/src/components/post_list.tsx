@@ -3,6 +3,7 @@
 import Image from "next/image";
 import moment from "moment";
 import "moment/locale/zh-cn";
+import { getAvatarUrl } from "@lib/user/server-utils";
 
 moment.locale("zh-cn");
 
@@ -21,20 +22,7 @@ interface PostListProps {
   posts: Post[];
 }
 
-const backgroundColors = ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"];
-
 export default function PostList({ posts }: PostListProps) {
-  const getAvatarUrl = (post: Post) => {
-    const hash = post.userId
-      .slice(0, 5)
-      .split("")
-      .reduce((acc, char) => {
-        return acc + char.charCodeAt(0);
-      }, 0);
-
-    const backColor = backgroundColors[hash % backgroundColors.length];
-    return `https://api.dicebear.com/9.x/micah/jpg?seed=${post.userId}&backgroundColor=${backColor}`;
-  };
   return (
     <ul>
       {posts.map((post) => (
@@ -43,7 +31,7 @@ export default function PostList({ posts }: PostListProps) {
             <div className="flex flex-row">
               <div className="flex-none pt-1">
                 <Image
-                  src={getAvatarUrl(post)}
+                  src={getAvatarUrl(post.postId)}
                   alt="1"
                   width={40}
                   height={40}
@@ -53,9 +41,7 @@ export default function PostList({ posts }: PostListProps) {
               <div className="px-2 flex-1">
                 <div className="flex flex-col">
                   <p className="pt-0.5 font-mono text-lg font-semibold">
-                    <a href={`/post/${post.postId}`}>
-                    {post.topic}
-                    </a>
+                    <a href={`/post/${post.postId}`}>{post.topic}</a>
                   </p>
                 </div>
                 <div className="inline-flex font-sans text-slate-200 space-x-4">

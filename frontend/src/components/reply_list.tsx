@@ -1,5 +1,4 @@
-"use client";
-
+import { getAvatarUrl } from "@lib/user/server-utils";
 import Image from "next/image";
 
 interface Comment {
@@ -28,7 +27,7 @@ export default function ReplyList({ comments, op }: ReplyListProps) {
           <div className="flex flex-row">
             <div className="flex-none">
               <Image
-                src="https://minio-img.nezuko.me/img/2024/04/14/661b58ab8fae1.png"
+                src={getAvatarUrl(comment.userId)}
                 alt="1"
                 width={48}
                 height={48}
