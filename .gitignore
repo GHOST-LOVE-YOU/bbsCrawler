@@ -1,4 +1,4 @@
 backend/myenv
-backend/storage
-backend/.env
-backend/cookies.json
+backend/app/storage
+backend/app/.env
+backend/app/cookies.json
