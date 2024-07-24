@@ -8,7 +8,7 @@ export function Logo() {
   return (
     <Image
       className="pt-2 hover:scale-110 transition-transform duration-200 cursor-pointer"
-      src="https://minio-img.nezuko.me/img/2024/04/14/661bb4f879aa5.png"
+      src="/logo.png"
       alt="logo"
       height={180}
       width={180}
