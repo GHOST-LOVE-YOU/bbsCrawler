@@ -1,3 +1,4 @@
+import pytz
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
@@ -23,12 +24,12 @@ def convert_to_datetime(time_str):
         return None
 
 # 定义时间格式解析函数
-def parse_time(time_str):
+def parse_time(time_str, beijing_tz):
     try:
         if ':' in time_str:
-            return datetime.strptime(time_str, "%H:%M:%S")
+            return beijing_tz.localize(datetime.strptime(time_str, "%H:%M:%S"))
         else:
-            return datetime.strptime(time_str, "%Y-%m-%d")
+            return beijing_tz.localize(datetime.strptime(time_str, "%Y-%m-%d"))
     except ValueError:
         return None
 
@@ -70,8 +71,11 @@ async def handle_auth(context):
         await page.goto(context.request.url)
 
 async def add_posts(context:PlaywrightCrawlingContext):
-    # 获取当前时间
-    current_time = datetime.now()
+    # 获取当前时间的东八区时间（北京时间）
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    current_time_beijing = datetime.now(beijing_tz)
+
+
     overpage = False
 
     posts = await context.page.evaluate('''() => {
@@ -85,17 +89,17 @@ async def add_posts(context:PlaywrightCrawlingContext):
     # 输出获取到的帖子信息
     for post in posts:
         if post['replyTimeText'] and post['url']:
-            post_time = parse_time(post['replyTimeText'])
+            post_time = parse_time(post['replyTimeText'], beijing_tz)
             if post_time:
                 if '-' in post['replyTimeText']:
                     continue
                 # 对于只有时间信息的情况，假设是当天的时间
                 if ':' in post['replyTimeText']:
-                    post_time = post_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
+                    post_time = post_time.replace(year=current_time_beijing.year, month=current_time_beijing.month, day=current_time_beijing.day)
                 
-                time_difference = current_time - post_time
+                time_difference = current_time_beijing - post_time
                 print(f"回复时间: {post['replyTimeText']}, URL: {post['url']}, 时间差: {time_difference}")
-                if time_difference <= timedelta(minutes=8):
+                if time_difference <= timedelta(minutes=12):
                     print(f"最近60分钟的内容: 回复时间: {post['replyTimeText']}, URL: {post['url']}")
                     # 将帖子详情页面加入队列
                     await context.enqueue_links(
@@ -103,9 +107,6 @@ async def add_posts(context:PlaywrightCrawlingContext):
                         label='DETAIL',
                         strategy='all',
                     )
-                    # addUrl = str("https://bbs.byr.cn"+post['url'])
-                    # await context.add_requests(addUrl)
-
                 else:
                     overpage = True
                     break

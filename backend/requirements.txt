@@ -3,3 +3,4 @@ crawlee==0.1.0
 crawlee[beautifulsoup]
 crawlee[playwright]
 # playwright install
+pytz
