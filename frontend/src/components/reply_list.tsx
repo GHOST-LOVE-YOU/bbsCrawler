@@ -1,5 +1,6 @@
 import { getAvatarUrl } from "@lib/user/server-utils";
 import Image from "next/image";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Comment {
   sequence: number;
@@ -16,7 +17,14 @@ interface ReplyListProps {
   op: string;
 }
 
-export default function ReplyList({ comments, op }: ReplyListProps) {
+export default async function ReplyList({ comments, op }: ReplyListProps) {
+  const { isAuthenticated } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  if (!isUserAuthenticated) {
+    return (
+      <div className="text-center text-zinc-400 mt-5">请登录以查看评论</div>
+    );
+  }
   return (
     <div>
       {comments.map((comment) => (

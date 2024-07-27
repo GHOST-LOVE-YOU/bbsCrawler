@@ -4,6 +4,7 @@ import Image from "next/image";
 import moment from "moment";
 import "moment/locale/zh-cn";
 import { getAvatarUrl } from "@lib/user/server-utils";
+import Link from "next/link";
 
 moment.locale("zh-cn");
 
@@ -30,13 +31,15 @@ export default function PostList({ posts }: PostListProps) {
           <li>
             <div className="flex flex-row">
               <div className="flex-none pt-1">
-                <Image
-                  src={getAvatarUrl(post.postId)}
-                  alt="1"
-                  width={40}
-                  height={40}
-                  className="rounded-md"
-                />
+                <Link href={`/space/${post.userId}`} passHref>
+                  <Image
+                    src={getAvatarUrl(post.postId)}
+                    alt="1"
+                    width={40}
+                    height={40}
+                    className="rounded-md"
+                  />
+                </Link>
               </div>
               <div className="px-2 flex-1">
                 <div className="flex flex-col">

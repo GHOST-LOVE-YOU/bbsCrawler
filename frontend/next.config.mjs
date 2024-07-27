@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   env: {
     KINDE_SITE_URL:
       process.env.KINDE_SITE_URL ?? `https://${process.env.VERCEL_URL}`,

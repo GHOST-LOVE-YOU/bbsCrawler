@@ -14,6 +14,9 @@ export default function PostPagination({
   currentPage,
   postId,
 }: PageinationProps) {
+  if(maxPage===1){
+    return null;
+  }
   const getPages = () => {
     let pages = [];
     if (maxPage <= 5) {

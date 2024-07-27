@@ -22,14 +22,15 @@ enum UserTag {
 
 model User {
   id        String    @id @default(uuid())
-  kinde_id  String?   @unique
+  kinde_id  String?   @unique @default(dbgenerated("NULL"))
   name      String
   avatar    String?
   tag       UserTag[]
   createdAt DateTime  @default(now())
 
-  posts    Post[]
-  comments Comment[]
+  posts         Post[]
+  comments      Comment[]
+  subscriptions Subscription[]
 }
 
 enum PostSection {
@@ -84,4 +85,15 @@ model ScheduledTask {
   lastStatus LastTaskStatus?
   lastRun    DateTime?
   nextRun    DateTime?
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }

@@ -1,6 +1,8 @@
+import "server-only";
+
 import prisma from "@lib/db";
 import { UserTag } from "@prisma/client";
-import "server-only";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function addBotUser(name: string) {
   const newUser = await prisma.user.create({
@@ -11,6 +13,20 @@ export async function addBotUser(name: string) {
   });
 
   return newUser;
+}
+
+export async function clientGetUser() {
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  if (!isUserAuthenticated) {
+    return null;
+  }
+  const kindeUsers = await getUser();
+  if (!kindeUsers) {
+    return null;
+  }
+  const user = await getUserByKindeId(kindeUsers.id, kindeUsers.given_name!);
+  return user;
 }
 
 export async function getUser(name: string, tag: UserTag) {
@@ -39,3 +55,59 @@ export const getAvatarUrl = (userId: string) => {
   const backColor = backgroundColors[hash % backgroundColors.length];
   return `https://api.dicebear.com/9.x/micah/jpg?seed=${userId}&backgroundColor=${backColor}`;
 };
+
+export async function getUserByKindeId(kinde_id: string, given_name: string) {
+  // Query the user by kinde_id
+  let user = await prisma.user.findUnique({
+    where: { kinde_id },
+  });
+
+  // If the user exists, return it
+  if (user) {
+    return user;
+  }
+
+  // If the user does not exist, create a new user with the user tag
+  user = await prisma.user.create({
+    data: {
+      kinde_id,
+      name: given_name,
+      tag: { set: ["user"] },
+    },
+  });
+
+  return user;
+}
+
+export async function getUserByUserId(userId: string) {
+  return await prisma.user.findUnique({
+    where: { id: userId },
+  });
+}
+
+export async function getUserOverview(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      posts: true,
+      comments: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const joinedDays = Math.floor(
+    (new Date().getTime() - new Date(user.createdAt).getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+  const postCount = user.posts.length;
+  const commentCount = user.comments.length;
+
+  return {
+    joinedDays,
+    postCount,
+    commentCount,
+  };
+}
