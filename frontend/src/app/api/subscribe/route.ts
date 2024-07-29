@@ -1,7 +1,5 @@
 import prisma from "@lib/db";
-import type { NextApiRequest, NextApiResponse } from "next";
 import webpush from "web-push";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { clientGetUser } from "@lib/user/server-utils";
 
 // 配置VAPID details

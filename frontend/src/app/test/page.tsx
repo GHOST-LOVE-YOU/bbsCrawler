@@ -1,35 +1,48 @@
-"use client";
+"use client"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-
-const RandomAvatarGenerator: React.FC = () => {
-  const [avatarUrl, setAvatarUrl] = useState<string>('');
-
-  const generateRandomAvatar = () => {
-    const seed = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
-    
-    setAvatarUrl(`https://api.dicebear.com/9.x/micah/svg?seed=${seed}`);
-  };
-
+export default function DialogDemo() {
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <Button 
-        onClick={generateRandomAvatar}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Generate Random Avatar
-      </Button>
-      {avatarUrl && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-500 mb-2">Generated Avatar URL:</p>
-          {avatarUrl}
-          {/* <img src={avatarUrl} alt="Random Avatar" className="w-32 h-32 mt-4 rounded-full shadow-lg" /> */}
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Edit Profile</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right">
+              Username
+            </Label>
+            <Input id="username" value="@peduarte" className="col-span-3" />
+          </div>
         </div>
-      )}
-    </div>
-  );
-};
-
-export default RandomAvatarGenerator;
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}

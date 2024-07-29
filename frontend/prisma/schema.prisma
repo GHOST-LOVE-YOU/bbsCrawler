@@ -21,16 +21,21 @@ enum UserTag {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  kinde_id  String?   @unique @default(dbgenerated("NULL"))
-  name      String
-  avatar    String?
-  tag       UserTag[]
-  createdAt DateTime  @default(now())
-
-  posts         Post[]
-  comments      Comment[]
-  subscriptions Subscription[]
+  id                      String                   @id @default(uuid())
+  kinde_id                String?                  @unique @default(dbgenerated("NULL"))
+  name                    String
+  avatar                  String?
+  tag                     UserTag[]
+  createdAt               DateTime                 @default(now())
+  // 内容
+  posts                   Post[]
+  comments                Comment[]
+  // 通知
+  notificationMethods     NotificationMethod[]
+  botBindings             BotBinding[]             @relation("UserBotBindings")
+  boundByUsers            BotBinding[]             @relation("BotUserBindings")
+  notificationPreferences NotificationPreference[]
+  claimedItems            ClaimedItem[]
 }
 
 enum PostSection {
@@ -46,9 +51,10 @@ model Post {
   updatedAt DateTime
   createdAt DateTime
 
-  userId   String
-  user     User      @relation(fields: [userId], references: [id])
-  comments Comment[]
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  claimedBy ClaimedItem[]
 }
 
 model Comment {
@@ -59,10 +65,11 @@ model Comment {
   dislike  Int
   time     DateTime
 
-  postId String
-  post   Post   @relation(fields: [postId], references: [id])
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  postId    String
+  post      Post          @relation(fields: [postId], references: [id])
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  claimedBy ClaimedItem[]
 
   @@unique([postId, sequence])
 }
@@ -87,13 +94,94 @@ model ScheduledTask {
   nextRun    DateTime?
 }
 
-model Subscription {
+// 通知方式
+enum NotificationType {
+  BROWSER_PUSH
+  TELEGRAM
+  EMAIL
+}
+
+model BrowserPushNotification {
+  id             String             @id @default(uuid())
+  endpoint       String
+  p256dh         String
+  auth           String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  notification   NotificationMethod @relation(fields: [notificationId], references: [id])
+  notificationId String             @unique
+}
+
+model TelegramNotification {
+  id             String             @id @default(uuid())
+  chatId         String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  notification   NotificationMethod @relation(fields: [notificationId], references: [id])
+  notificationId String             @unique
+}
+
+model EmailNotification {
+  id             String             @id @default(uuid())
+  email          String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  notification   NotificationMethod @relation(fields: [notificationId], references: [id])
+  notificationId String             @unique
+}
+
+model NotificationMethod {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType
+  isEnabled Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  browserPush BrowserPushNotification?
+  telegram    TelegramNotification?
+  email       EmailNotification?
+}
+
+// 通知选项
+enum NotificationTrigger {
+  BOT_REPLY_TO_POST
+  BOT_REPLY_TO_COMMENT
+  ANY_REPLY_TO_POST
+  ANY_REPLY_TO_COMMENT
+}
+
+model BotBinding {
   id        String   @id @default(uuid())
   userId    String
-  endpoint  String
-  p256dh    String
-  auth      String
+  user      User     @relation("UserBotBindings", fields: [userId], references: [id])
+  botUserId String
+  botUser   User     @relation("BotUserBindings", fields: [botUserId], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-  user User @relation(fields: [userId], references: [id])
+model NotificationPreference {
+  id        String              @id @default(uuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id])
+  trigger   NotificationTrigger
+  isEnabled Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model ClaimedItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id])
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, postId, commentId])
 }

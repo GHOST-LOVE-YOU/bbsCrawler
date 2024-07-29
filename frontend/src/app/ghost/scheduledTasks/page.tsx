@@ -8,10 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getScheduledTask } from "@actions/actions";
 import { ScheduledTask } from "@prisma/client";
 import moment from "moment";
 import "moment/locale/zh-cn";
+import { getScheduledTask } from "@lib/scheduleds/server-utils";
 moment.locale("zh-cn");
 
 export default function ScheduledTasksPage() {
