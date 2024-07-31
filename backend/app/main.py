@@ -25,7 +25,6 @@ async def crawl(auth_data: AuthData):
             try:
                 crawl_results.clear()
                 await run_crawler()
-                # 爬虫任务完成后重启服务器
                 return {"status": "success", "data": crawl_results}
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))

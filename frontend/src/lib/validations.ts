@@ -31,17 +31,20 @@ export const commentSchema = z
     time: new Date(data.time),
   }));
 
-const browserPushSchema = z.object({
+export const browserPushSchema = z.object({
+  disable: z.boolean(),
   endpoint: z.string().url(),
   p256dh: z.string(),
   auth: z.string(),
 });
 
-const telegramSchema = z.object({
+export const telegramSchema = z.object({
+  disable: z.boolean(),
   chatId: z.string(),
 });
 
-const emailSchema = z.object({
+export const emailSchema = z.object({
+  disable: z.boolean(),
   email: z.string().email(),
 });
 
@@ -56,7 +59,7 @@ export const notificationSchema = z.union([
 export type TNotification = z.infer<typeof notificationSchema>;
 
 export const typeFieldMap = {
-  BROWSER_PUSH: ["endpoint", "p256dh", "auth"],
-  TELEGRAM: ["chatId"],
-  EMAIL: ["email"],
+  webpush: ["disable", "endpoint", "p256dh", "auth"],
+  telegram: ["disable", "chatId"],
+  email: ["disable", "email"],
 };

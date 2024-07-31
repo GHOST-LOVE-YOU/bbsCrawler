@@ -14,7 +14,7 @@ export default function PostPagination({
   currentPage,
   postId,
 }: PageinationProps) {
-  if(maxPage===1){
+  if (maxPage === 1) {
     return null;
   }
   const getPages = () => {
@@ -43,15 +43,19 @@ export default function PostPagination({
     return pages;
   };
 
+  const getHref = (page: number | string) => {
+    if (typeof page === "string") return "#";
+    if (page < 1 || page > maxPage) return "#";
+    return `/post/${postId}?page=${page}`;
+  };
+
   return (
     <nav
       className="pr-2 bg-nodedark inline-flex -space-x-px rounded-md shadow-sm h-7"
       aria-label="Pagination"
     >
       <a
-        href={
-          currentPage === 1 ? "#" : `/post/${postId}?page=${currentPage - 1}`
-        }
+        href={getHref(currentPage - 1)}
         className={cn(
           "relative inline-flex items-center rounded-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0",
           {
@@ -65,7 +69,7 @@ export default function PostPagination({
       {getPages().map((page, index) => (
         <a
           key={index}
-          href={`/post/${postId}?page=${page}`}
+          href={getHref(page)}
           aria-current={page === currentPage ? "page" : undefined}
           className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold rounded-md text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
             page === currentPage
@@ -79,11 +83,7 @@ export default function PostPagination({
         </a>
       ))}
       <a
-        href={
-          currentPage === maxPage
-            ? "#"
-            : `/post/${postId}?page=${currentPage + 1}`
-        }
+        href={getHref(currentPage + 1)}
         className="relative inline-flex items-center rounded-r-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0"
         aria-disabled={currentPage === maxPage}
       >

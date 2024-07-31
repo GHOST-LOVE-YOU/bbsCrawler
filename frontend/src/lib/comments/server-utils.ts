@@ -1,3 +1,5 @@
+import "server-only";
+
 import prisma from "@lib/db";
 import { getUser } from "@lib/user/server-utils";
 import { commentSchema } from "@lib/validations";

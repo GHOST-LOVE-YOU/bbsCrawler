@@ -40,6 +40,15 @@ export default function PagePagination({
     return pages;
   };
 
+  const getHref = (page: number | string) => {
+    // 如果page是string类型 return "#";
+    if (typeof page === "string") return "#";
+    if (page < 1 || page > maxPage) return "#";
+    return sortBy === "updatedAt"
+      ? `/page/${page}?sortBy=${sortBy}`
+      : `/page/${page}`;
+  };
+
   return (
     <nav
       className="pr-2 bg-nodedark inline-flex -space-x-px rounded-md shadow-sm h-7"
@@ -66,11 +75,7 @@ export default function PagePagination({
       {getPages().map((page, index) => (
         <a
           key={index}
-          href={
-            sortBy === "updatedAt"
-              ? `/page/${index + 1}?sortBy=${sortBy}`
-              : `/page/${index + 1}`
-          }
+          href={getHref(page)}
           aria-current={page === currentPage ? "page" : undefined}
           className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold rounded-md text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
             page === currentPage

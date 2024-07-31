@@ -43,7 +43,7 @@ export default function PostList({ posts }: PostListProps) {
               </div>
               <div className="px-2 flex-1">
                 <div className="flex flex-col">
-                  <p className="pt-0.5 font-mono text-lg font-semibold">
+                  <p className="pt-0.5 font-mono text-lg font-semibold text-zinc-100">
                     <a href={`/post/${post.postId}`}>{post.topic}</a>
                   </p>
                 </div>

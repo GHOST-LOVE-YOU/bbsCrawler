@@ -1,9 +1,11 @@
+import { NotificationType } from "@lib/notifications/type";
 import { TNotification } from "@lib/validations";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 
 type SubmitButtonsProps = {
-  form: UseFormReturn<TNotification>;
+  actionType: NotificationType;
+  form: UseFormReturn<Partial<TNotification>>;
 };
 
 export function SubmitButtons({ form }: SubmitButtonsProps) {

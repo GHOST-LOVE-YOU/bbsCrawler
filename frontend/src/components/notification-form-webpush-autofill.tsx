@@ -3,7 +3,7 @@ import React from "react";
 import { UseFormReturn } from "react-hook-form";
 
 type WebPushAutoFillProps = {
-  form: UseFormReturn<TNotification>;
+  form: UseFormReturn<Partial<TNotification>>;
 };
 
 export function WebPushAutoFill({ form }: WebPushAutoFillProps) {

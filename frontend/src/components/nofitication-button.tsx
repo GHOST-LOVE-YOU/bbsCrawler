@@ -12,9 +12,16 @@ import {
 import { Button } from "./ui/button";
 import NotificationForm from "./nofitication-form";
 import { flushSync } from "react-dom";
+import { NotificationType } from "@lib/notifications/type";
 
 type NofiticationButtonProps = {
-  actionType: "add" | "edit";
+  actionType: NotificationType;
+};
+
+const dialogTitle = {
+  webpush: "浏览器通知",
+  email: "邮箱通知",
+  telegram: "Telegram 通知",
 };
 
 export default function NofiticationButton({
@@ -24,18 +31,12 @@ export default function NofiticationButton({
   return (
     <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
       <DialogTrigger asChild>
-        {actionType === "add" ? (
-          <Button className="rounded-3xl w-80">增加通知</Button>
-        ) : (
-          <Button variant="secondary" />
-        )}
+        <Button variant="link">编辑</Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {actionType === "add" ? "添加通知" : "编辑通知"}
-          </DialogTitle>
+          <DialogTitle>{dialogTitle[actionType]}</DialogTitle>
         </DialogHeader>
         <NotificationForm
           actionType={actionType}
