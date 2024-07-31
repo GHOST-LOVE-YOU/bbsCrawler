@@ -4,8 +4,6 @@ from pydantic import BaseModel
 import uvicorn
 from asyncio import Semaphore
 from utils import authenticate, run_crawler
-import os
-import signal
 
 app = FastAPI()
 
@@ -28,7 +26,6 @@ async def crawl(auth_data: AuthData):
                 crawl_results.clear()
                 await run_crawler()
                 # 爬虫任务完成后重启服务器
-                os.kill(os.getpid(), signal.SIGTERM)
                 return {"status": "success", "data": crawl_results}
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))

@@ -6,6 +6,7 @@ from crawler.route import router
 from dotenv import load_dotenv
 from crawlee.configuration import Configuration
 import os
+from crawlee.storages.request_queue import RequestQueue
 
 load_dotenv()
 AUTH_USERNAME = os.getenv("AUTH_USERNAME")
@@ -16,15 +17,18 @@ def authenticate(username: str, password: str) -> bool:
     return username == AUTH_USERNAME and password == AUTH_PASSWORD
 
 async def run_crawler():
+    # 生成唯一的请求ID
+    request_id = str(uuid.uuid4())
     config = Configuration(
         persist_storage=False,
-        purge_on_start=True,
     )
     crawler = PlaywrightCrawler(
         max_requests_per_crawl=500,
         request_handler=router,
         configuration=config,
+        request_provider=await RequestQueue.open(name=request_id),
     )
+    
     unique_key = str(uuid.uuid4())
     request = BaseRequestData(url='https://bbs.byr.cn/#!board/IWhisper', unique_key=unique_key)
     
