@@ -1,5 +1,5 @@
 import { getAvatarUrl } from "@lib/user/server-utils";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Comment {

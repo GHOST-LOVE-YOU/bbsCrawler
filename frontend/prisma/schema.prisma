@@ -138,6 +138,8 @@ model EmailNotification {
 enum MessagesType {
   POST_REPLY
   COMMENT_REPLY
+  WATCHED_POST_NEW_COMMENT
+  WATCHED_COMMENT_NEW_QUOTED
 }
 
 model Inbox {

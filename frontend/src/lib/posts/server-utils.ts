@@ -38,6 +38,7 @@ export async function autoGetPost(data: unknown) {
       userId: user.id,
     },
   });
+  // 有一个新帖子发布了
   return { created: true, post: newPost };
 }
 

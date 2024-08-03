@@ -1,6 +1,6 @@
 // "use client";
 
-import Image from "next/image";
+import Image from "next/legacy/image";
 import moment from "moment";
 import "moment/locale/zh-cn";
 import { getAvatarUrl } from "@lib/user/server-utils";
