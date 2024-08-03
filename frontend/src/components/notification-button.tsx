@@ -5,12 +5,13 @@ import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import NotificationForm from "./nofitication-form";
+import NotificationForm from "./notification-form";
 import { flushSync } from "react-dom";
 import { NotificationType } from "@lib/notifications/type";
 
@@ -24,7 +25,20 @@ const dialogTitle = {
   telegram: "Telegram 通知",
 };
 
-export default function NofiticationButton({
+const getDescription = (actionType: NotificationType) => {
+  switch (actionType) {
+    case "webpush":
+      return "通过浏览器推送通知";
+    case "email":
+      return "通过邮件发送通知";
+    case "telegram":
+      return "通过 Telegram Bot 发送通知";
+    default:
+      return "选择一种通知类型";
+  }
+};
+
+export default function NotificationButton({
   actionType,
 }: NofiticationButtonProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -37,6 +51,7 @@ export default function NofiticationButton({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{dialogTitle[actionType]}</DialogTitle>
+          <DialogDescription>{getDescription(actionType)}</DialogDescription>
         </DialogHeader>
         <NotificationForm
           actionType={actionType}

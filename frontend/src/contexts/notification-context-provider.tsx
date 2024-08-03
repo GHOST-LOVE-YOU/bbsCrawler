@@ -1,19 +1,22 @@
+// src/contexts/notification-context-provider.tsx
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import { addNotification } from "@actions/actions";
+import { useToast } from "@components/ui/use-toast";
+import React, { createContext, use, useContext, useState } from "react";
 
 export type EmailNotification = {
-  disabled: boolean;
+  disable: boolean;
   email: string;
 };
 
 export type TelegramNotification = {
-  disabled: boolean;
+  disable: boolean;
   chatId: string;
 };
 
 export type BrowserPushNotification = {
-  disabled: boolean;
+  disable: boolean;
   endpoint: string;
   p256dh: string;
   auth: string;
@@ -23,6 +26,11 @@ type NotificationContextType = {
   emailNotification: EmailNotification | null;
   telegramNotification: TelegramNotification | null;
   browserPushNotification: BrowserPushNotification | null;
+  disabledNotificationMethods: {
+    email: boolean;
+    telegram: boolean;
+    webpush: boolean;
+  };
   updateEmailNotification: (newState: Partial<EmailNotification>) => void;
   updateTelegramNotification: (newState: Partial<TelegramNotification>) => void;
   updateBrowserPushNotification: (
@@ -57,6 +65,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   initialTelegramNotification,
   initialBrowserPushNotification,
 }) => {
+  const { toast } = useToast();
   const [emailNotification, setEmailNotification] =
     useState<EmailNotification | null>(initialEmailNotification);
   const [telegramNotification, setTelegramNotification] =
@@ -103,7 +112,24 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         } as BrowserPushNotification)
     );
 
-    // TODO: Update the browser push notification state on your backend
+    const error = await addNotification(newState);
+    if (!error.success) {
+      toast({
+        variant: "destructive",
+        description: error.message,
+      });
+    } else {
+      toast({
+        variant: "default",
+        description: error.message,
+      });
+    }
+  };
+
+  const disabledNotificationMethods = {
+    email: emailNotification?.disable ?? true,
+    telegram: telegramNotification?.disable ?? true,
+    webpush: browserPushNotification?.disable ?? true,
   };
 
   return (
@@ -112,6 +138,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         emailNotification,
         telegramNotification,
         browserPushNotification,
+        disabledNotificationMethods,
         updateEmailNotification,
         updateTelegramNotification,
         updateBrowserPushNotification,

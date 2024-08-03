@@ -8,13 +8,21 @@ export const autoPostSchema = z
     createdAt: z.string(),
     userName: z.string(),
   })
-  .transform((data) => ({
-    ...data,
-    createdAt:
-      data.createdAt === "unknow" ? new Date() : new Date(data.createdAt),
-    updatedAt:
-      data.createdAt === "unknow" ? new Date() : new Date(data.createdAt),
-  }));
+  .transform((data) => {
+    const adjustTime = (dateString: string): Date => {
+      const date = new Date(dateString);
+      return new Date(date.getTime() - 8 * 60 * 60 * 1000);
+    };
+
+    const createdAt =
+      data.createdAt === "unknow" ? new Date() : adjustTime(data.createdAt);
+
+    return {
+      ...data,
+      createdAt,
+      updatedAt: createdAt,
+    };
+  });
 
 export const commentSchema = z
   .object({

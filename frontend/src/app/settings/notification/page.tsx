@@ -1,5 +1,5 @@
 // app/settings/notification/page.tsx
-import NofiticationList from "@components/nofitication-list";
+import NofiticationList from "@components/notification-list";
 import { NotificationProvider } from "@contexts/notification-context-provider";
 import { getNotifications } from "@lib/notifications/utils";
 
@@ -18,11 +18,6 @@ export default async function UserProfilePage() {
           <NofiticationList />
         </NotificationProvider>
       </div>
-      {/* {toast.message && (
-        <Toast variant={toast.type === 'success' ? 'default' : 'destructive'}>
-          {toast.message}
-        </Toast>
-      )} */}
     </div>
   );
 }

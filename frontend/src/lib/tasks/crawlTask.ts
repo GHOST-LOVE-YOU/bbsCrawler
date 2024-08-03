@@ -33,7 +33,6 @@ async function handleCrawlTask() {
 
   // 处理返回的数据
   const posts = response.data["data"];
-  console.log(posts);
   for (const data of posts) {
     const result = await autoGetPost({
       byr_id: data.byr_id,

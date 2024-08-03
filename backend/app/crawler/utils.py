@@ -16,6 +16,7 @@ PASSWORD = os.getenv("PASSWORD")
 # 时间字符串转换函数
 def convert_to_datetime(time_str):
     try:
+        time_str = time_str.replace("&nbsp;", " ")
         time_format = "%a %b %d %H:%M:%S %Y"
         datetime_obj = datetime.strptime(time_str, time_format)
         return datetime_obj

@@ -20,6 +20,7 @@ import {
   TelegramNotification,
   useNotification,
 } from "@contexts/notification-context-provider";
+import { Form } from "./ui/form";
 
 type NotificationFormProps = {
   actionType: NotificationType;
@@ -42,15 +43,15 @@ export default function NotificationForm({
   let resolver: any;
   switch (actionType) {
     case "email":
-      defaultValues = emailNotification || {};
+      defaultValues = emailNotification || { disable: true };
       resolver = zodResolver(emailSchema);
       break;
     case "telegram":
-      defaultValues = telegramNotification || {};
+      defaultValues = telegramNotification || { disable: true };
       resolver = zodResolver(telegramSchema);
       break;
     case "webpush":
-      defaultValues = browserPushNotification || {};
+      defaultValues = browserPushNotification || { disable: true };
       resolver = zodResolver(browserPushSchema);
       break;
   }
@@ -77,10 +78,12 @@ export default function NotificationForm({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)}>
-      <NotificationFields actionType={actionType} form={form} />
-      {actionType === "webpush" && <WebPushAutoFill form={form} />}
-      <SubmitButtons form={form} />
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <NotificationFields actionType={actionType} form={form} />
+        {actionType === "webpush" && <WebPushAutoFill form={form} />}
+        <SubmitButtons actionType={actionType} form={form} />
+      </form>
+    </Form>
   );
 }

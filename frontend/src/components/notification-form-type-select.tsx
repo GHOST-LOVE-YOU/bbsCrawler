@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { NotificationType } from "@prisma/client";
+import { NotificationType } from "@lib/notifications/type";
 
 type NotificationTypeSelectProps = {
   type: NotificationType;
