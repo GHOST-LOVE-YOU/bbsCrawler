@@ -1,8 +1,10 @@
 import { getAvatarUrl } from "@lib/user/server-utils";
 import Image from "next/legacy/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import NotificationRuleButton from "./notification-rule-button";
 
 interface Comment {
+  commentId: string;
   sequence: number;
   content: string | null;
   like: number;
@@ -78,8 +80,11 @@ export default async function ReplyList({ comments, op }: ReplyListProps) {
                 踩({comment.dislike})
               </div>
               <div className="inline-flex">
-                <span className="icon-[ph--star-bold] text-2xl mr-1" />
-                收藏(0)
+                <NotificationRuleButton
+                  targetType="COMMENT"
+                  targetId={comment.commentId}
+                  action="NOTIFY"
+                />
               </div>
             </div>
           </div>

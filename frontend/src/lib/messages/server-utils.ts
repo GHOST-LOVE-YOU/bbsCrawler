@@ -9,7 +9,7 @@ import {
 } from "@prisma/client";
 
 export async function autoHandleNewComment(comment: Comment) {
-  console.log("New comment created", comment);
+  // console.log("New comment created", comment);
 
   try {
     // 1. 获取评论作者、帖子和帖子作者
@@ -34,15 +34,12 @@ export async function autoHandleNewComment(comment: Comment) {
     const content1 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[我的帖子](/post/${post.id}) ：${post.topic}`;
     await sendNotification(post.user, "POST_REPLY", content1);
 
-    // 3. 向绑定了该帖子的真实用户发送通知
-    await notifyUsersWithPostRule(post, commentAuthor, post.user);
-
-    // 4. 向绑定了帖子作者且没有取消该帖子通知的真实用户发送通知
-    await notifyUsersBindingPostAuthor(post.user, post, commentAuthor);
+    // 3 & 4. 向满足条件的真实用户发送通知（合并处理）
+    await notifyRelevantUsers(post, commentAuthor, post.user);
 
     // 5 & 6. 检查是否引用了其他评论，如果是，通知被引用的评论作者
-    // 5. 检查是否引用了其他评论
     const quotedCommentInfo = extractQuotedComment(comment.content);
+    // console.log("quotedCommentInfo", quotedCommentInfo);
     if (quotedCommentInfo) {
       await handleQuotedCommentNotification(
         quotedCommentInfo,
@@ -80,56 +77,61 @@ async function sendNotification(
   });
 }
 
-async function notifyUsersWithPostRule(
+async function notifyRelevantUsers(
   post: Post,
   commentAuthor: User,
   postAuthor: User
 ) {
-  const usersToNotify = await prisma.notificationRule.findMany({
-    where: {
-      targetType: NotificationTargetType.POST,
-      targetId: post.id,
-      action: NotificationAction.NOTIFY,
-    },
-    include: { user: true },
-  });
-
-  let content2: string;
-  for (const rule of usersToNotify) {
-    content2 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[${postAuthor.name}](/space/${postAuthor.id})的[帖子](/post/${post.id}) ：${post.topic}`;
-    await sendNotification(rule.user, "WATCHED_POST_NEW_COMMENT", content2);
-  }
-}
-
-async function notifyUsersBindingPostAuthor(
-  postAuthor: User,
-  post: Post,
-  commentAuthor: User
-) {
-  const bindings = await prisma.userBinding.findMany({
-    where: { botId: postAuthor.id },
-    include: { user: true },
-  });
-
-  let content3: string;
-  for (const binding of bindings) {
-    const notificationRule = await prisma.notificationRule.findUnique({
+  // 获取所有需要通知的用户
+  const [postRules, authorBindings] = await Promise.all([
+    prisma.notificationRule.findMany({
       where: {
-        userId_targetType_targetId: {
-          userId: binding.user.id,
-          targetType: NotificationTargetType.POST,
-          targetId: post.id,
-        },
+        targetType: NotificationTargetType.POST,
+        targetId: post.id,
+        action: NotificationAction.NOTIFY,
       },
-    });
+      include: { user: true },
+    }),
+    prisma.userBinding.findMany({
+      where: { botId: postAuthor.id },
+      include: { user: true },
+    }),
+  ]);
 
-    if (notificationRule?.action !== NotificationAction.DONT_NOTIFY) {
-      content3 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[${postAuthor.name}](/space/${postAuthor.id})的[帖子](/post/${post.id}) ：${post.topic}`;
-      await sendNotification(
-        binding.user,
-        "WATCHED_POST_NEW_COMMENT",
-        content3
-      );
+  // 创建一个 Set 来存储已通知的用户 ID
+  const notifiedUsers = new Set<string>();
+
+  // 处理帖子规则
+  for (const rule of postRules) {
+    if (!notifiedUsers.has(rule.user.id)) {
+      const content = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[${postAuthor.name}](/space/${postAuthor.id})的[帖子](/post/${post.id}) ：${post.topic}`;
+      await sendNotification(rule.user, "WATCHED_POST_NEW_COMMENT", content);
+      notifiedUsers.add(rule.user.id);
+    }
+  }
+
+  // 处理作者绑定
+  for (const binding of authorBindings) {
+    if (!notifiedUsers.has(binding.user.id)) {
+      const notificationRule = await prisma.notificationRule.findUnique({
+        where: {
+          userId_targetType_targetId: {
+            userId: binding.user.id,
+            targetType: NotificationTargetType.POST,
+            targetId: post.id,
+          },
+        },
+      });
+
+      if (notificationRule?.action !== NotificationAction.DONT_NOTIFY) {
+        const content = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[${postAuthor.name}](/space/${postAuthor.id})的[帖子](/post/${post.id}) ：${post.topic}`;
+        await sendNotification(
+          binding.user,
+          "WATCHED_POST_NEW_COMMENT",
+          content
+        );
+        notifiedUsers.add(binding.user.id);
+      }
     }
   }
 }
@@ -140,70 +142,99 @@ function extractQuotedComment(
   if (!content) {
     return null;
   }
-  const match = content.match(/【 在 (.+?) 的大作中提到: 】<br>(.+?)/);
-  if (match) {
-    return {
-      author: match[1],
-      content: match[2].trim(),
-    };
+
+  // 匹配引用的作者
+  const authorMatch = content.match(/【 在 (.+?) 的大作中提到: 】/);
+  if (!authorMatch) {
+    return null;
   }
-  return null;
+
+  const author = authorMatch[1];
+
+  // 提取引用的内容
+  const contentMatch = content.match(/【 在 .+? 的大作中提到: 】<br>([\s\S]+)/);
+  if (!contentMatch) {
+    return null;
+  }
+
+  // 处理引用的内容，移除 HTML 标签但保留 <br>
+  let quotedContent = contentMatch[1]
+    .replace(/<font class="f006">: /g, "")
+    .replace(/<\/font>/g, "")
+    .replace(/^: /gm, "") // 移除每行开头的 ": "
+    .replace(/<br>$/, "") // 移除最后的 <br> 标签
+    .trim();
+
+  return {
+    author,
+    content: quotedContent,
+  };
 }
 
-async function notifyUsersBindingQuotedAuthor(
+async function notifyRelevantUsersForQuotedComment(
+  quotedComment: Comment,
   quotedAuthor: User,
   post: Post,
   commentAuthor: User,
-  quotedComment: Comment,
-  newComment: Comment
+  newComment: Comment,
+  notificationContent: string
 ) {
-  const bindings = await prisma.userBinding.findMany({
-    where: { botId: quotedAuthor.id },
-    include: { user: true },
-  });
-
-  let content5: string;
-  for (const binding of bindings) {
-    const notificationRule = await prisma.notificationRule.findUnique({
+  // 获取所有需要通知的用户
+  const [commentRules, authorBindings] = await Promise.all([
+    prisma.notificationRule.findMany({
       where: {
-        userId_targetType_targetId: {
-          userId: binding.user.id,
-          targetType: NotificationTargetType.POST,
-          targetId: post.id,
-        },
+        targetType: NotificationTargetType.COMMENT,
+        targetId: quotedComment.id,
+        action: NotificationAction.NOTIFY,
       },
-    });
+      include: { user: true },
+    }),
+    prisma.userBinding.findMany({
+      where: { botId: quotedAuthor.id },
+      include: { user: true },
+    }),
+  ]);
 
-    if (notificationRule?.action !== NotificationAction.DONT_NOTIFY) {
-      content5 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 在[帖子](/post/${post.id})中回复了[${quotedAuthor.name}](/space/${quotedAuthor.id})的[评论](/post/${post.id}?sequence=${quotedComment.sequence})：${newComment.content}`;
+  // console.log("commentRules", commentRules);
+  // console.log("targetId", quotedComment.id);
+
+  // 创建一个 Set 来存储已通知的用户 ID
+  const notifiedUsers = new Set<string>();
+
+  // 处理评论规则
+  for (const rule of commentRules) {
+    if (!notifiedUsers.has(rule.user.id)) {
       await sendNotification(
-        binding.user,
+        rule.user,
         "WATCHED_COMMENT_NEW_QUOTED",
-        content5
+        notificationContent
       );
+      notifiedUsers.add(rule.user.id);
     }
   }
-}
 
-async function notifyUsersWithCommentRule(
-  quotedComment: Comment,
-  post: Post,
-  commentAuthor: User,
-  newComment: Comment
-) {
-  const usersToNotify = await prisma.notificationRule.findMany({
-    where: {
-      targetType: NotificationTargetType.COMMENT,
-      targetId: quotedComment.id,
-      action: NotificationAction.NOTIFY,
-    },
-    include: { user: true },
-  });
+  // 处理作者绑定
+  for (const binding of authorBindings) {
+    if (!notifiedUsers.has(binding.user.id)) {
+      const notificationRule = await prisma.notificationRule.findUnique({
+        where: {
+          userId_targetType_targetId: {
+            userId: binding.user.id,
+            targetType: NotificationTargetType.POST,
+            targetId: post.id,
+          },
+        },
+      });
 
-  const content6 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 在[帖子](/post/${post.id})中回复了你关注的[评论](/post/${post.id}?sequence=${quotedComment.sequence})：${newComment.content}`;
-
-  for (const rule of usersToNotify) {
-    await sendNotification(rule.user, "WATCHED_COMMENT_NEW_QUOTED", content6);
+      if (notificationRule?.action !== NotificationAction.DONT_NOTIFY) {
+        await sendNotification(
+          binding.user,
+          "WATCHED_COMMENT_NEW_QUOTED",
+          notificationContent
+        );
+        notifiedUsers.add(binding.user.id);
+      }
+    }
   }
 }
 
@@ -229,29 +260,21 @@ async function handleQuotedCommentNotification(
       orderBy: { sequence: "desc" }, // 如果有多个匹配，选择最新的一个
     });
 
-    // 构建通知内容
-    let content4: string;
     if (matchedComment) {
-      content4 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 在[帖子](/post/${post.id})中回复了你的[评论](/post/${post.id}?sequence=${matchedComment.sequence})：${newComment.content}`;
+      // 构建通知内容
+      const content = `[${commentAuthor.name}](/space/${commentAuthor.id}) 在[帖子](/post/${post.id})中回复了[${quotedAuthor.name}](/space/${quotedAuthor.id})的[评论](/post/${post.id}?sequence=${matchedComment.sequence})：${newComment.content}`;
 
       // 通知被引用的评论作者（机器人）
-      await sendNotification(quotedAuthor, "COMMENT_REPLY", content4);
+      await sendNotification(quotedAuthor, "COMMENT_REPLY", content);
 
-      // 通知绑定了被引用评论的真实用户
-      await notifyUsersWithCommentRule(
+      // 通知相关的真实用户（合并处理）
+      await notifyRelevantUsersForQuotedComment(
         matchedComment,
-        post,
-        commentAuthor,
-        newComment
-      );
-
-      // 通知绑定了被引用评论作者的真实用户
-      await notifyUsersBindingQuotedAuthor(
         quotedAuthor,
         post,
         commentAuthor,
-        matchedComment,
-        newComment
+        newComment,
+        content
       );
     }
   }

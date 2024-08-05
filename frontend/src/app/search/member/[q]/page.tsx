@@ -1,12 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Search, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { User } from "@prisma/client";
 import { getAvatarUrl, searchUserByName } from "@lib/user/server-utils";
 import Image from "next/legacy/image";
 import BindingsButton from "@components/bindings-button";
 import { Badge } from "@components/ui/badge";
-import { Input } from "@/components/ui/input";
 
 const UserCard: React.FC<{ user: User }> = ({ user }) => (
   <Card className="bg-gray-800 text-white hover:shadow-lg transition-shadow duration-300">

@@ -47,6 +47,7 @@ export async function getCommentsByPage(postId: string, page: number) {
 
   // 处理评论数据
   const result = comments.map((comment) => ({
+    commentId: comment.id,
     sequence: comment.sequence,
     content: comment.content,
     like: comment.like,
