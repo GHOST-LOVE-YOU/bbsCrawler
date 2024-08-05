@@ -1,42 +1,61 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Diamond, Search, PenLine, MessageSquare } from "lucide-react";
 import {
+  clientGetUser,
   getAvatarUrl,
   getUserByUserId,
   getUserOverview,
 } from "@lib/user/server-utils";
 import SpaceTopic from "@components/space_topic";
 import { getPostByUserId } from "@lib/posts/server-utils";
+import { Badge } from "@components/ui/badge";
+import BindingsButton from "@components/bindings-button";
 
 export default async function Page({ params }: { params: { userId: string } }) {
   const user = await getUserByUserId(params.userId);
   if (!user) {
     return <div>User not found</div>;
   }
+  const currentUser = await clientGetUser();
+  if (!currentUser) {
+    return <div>Unauthorized</div>;
+  }
   const { joinedDays, postCount, commentCount } = await getUserOverview(
     params.userId
   );
   const topicsList = await getPostByUserId(params.userId);
+  const showBindingsButton =
+    currentUser && !currentUser.tag.includes("bot") && user.tag.includes("bot");
   return (
-    <div className="bg-stone-400 bg-transparent bg-opacity-65 p-6 rounded-lg max-w-4xl mx-auto mt-4">
-      <div className="flex items-center mb-6">
-        <div className="w-16 h-16 rounded-lg mr-4 flex-shrink-0">
-          <Image
-            src={user.avatar ? user.avatar : getAvatarUrl(user.id)}
-            alt="User avatar"
-            width={64}
-            height={64}
-            className="w-full h-full object-cover rounded-lg"
-          />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-stone-300">{user.name}</h2>
-          <p className="text-stone-700">一句话介绍自己</p>
-        </div>
-      </div>
+    <div className="container mx-auto p-4 max-w-4xl">
+      <Card className="mb-4">
+        <CardContent className="flex items-center justify-between p-4">
+          <div className="flex items-center space-x-4">
+            <Image
+              src={user.avatar ? user.avatar : getAvatarUrl(user.id)}
+              alt="User avatar"
+              width={64}
+              height={64}
+              className="w-full h-full object-cover rounded-lg"
+            />
+            <div>
+              <h1 className="text-2xl font-bold flex items-center">
+                {user.name}
+                {user.tag.includes("bot") && (
+                  <Badge variant="secondary" className="ml-2">
+                    Bot
+                  </Badge>
+                )}
+              </h1>
+              <p className="text-stone-700">一句话介绍自己</p>
+            </div>
+          </div>
+          {showBindingsButton && <BindingsButton botUserId={user.id} />}
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-4 bg-stone-600">

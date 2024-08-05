@@ -111,3 +111,17 @@ export async function getUserOverview(userId: string) {
     commentCount,
   };
 }
+
+export async function searchUserByName(name: string) {
+  const user = await clientGetUser();
+  if (!user) {
+    return [];
+  }
+  return await prisma.user.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+  });
+}

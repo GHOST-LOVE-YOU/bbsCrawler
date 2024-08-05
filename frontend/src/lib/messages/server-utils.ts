@@ -1,3 +1,4 @@
+import prisma from "../db";
 import {
   Comment,
   User,
@@ -6,7 +7,6 @@ import {
   Post,
   MessagesType,
 } from "@prisma/client";
-import prisma from "@lib/db";
 
 export async function autoHandleNewComment(comment: Comment) {
   console.log("New comment created", comment);
@@ -41,6 +41,7 @@ export async function autoHandleNewComment(comment: Comment) {
     await notifyUsersBindingPostAuthor(post.user, post, commentAuthor);
 
     // 5 & 6. 检查是否引用了其他评论，如果是，通知被引用的评论作者
+    // 5. 检查是否引用了其他评论
     const quotedCommentInfo = extractQuotedComment(comment.content);
     if (quotedCommentInfo) {
       await handleQuotedCommentNotification(

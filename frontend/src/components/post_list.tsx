@@ -50,7 +50,9 @@ export default function PostList({ posts }: PostListProps) {
                 <div className="inline-flex font-sans text-slate-200 space-x-4">
                   <div className="flex items-center space-x-1">
                     <span className="icon-[ph--user]" />
-                    <p className="relative bottom-0.5">{post.userName}</p>
+                    <p className="relative bottom-0.5">
+                      <a href={`/space/${post.userId}`}>{post.userName}</a>
+                    </p>
                   </div>
                   <div className="flex items-center space-x-1">
                     <span className="icon-[clarity--eye-show-line]" />
