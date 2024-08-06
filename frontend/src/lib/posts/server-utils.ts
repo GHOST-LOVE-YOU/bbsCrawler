@@ -48,26 +48,33 @@ export async function userGetPost(
   sortBy: "createdAt" | "updatedAt"
 ) {
   const pageSize = 50;
-  const posts = await prisma.post.findMany({
-    skip: pageSize * (page - 1),
-    take: pageSize,
-    orderBy: {
-      [sortBy]: "desc",
-    },
-    include: {
-      user: true,
-      comments: {
-        orderBy: {
-          sequence: "desc",
-        },
-        include: {
-          user: true,
+  const skip = pageSize * (page - 1);
+
+  const [posts, totalCount] = await prisma.$transaction([
+    prisma.post.findMany({
+      skip,
+      take: pageSize,
+      orderBy: {
+        [sortBy]: "desc",
+      },
+      include: {
+        user: true,
+        comments: {
+          orderBy: {
+            sequence: "desc",
+          },
+          include: {
+            user: true,
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.post.count(),
+  ]);
 
-  return posts.map(({ id, topic, user, comments }) => ({
+  const maxPage = Math.ceil(totalCount / pageSize);
+
+  const formattedPosts = posts.map(({ id, topic, user, comments }) => ({
     postId: id,
     topic,
     userName: user.name,
@@ -78,12 +85,11 @@ export async function userGetPost(
     latestCommentUserName: comments[0]?.user.name || null,
     latestCommentUserId: comments[0]?.user.id || null,
   }));
-}
 
-export async function userGetMaxPage() {
-  const pageSize = 50;
-  const count = await prisma.post.count();
-  return Math.ceil(count / pageSize);
+  return {
+    posts: formattedPosts,
+    maxPage,
+  };
 }
 
 export async function getPostByUserId(userId: string) {
@@ -108,4 +114,63 @@ export async function getPostByUserId(userId: string) {
   });
 
   return posts;
+}
+
+export async function searchPostsByKeyword(keyword: string, page: number) {
+  const pageSize = 50;
+  const skip = pageSize * (page - 1);
+
+  const [posts, totalCount] = await prisma.$transaction([
+    prisma.post.findMany({
+      skip,
+      take: pageSize,
+      where: {
+        topic: {
+          contains: keyword,
+          mode: "insensitive", // Case-insensitive search
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Sort by creation date, most recent first
+      },
+      include: {
+        user: true,
+        comments: {
+          orderBy: {
+            sequence: "desc",
+          },
+          include: {
+            user: true,
+          },
+        },
+      },
+    }),
+    prisma.post.count({
+      where: {
+        topic: {
+          contains: keyword,
+          mode: "insensitive",
+        },
+      },
+    }),
+  ]);
+
+  const maxPage = Math.ceil(totalCount / pageSize);
+
+  const formattedPosts = posts.map(({ id, topic, user, comments }) => ({
+    postId: id,
+    topic,
+    userName: user.name,
+    userId: user.id,
+    userAvatar: user.avatar,
+    commentCount: comments.length,
+    latestCommentTime: comments[0]?.time || null,
+    latestCommentUserName: comments[0]?.user.name || null,
+    latestCommentUserId: comments[0]?.user.id || null,
+  }));
+
+  return {
+    posts: formattedPosts,
+    maxPage,
+  };
 }

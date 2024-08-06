@@ -1,9 +1,9 @@
 import PostList from "@components/post_list";
 import SideBar from "@components/sidebar";
-import { userGetMaxPage, userGetPost } from "@lib/posts/server-utils";
 import Sortby from "@components/sortby";
 import PagePagination from "@components/page_pagination";
 import ServiceWorkerRegistration from "@components/service_worker_registration";
+import { userGetPost } from "@lib/posts/server-utils";
 
 export default async function Home({
   searchParams,
@@ -12,8 +12,7 @@ export default async function Home({
 }) {
   const sortBy =
     searchParams.sortBy === "updatedAt" ? "updatedAt" : "createdAt";
-  const posts = await userGetPost(1, sortBy);
-  const maxPage = await userGetMaxPage();
+  const { posts, maxPage } = await userGetPost(1, sortBy);
 
   return (
     <div className="justify-between">
@@ -23,21 +22,13 @@ export default async function Home({
           <div className="flex-1">
             <ul>
               <li className="flex justify-between">
-                <Sortby sortBy={sortBy} currentUrl="/" />
-                <PagePagination
-                  maxPage={maxPage}
-                  currentPage={1}
-                  sortBy={sortBy}
-                />
+                <Sortby sortBy={sortBy} />
+                <PagePagination maxPage={maxPage} sortBy={sortBy} />
               </li>
               <PostList posts={posts} />
             </ul>
             <div className="flex justify-end pt-2">
-              <PagePagination
-                maxPage={maxPage}
-                currentPage={1}
-                sortBy={sortBy}
-              />
+              <PagePagination maxPage={maxPage} sortBy={sortBy} />
             </div>
           </div>
           <div className="flex-none w-60 hidden md:block">

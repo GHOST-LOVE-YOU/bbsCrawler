@@ -20,9 +20,9 @@ export function SearchInput() {
 
   const handleSearch = () => {
     if (selectedIndex === 0) {
-      router.push(`/search/posts/${input}`);
+      router.push(`/search/post/${input}`);
     } else if (selectedIndex === 1) {
-      router.push(`/search/users/${input}`);
+      router.push(`/search/member/${input}`);
     } else if (selectedIndex === 2) {
       window.open(`https://www.google.com/search?q=${input}`, "_blank");
     }

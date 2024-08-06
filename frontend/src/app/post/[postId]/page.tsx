@@ -1,5 +1,5 @@
 import NotificationRuleButton from "@components/notification-rule-button";
-import PostPagination from "@components/post_pagination";
+import ParamPagination from "@components/param_pagination";
 import ReplyList from "@components/reply_list";
 import SideBar from "@components/sidebar";
 import { getCommentsByPage } from "@lib/server-utils";
@@ -35,11 +35,7 @@ export default async function PostPage({
             </div>
             <ReplyList comments={result.comments} op={result.op} />
             <div className="flex justify-end">
-              <PostPagination
-                maxPage={result.maxPage}
-                currentPage={result.currentPage}
-                postId={postId}
-              />
+              <ParamPagination maxPage={result.maxPage} />
             </div>
           </div>
           <div className="flex-none w-60 hidden md:block">
