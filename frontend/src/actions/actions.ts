@@ -67,3 +67,54 @@ export async function addNotification(data: unknown) {
     };
   }
 }
+
+export async function deletebindingBot(id: string) {
+  const user = await clientGetUser();
+  if (!user) {
+    return {
+      success: false,
+      message: "You are not logged in.",
+    };
+  }
+
+  try {
+    await prisma.userBinding.deleteMany({
+      where: {
+        AND: [{ userId: user.id }, { botId: id }],
+      },
+    });
+
+    return { success: true, message: "Bot unbound successfully." };
+  } catch (error) {
+    return { success: false, message: "Error unbinding bot." };
+  }
+}
+
+export async function deleteNotificationRule(id: string) {
+  const user = await clientGetUser();
+  if (!user) {
+    return {
+      success: false,
+      message: "You are not logged in.",
+    };
+  }
+
+  try {
+    await prisma.notificationRule.delete({
+      where: {
+        id,
+        userId: user.id,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Notification rule deleted successfully.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Error deleting notification rule.",
+    };
+  }
+}

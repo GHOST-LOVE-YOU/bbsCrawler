@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 const navLinks = [
   { href: "/settings/introduction", label: "个人信息" },
   { href: "/settings/notification", label: "通知" },
-  { href: "/settings/contact", label: "联系方式" },
-  { href: "/settings/block", label: "屏蔽用户" },
-  { href: "/settings/preferences", label: "常用偏好" },
-  { href: "/settings/home", label: "首页版块" },
-  { href: "/settings/extensions", label: "论坛扩展" },
+  { href: "/settings/contact", label: "联系方式[x]" },
+  { href: "/settings/block", label: "屏蔽用户[x]" },
+  { href: "/settings/preferences", label: "常用偏好[x]" },
+  { href: "/settings/home", label: "首页版块[x]" },
+  { href: "/settings/extensions", label: "论坛扩展[x]" },
 ];
 
 const UserProfileSettings = ({ children }: { children: React.ReactNode }) => {
@@ -30,7 +30,7 @@ const UserProfileSettings = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="bg-gray-800 text-gray-200 p-6 rounded-lg max-w-4xl mx-auto">
       <div className="flex mb-6">
-        <div className="w-1/4 relative">
+        <div className="w-1/6 relative">
           <nav>
             <ul className="space-y-2">
               {navLinks.map((link) => (
@@ -64,7 +64,7 @@ const UserProfileSettings = ({ children }: { children: React.ReactNode }) => {
             </ul>
           </nav>
         </div>
-        <div className="w-3/4 space-y-6">
+        <div className="w-5/6 space-y-6">
           <motion.div
             key={selectedLink}
             initial={{ opacity: 0, x: -20 }}

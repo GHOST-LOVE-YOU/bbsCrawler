@@ -50,8 +50,6 @@ const NotificationTitle: Record<MessagesType, string> = {
   WATCHED_COMMENT_NEW_QUOTED: "你关注的帖子有新回复",
 };
 
-
-
 interface BrowserPushNotification {
   disable: boolean;
   endpoint: string;

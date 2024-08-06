@@ -1,3 +1,4 @@
+import { clientGetUser, getAvatarUrl } from "@lib/user/server-utils";
 import prisma from "../db";
 import {
   Comment,
@@ -278,4 +279,51 @@ async function handleQuotedCommentNotification(
       );
     }
   }
+}
+
+// user actions
+export type MessageWithAvatar = {
+  id: string;
+  type: MessagesType;
+  content: string;
+  isRead: boolean;
+  createdAt: Date;
+  avatarUrl: string | null;
+};
+
+function extractUserId(content: string): string | null {
+  const match = content.match(/\/space\/([0-9a-fA-F-]{36})/);
+  return match ? match[1] : null;
+}
+
+export async function userGetMessages(
+  types: MessagesType[]
+): Promise<MessageWithAvatar[]> {
+  const user = await clientGetUser();
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const messages = await prisma.message.findMany({
+    where: {
+      inbox: { userId: user.id },
+      type: { in: types },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const messagesWithAvatar: MessageWithAvatar[] = await Promise.all(
+    messages.map(async (message) => {
+      const extractedUserId = extractUserId(message.content);
+      const avatarUrl = extractedUserId
+        ? await getAvatarUrl(extractedUserId)
+        : null;
+
+      return {
+        ...message,
+        avatarUrl,
+      };
+    })
+  );
+
+  return messagesWithAvatar;
 }

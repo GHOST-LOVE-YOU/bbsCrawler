@@ -20,7 +20,7 @@ export default function NotificationMethodsList() {
   const { disabledNotificationMethods } = useNotification();
   return (
     <div className="space-y-2">
-      <h2 className="text-lg font-semibold mb-3">通知方式</h2>
+      <h2 className="text-xl font-semibold mb-3">通知方式</h2>
       {notificationMethods.map((method) => {
         const isEnabled =
           !disabledNotificationMethods[
