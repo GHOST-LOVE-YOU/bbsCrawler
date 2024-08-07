@@ -18,7 +18,7 @@ export default function NotifyCommentOverview() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold mb-3">已关联的评论</h2>
+      <h2 className="text-xl font-semibold mb-3">相关联的评论</h2>
       {Object.entries(groupedComments).map(
         ([postId, { postTitle, comments }]) => (
           <Card key={postId} className="w-full">
@@ -39,7 +39,7 @@ export default function NotifyCommentOverview() {
                       className="ml-4 shrink-0"
                       onClick={() => onDontNotify(comment.id, "COMMENT")}
                     >
-                      取消认领
+                      屏蔽
                     </Button>
                   </div>
                 ))}

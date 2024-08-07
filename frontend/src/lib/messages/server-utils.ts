@@ -301,7 +301,7 @@ export async function userGetMessages(
 ): Promise<MessageWithAvatar[]> {
   const user = await clientGetUser();
   if (!user) {
-    throw new Error("User not found");
+    return [];
   }
   const messages = await prisma.message.findMany({
     where: {
@@ -326,4 +326,31 @@ export async function userGetMessages(
   );
 
   return messagesWithAvatar;
+}
+
+export async function userGetUnreadMessageCount(): Promise<number> {
+  const user = await clientGetUser();
+
+  if (!user) {
+    return 0;
+  }
+
+  const userWithInbox = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { inbox: { select: { id: true } } },
+  });
+
+  if (!userWithInbox || !userWithInbox.inbox) {
+    return 0; // User has no inbox, so there can't be any unread messages
+  }
+
+  // Now count unread messages
+  const unreadCount = await prisma.message.count({
+    where: {
+      inbox: { id: userWithInbox.inbox.id },
+      isRead: false,
+    },
+  });
+
+  return unreadCount;
 }

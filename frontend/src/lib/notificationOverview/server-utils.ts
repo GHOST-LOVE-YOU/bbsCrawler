@@ -2,6 +2,14 @@ import "server-only";
 import prisma from "@lib/db";
 import { clientGetUser } from "@lib/user/server-utils";
 import { NotificationAction, NotificationTargetType } from "@prisma/client";
+import { toZonedTime } from "date-fns-tz";
+import {
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+  subDays,
+} from "date-fns";
 
 export async function getPostNotificationsOverview() {
   const user = await clientGetUser();
@@ -9,19 +17,39 @@ export async function getPostNotificationsOverview() {
     return [];
   }
 
-  // Get posts from direct notification rules
-  const directNotifications = await prisma.notificationRule.findMany({
+  const beijingTimeZone = "Asia/Shanghai";
+  const now = new Date();
+  const currentTimeInBeijing = toZonedTime(now, beijingTimeZone);
+  const previousMorning8AM = setMilliseconds(
+    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0),
+    0
+  );
+
+  // Get all notification rules for this user
+  const notificationRules = await prisma.notificationRule.findMany({
     where: {
       userId: user.id,
       targetType: NotificationTargetType.POST,
-      action: NotificationAction.NOTIFY,
     },
     select: {
       targetId: true,
+      action: true,
     },
   });
 
-  // Get posts from bot bindings
+  // Separate NOTIFY and DONT_NOTIFY rules
+  const notifyPostIds = new Set(
+    notificationRules
+      .filter((rule) => rule.action === NotificationAction.NOTIFY)
+      .map((rule) => rule.targetId)
+  );
+  const dontNotifyPostIds = new Set(
+    notificationRules
+      .filter((rule) => rule.action === NotificationAction.DONT_NOTIFY)
+      .map((rule) => rule.targetId)
+  );
+
+  // Get bot IDs bound to the user
   const botBindings = await prisma.userBinding.findMany({
     where: {
       userId: user.id,
@@ -30,13 +58,15 @@ export async function getPostNotificationsOverview() {
       botId: true,
     },
   });
-
   const botIds = botBindings.map((binding) => binding.botId);
 
+  // Get posts from bots with time constraint
   const postsFromBots = await prisma.post.findMany({
     where: {
-      userId: {
-        in: botIds,
+      userId: { in: botIds },
+      createdAt: { gte: previousMorning8AM },
+      AND: {
+        id: { notIn: Array.from(dontNotifyPostIds) },
       },
     },
     select: {
@@ -46,20 +76,22 @@ export async function getPostNotificationsOverview() {
 
   // Combine and deduplicate post IDs
   const allPostIds = new Set([
-    ...directNotifications.map((notification) => notification.targetId),
+    ...Array.from(notifyPostIds),
     ...postsFromBots.map((post) => post.id),
   ]);
+
+  // Remove DONT_NOTIFY posts
+  dontNotifyPostIds.forEach((id) => allPostIds.delete(id));
 
   // Fetch post details
   const postDetails = await prisma.post.findMany({
     where: {
-      id: {
-        in: Array.from(allPostIds),
-      },
+      id: { in: Array.from(allPostIds) },
     },
     select: {
       id: true,
       topic: true,
+      createdAt: true,
     },
   });
 
@@ -71,6 +103,14 @@ export async function getCommentNotificationsOverview() {
   if (!user) {
     return [];
   }
+
+  const beijingTimeZone = "Asia/Shanghai";
+  const now = new Date();
+  const currentTimeInBeijing = toZonedTime(now, beijingTimeZone);
+  const previousMorning8AM = setMilliseconds(
+    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0),
+    0
+  );
 
   // 1. Get all notification rules for this user
   const notificationRules = await prisma.notificationRule.findMany({
@@ -112,6 +152,7 @@ export async function getCommentNotificationsOverview() {
           userId: { in: botIds },
           AND: {
             id: { notIn: Array.from(dontNotifyCommentIds) },
+            time: { gte: previousMorning8AM }, // Add time constraint here
           },
         },
       ],
@@ -120,6 +161,7 @@ export async function getCommentNotificationsOverview() {
       id: true,
       content: true,
       sequence: true,
+      time: true,
       post: {
         select: {
           id: true,
@@ -134,7 +176,8 @@ export async function getCommentNotificationsOverview() {
     postId: comment.post.id,
     postTitle: comment.post.topic,
     commentSequence: comment.sequence,
-    content: comment.content,
+    content: comment.content ?? "--",
     id: comment.id,
+    time: comment.time,
   }));
 }

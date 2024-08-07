@@ -8,6 +8,7 @@ import Link from "next/link";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { getAvatarUrl, getUserByKindeId } from "@lib/user/server-utils";
+import { userGetUnreadMessageCount } from "@lib/messages/server-utils";
 
 export default async function SideBar() {
   const { getUser, isAuthenticated } = getKindeServerSession();
@@ -26,7 +27,7 @@ export default async function SideBar() {
           <>
             <UserInfo user={user} />
             <UserActions />
-            <BoundIWhisper />
+            {/* <TipsInfo /> */}
           </>
         ) : (
           <GuestInfo />
@@ -61,7 +62,9 @@ function UserInfo({ user }: { user: any }) {
               <span className="icon-[ph--user-bold] bg-zinc-300 hover:bg-white" />
             </Link>
             <button className="bg-dark text-white rounded-md pl-1 pt-0.5">
-              <span className="icon-[material-symbols--settings] bg-zinc-300 hover:bg-white" />
+              <Link href="/settings/notification-rule" passHref>
+                <span className="icon-[material-symbols--settings] bg-zinc-300 hover:bg-white" />
+              </Link>
             </button>
             <LogoutLink>
               <button className="bg-dark text-white rounded-md pl-1 pt-0.5">
@@ -75,7 +78,8 @@ function UserInfo({ user }: { user: any }) {
   );
 }
 
-function UserActions() {
+async function UserActions() {
+  const unreadCount = await userGetUnreadMessageCount();
   return (
     <div className="bg-zinc-700 rounded-md p-2 mt-4">
       <div className="flex flex-row">
@@ -97,10 +101,25 @@ function UserActions() {
         </div>
         <div className="flex basis-1/2">
           <div className="flex flex-col">
-            <div className="text-zinc-300 hover:text-white cursor-pointer">
-              <div className="flex flex-row">
-                <span className="icon-[basil--notification-on-solid] text-xl" />
-                <p className="pl-1">通知</p>
+            <div className="text-zinc-300 hover:text-white cursor-pointer relative">
+              <div className="flex flex-row items-center">
+                <div className="relative">
+                  <span
+                    className={`icon-[basil--notification-on-solid] text-xl ${
+                      unreadCount > 0 ? "text-red-500" : ""
+                    }`}
+                  />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3 flex items-center justify-center text-xs text-white font-bold">
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
+                <p className="pl-1">
+                  <Link href="/inbox/comment" passHref>
+                    通知
+                  </Link>
+                </p>
               </div>
             </div>
             <div className="text-zinc-300 hover:text-white cursor-pointer pt-1">
@@ -129,7 +148,7 @@ function GuestInfo() {
           登录
         </button>
       </LoginLink>
-      <RegisterLink postLoginRedirectURL="/dashboard">
+      <RegisterLink postLoginRedirectURL="/">
         <button className="bg-green-500 hover:bg-green-600 text-white rounded-md p-1 mt-2 w-16 ml-5">
           注册
         </button>
@@ -138,20 +157,13 @@ function GuestInfo() {
   );
 }
 
-function BoundIWhisper() {
+function TipsInfo() {
   return (
-    <>
-      <div className="bg-green-500 hover:bg-green-600 rounded-xl p-2 mt-4">
-        <p className="text-white text-center cursor-pointer">IWhisper#118</p>
-      </div>
-      <div className="bg-green-500 hover:bg-green-600 rounded-xl p-2 mt-4">
-        <div className="block text-white text-center cursor-pointer">
-          <div className="flex flex-row justify-center">
-            <span className="icon-[ant-design--plus-circle-outlined] text-2xl" />
-            <p className="pl-2">绑定IWhisper</p>
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="mt-6 p-2 border-2 border-black rounded-md shadow-md">
+      <p className="text-zinc-300 text-lg font-bold">欢迎登陆</p>
+      <p className="text-zinc-300 pt-1 font-mono text-justify">
+        本站主要目的是悄悄话通知, 详细介绍请看该帖子
+      </p>
+    </div>
   );
 }

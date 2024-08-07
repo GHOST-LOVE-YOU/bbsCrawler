@@ -9,7 +9,10 @@ import { clientGetUser, getAvatarUrl } from "@lib/user/server-utils";
 
 export default async function UserProfilePage() {
   const user = await clientGetUser();
-  const avatarUrl = user!.avatar ? user!.avatar : await getAvatarUrl(user!.id);
+  if (!user) {
+    return null;
+  }
+  const avatarUrl = user.avatar ? user.avatar : await getAvatarUrl(user!.id);
   return (
     <div className="p-4">
       <div>

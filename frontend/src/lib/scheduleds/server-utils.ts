@@ -41,7 +41,3 @@ export async function updateTaskStatus({
     });
   }
 }
-
-export async function getScheduledTask() {
-  return await prisma.scheduledTask.findMany();
-}

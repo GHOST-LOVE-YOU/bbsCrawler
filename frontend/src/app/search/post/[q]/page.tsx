@@ -15,11 +15,12 @@ export default async function PostListPage({
   params,
   searchParams,
 }: PostListPageProps) {
-  const q = params.q;
+  const q = decodeURIComponent(params.q);
   const page = parseInt(searchParams.page as string) || 1;
   const sortBy =
     searchParams.sortBy === "updatedAt" ? "updatedAt" : "createdAt";
   const { posts, maxPage } = await searchPostsByKeyword(q, page);
+  console.log(posts);
   return (
     <div className="justify-between">
       <div className="container mx-auto max-w-5xl bg-nodedark border-black border-2 rounded-xl shadow-2xl my-4 px-6 ">

@@ -8,7 +8,11 @@ export async function getNotifications() {
   const user = await clientGetUser();
 
   if (!user) {
-    throw new Error("User not found");
+    return {
+      emailNotification: null,
+      telegramNotification: null,
+      browserPushNotification: null,
+    };
   }
 
   try {

@@ -31,7 +31,7 @@ export default function NotifyPostOverview() {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xl font-semibold mb-3">已认领的帖子</h2>
+      <h2 className="text-xl font-semibold mb-3">相关联的帖子</h2>
       {notifyPostOverview.map((post) => (
         <PostCard key={post.id} post={post} onUnclaim={onDontNotify} />
       ))}
