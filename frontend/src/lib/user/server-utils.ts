@@ -3,6 +3,8 @@ import "server-only";
 import prisma from "@lib/db";
 import { UserTag } from "@prisma/client";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { toZonedTime } from "date-fns-tz";
+import { setHours, setMilliseconds, setMinutes, setSeconds, subDays } from "date-fns";
 
 export async function addBotUser(name: string) {
   const newUser = await prisma.user.create({
@@ -85,33 +87,6 @@ export async function getUserByUserId(userId: string) {
   });
 }
 
-export async function getUserOverview(userId: string) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      posts: true,
-      comments: true,
-    },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const joinedDays = Math.floor(
-    (new Date().getTime() - new Date(user.createdAt).getTime()) /
-      (1000 * 60 * 60 * 24)
-  );
-  const postCount = user.posts.length;
-  const commentCount = user.comments.length;
-
-  return {
-    joinedDays,
-    postCount,
-    commentCount,
-  };
-}
-
 export async function searchUserByName(name: string) {
   const user = await clientGetUser();
   if (!user) {
@@ -124,4 +99,73 @@ export async function searchUserByName(name: string) {
       },
     },
   });
+}
+
+export async function getOptimizedUserData(userId: string) {
+  const beijingTimeZone = "Asia/Shanghai";
+  const now = new Date();
+  const currentTimeInBeijing = toZonedTime(now, beijingTimeZone);
+  const previousMorning8AM = setMilliseconds(
+    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0), 0
+  );
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      posts: {
+        where: {
+          createdAt: { gte: previousMorning8AM }
+        },
+        select: {
+          id: true,
+          topic: true,
+        }
+      },
+      comments: {
+        where: {
+          time: { gte: previousMorning8AM }
+        },
+        select: {
+          postId: true,
+          sequence: true,
+          content: true,
+          post: {
+            select: {
+              topic: true,
+            },
+          },
+        },
+        orderBy: {
+          time: 'desc',
+        },
+      },
+      _count: {
+        select: {
+          posts: true,
+          comments: true,
+        }
+      }
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const joinedDays = Math.floor(
+    (new Date().getTime() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  return {
+    joinedDays,
+    postCount: user._count.posts,
+    commentCount: user._count.comments,
+    topicsList: user.posts,
+    commentsList: user.comments.map((comment) => ({
+      postId: comment.postId,
+      postTitle: comment.post.topic,
+      commentSequence: comment.sequence,
+      content: comment.content,
+    })),
+  };
 }

@@ -4,6 +4,14 @@ import prisma from "@lib/db";
 import { getUser } from "@lib/user/server-utils";
 import { commentSchema } from "@lib/validations";
 import { autoHandleNewComment } from "@lib/messages/server-utils";
+import { toZonedTime } from "date-fns-tz";
+import {
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+  subDays,
+} from "date-fns";
 
 export async function autoAddComment(Comment: unknown, post_id: string) {
   const validatedComment = commentSchema.parse(Comment);
@@ -41,3 +49,4 @@ export async function autoAddComment(Comment: unknown, post_id: string) {
   }
   return { message: "Comment added successfully", success: true };
 }
+

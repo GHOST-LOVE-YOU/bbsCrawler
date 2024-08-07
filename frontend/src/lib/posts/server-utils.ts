@@ -92,30 +92,6 @@ export async function userGetPost(
   };
 }
 
-export async function getPostByUserId(userId: string) {
-  const beijingTimeZone = "Asia/Shanghai";
-  const now = new Date();
-  const currentTimeInBeijing = toZonedTime(now, beijingTimeZone);
-  const previousMorning8AM = setMilliseconds(
-    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0),
-    0
-  );
-  const posts = await prisma.post.findMany({
-    where: {
-      userId: userId,
-      createdAt: {
-        gte: previousMorning8AM,
-      },
-    },
-    select: {
-      id: true,
-      topic: true,
-    },
-  });
-
-  return posts;
-}
-
 export async function searchPostsByKeyword(keyword: string, page: number) {
   const pageSize = 50;
   const skip = pageSize * (page - 1);

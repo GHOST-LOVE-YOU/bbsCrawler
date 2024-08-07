@@ -6,11 +6,11 @@ import { Clock, Diamond, Search, PenLine, MessageSquare } from "lucide-react";
 import {
   clientGetUser,
   getAvatarUrl,
+  getOptimizedUserData,
   getUserByUserId,
-  getUserOverview,
 } from "@lib/user/server-utils";
-import SpaceTopic from "@components/space_topic";
-import { getPostByUserId } from "@lib/posts/server-utils";
+import SpaceTopic from "@components/space-topic";
+import SpaceComment from "@components/space-comment";
 import { Badge } from "@components/ui/badge";
 import BindingsButton from "@components/bindings-button";
 
@@ -23,10 +23,8 @@ export default async function Page({ params }: { params: { userId: string } }) {
   if (!currentUser) {
     return <div>Unauthorized</div>;
   }
-  const { joinedDays, postCount, commentCount } = await getUserOverview(
-    params.userId
-  );
-  const topicsList = await getPostByUserId(params.userId);
+  const { joinedDays, postCount, commentCount, topicsList, commentsList } =
+    await getOptimizedUserData(params.userId);
   const showBindingsButton =
     currentUser && !currentUser.tag.includes("bot") && user.tag.includes("bot");
   return (
@@ -64,44 +62,18 @@ export default async function Page({ params }: { params: { userId: string } }) {
           <TabsTrigger value="comments">评论</TabsTrigger>
           <TabsTrigger value="bookmarks">收藏</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-4">
-            <StatCard
-              icon={<Clock className="w-6 h-6" />}
-              label="加入天数"
-              value={joinedDays}
-            />
-            <StatCard
-              icon={<Diamond className="w-6 h-6" />}
-              label="等级"
-              value="2"
-            />
-            <StatCard
-              icon={<Search className="w-6 h-6" />}
-              label="鸡腿数目"
-              value="699"
-            />
-            <StatCard
-              icon={<PenLine className="w-6 h-6" />}
-              label="主题帖数"
-              value={postCount}
-            />
-            <StatCard
-              icon={<MessageSquare className="w-6 h-6" />}
-              label="评论数目"
-              value={commentCount}
-            />
-          </div>
-          <Card className="mt-4 bg-stone-600">
-            <CardContent className="pt-6">
-              <p className="text-stone-300">没有找到readme🙁</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <OverviewContent
+          joinedDays={joinedDays}
+          postCount={postCount}
+          commentCount={commentCount}
+        />
+
         <TabsContent value="topics">
           <SpaceTopic topicsList={topicsList} />
         </TabsContent>
-        <TabsContent value="comments">评论内容</TabsContent>
+        <TabsContent value="comments">
+          <SpaceComment commentsList={commentsList} />
+        </TabsContent>
         <TabsContent value="bookmarks">收藏内容</TabsContent>
       </Tabs>
     </div>
@@ -116,4 +88,37 @@ const StatCard = ({ icon, label, value }: any) => (
       <p className="text-stone-100 font-bold">{value}</p>
     </CardContent>
   </Card>
+);
+
+const OverviewContent = ({ joinedDays, postCount, commentCount }: any) => (
+  <TabsContent value="overview">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-4">
+      <StatCard
+        icon={<Clock className="w-6 h-6" />}
+        label="加入天数"
+        value={joinedDays}
+      />
+      <StatCard icon={<Diamond className="w-6 h-6" />} label="等级" value="2" />
+      <StatCard
+        icon={<Search className="w-6 h-6" />}
+        label="鸡腿数目"
+        value="9999"
+      />
+      <StatCard
+        icon={<PenLine className="w-6 h-6" />}
+        label="主题帖数"
+        value={postCount}
+      />
+      <StatCard
+        icon={<MessageSquare className="w-6 h-6" />}
+        label="评论数目"
+        value={commentCount}
+      />
+    </div>
+    <Card className="mt-4 bg-stone-600">
+      <CardContent className="pt-6">
+        <p className="text-stone-300">没有找到readme🙁</p>
+      </CardContent>
+    </Card>
+  </TabsContent>
 );

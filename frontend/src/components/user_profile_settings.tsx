@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 
 const navLinks = [
   { href: "/settings/introduction", label: "个人信息" },
-  { href: "/settings/notification", label: "通知" },
-  { href: "/settings/contact", label: "联系方式[x]" },
+  { href: "/settings/notification-rule", label: "通知规则" },
+  { href: "/settings/notification-overview", label: "通知预览" },
   { href: "/settings/block", label: "屏蔽用户[x]" },
   { href: "/settings/preferences", label: "常用偏好[x]" },
   { href: "/settings/home", label: "首页版块[x]" },
