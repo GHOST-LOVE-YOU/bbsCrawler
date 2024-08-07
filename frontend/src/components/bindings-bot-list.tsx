@@ -6,6 +6,7 @@ import { useNotificationRule } from "@contexts/notification-rule-context-provide
 import Image from "next/image";
 import type { BindingsBot } from "@lib/bindings/type";
 import moment from "moment";
+import Link from "next/link";
 
 moment.locale("zh-cn");
 
@@ -26,7 +27,9 @@ const BotCard = ({ bot, onUnbind }: BotCardProps) => (
       />
       <div>
         <div className="flex items-center">
-          <span className="font-semibold mr-2 text-slate-800">{bot.name}</span>
+          <span className="font-semibold mr-2 text-slate-800">
+            <Link href={`/space/${bot.id}`}>{bot.name}</Link>
+          </span>
           <Bot size={16} className="text-blue-500" />
         </div>
         <span className="text-sm text-gray-500">

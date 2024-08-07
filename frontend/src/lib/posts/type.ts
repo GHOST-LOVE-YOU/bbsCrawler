@@ -3,3 +3,8 @@ type notifyPost = {
   targetId: string;
   title: string;
 };
+
+type notifyPostOverView = {
+  id: string;
+  topic: string;
+};

@@ -1,8 +1,8 @@
-import { getOneDayCommentByUserId } from "@lib/comments/server-utils";
+import { getCommentNotificationsOverview } from "@lib/notificationOverview/server-utils";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const notifyCommentList = await getOneDayCommentByUserId("e8aaffab-c53f-421b-8b04-baf299043556");
+  const data = await getCommentNotificationsOverview();
 
-  return NextResponse.json({ notifyCommentList });
+  return NextResponse.json({ data });
 }
