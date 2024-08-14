@@ -4,6 +4,7 @@ import { NotificationAction, NotificationTargetType } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Bell, BellOff } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type NotificationRuleButtonProps = {
   targetType: NotificationTargetType;
@@ -71,7 +72,16 @@ export default function NotificationRuleButton({
           disabled={isLoading}
           variant={isBound ? "default" : "outline"}
           size="sm"
-          className="text-zinc-400 hover:text-zinc-600"
+          className={cn(
+            "text-text-light dark:text-text-dark",
+            "hover:text-primary dark:hover:text-primary-dark",
+            "bg-background-light dark:bg-background-dark",
+            "border border-gray-300 dark:border-gray-700",
+            "transition-colors duration-200",
+            {
+              "bg-primary dark:bg-primary-dark text-white": isBound,
+            }
+          )}
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />

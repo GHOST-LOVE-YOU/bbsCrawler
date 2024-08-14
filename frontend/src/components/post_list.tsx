@@ -1,86 +1,73 @@
-// "use client";
-
 import Image from "next/legacy/image";
 import moment from "moment";
 import "moment/locale/zh-cn";
 import { getAvatarUrl } from "@lib/user/server-utils";
 import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 moment.locale("zh-cn");
 
-interface Post {
-  postId: string;
-  topic: string;
-  userName: string;
-  userId: string;
-  commentCount: number;
-  latestCommentTime: Date | null;
-  latestCommentUserName: string | null;
-  latestCommentUserId: string | null;
-}
-
 interface PostListProps {
-  posts: Post[];
+  posts: listPost[];
+  sortBy: sortByType;
 }
 
-export default function PostList({ posts }: PostListProps) {
+export default function PostList({ posts, sortBy }: PostListProps) {
   return (
-    <ul>
+    <ul className="divide-y divide-gray-200 dark:divide-gray-700 w-full">
       {posts.map((post) => (
-        <div key={post.postId} className="py-2 border-zinc-900 border-b-2">
-          <li>
-            <div className="flex flex-row">
-              <div className="flex-none pt-1">
-                <Link href={`/space/${post.userId}`} passHref>
-                  <Image
-                    src={getAvatarUrl(post.postId)}
-                    alt="1"
-                    width={40}
-                    height={40}
-                    className="rounded-md"
-                  />
-                </Link>
-              </div>
-              <div className="px-2 flex-1">
-                <div className="flex flex-col">
-                  <p className="pt-0.5 font-mono text-lg font-semibold text-zinc-100">
-                    <a href={`/post/${post.postId}`}>{post.topic}</a>
-                  </p>
+        <li key={post.postId} className="py-4">
+          <div className="flex items-start space-x-2 sm:space-x-4">
+            <Link
+              href={`/space/${post.userId}`}
+              passHref
+              className="flex-shrink-0"
+            >
+              <Image
+                src={getAvatarUrl(post.postId)}
+                alt="User avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            </Link>
+            <div className="flex-grow min-w-0">
+              <p className="text-base sm:text-lg font-semibold text-text-light dark:text-text-dark truncate">
+                <Link href={`/post/${post.postId}`}>{post.topic}</Link>
+              </p>
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center space-x-1">
+                  <span className="icon-[ph--user]" />
+                  <Link href={`/space/${post.userId}`}>{post.userName}</Link>
                 </div>
-                <div className="inline-flex font-sans text-slate-200 space-x-4">
-                  <div className="flex items-center space-x-1">
-                    <span className="icon-[ph--user]" />
-                    <p className="relative bottom-0.5">
-                      <a href={`/space/${post.userId}`}>{post.userName}</a>
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <span className="icon-[clarity--eye-show-line]" />
-                    <p className="relative bottom-0.5">000</p>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <span className="icon-[tabler--message]" />
-                    <p className="relative bottom-0.5">{post.commentCount}</p>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <span className="icon-[carbon--user-activity]" />
-                    <p className="relative bottom-0.5">
-                      {post.latestCommentUserName}
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <span className="icon-[bx--time-five]" />
-                    <p className="relative bottom-0.5">
-                      {post.latestCommentTime
-                        ? moment(post.latestCommentTime).fromNow()
-                        : "N/A"}
-                    </p>
-                  </div>
+                <div className="hidden sm:flex items-center space-x-1">
+                  <span className="icon-[clarity--eye-show-line]" />
+                  <span>000</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="icon-[tabler--message]" />
+                  <span>{post.commentCount}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="icon-[carbon--user-activity]" />
+                  <Link href={`/space/${post.latestCommentUserId}`}>
+                    {post.latestCommentUserName}
+                  </Link>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="icon-[bx--time-five]" />
+                  <span>
+                    {sortBy === "createdAt"
+                      ? moment(post.createdAtTime).fromNow()
+                      : post.latestCommentTime
+                      ? moment(post.latestCommentTime).fromNow()
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
             </div>
-          </li>
-        </div>
+          </div>
+        </li>
       ))}
     </ul>
   );

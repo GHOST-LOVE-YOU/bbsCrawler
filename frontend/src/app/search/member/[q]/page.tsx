@@ -8,7 +8,7 @@ import BindingsButton from "@components/bindings-button";
 import { Badge } from "@components/ui/badge";
 
 const UserCard: React.FC<{ user: User }> = ({ user }) => (
-  <Card className="bg-gray-800 text-white hover:shadow-lg transition-shadow duration-300">
+  <Card className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark hover:shadow-lg transition-shadow duration-300 border border-gray-300 dark:border-gray-700">
     <CardContent className="p-6">
       <div className="flex items-center mb-4">
         <div className="relative mr-4">
@@ -29,7 +29,7 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
               </Badge>
             )}
           </h3>
-          <p className="text-sm text-gray-400">Joined 999 days ago</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Joined 999 days ago</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm">
@@ -53,7 +53,7 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
         </div>
       </div>
     </CardContent>
-    <CardFooter className="p-4 bg-gray-700">
+    <CardFooter className="p-4 bg-gray-100 dark:bg-gray-800">
       <BindingsButton botUserId={user.id} />
     </CardFooter>
   </Card>
@@ -70,11 +70,11 @@ export default async function UserListPage({ params }: UserListPageProps) {
   const users: User[] = await searchUserByName(q);
 
   return (
-    <div className="p-6 ">
+    <div className="p-6 bg-background-light dark:bg-background-dark">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center mb-8">
-          <Users className="text-white mr-3 h-8 w-8" />
-          <h1 className="text-white text-3xl font-bold">查找用户</h1>
+          <Users className="text-text-light dark:text-text-dark mr-3 h-8 w-8" />
+          <h1 className="text-text-light dark:text-text-dark text-3xl font-bold">查找用户</h1>
         </div>
         {users.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -83,7 +83,7 @@ export default async function UserListPage({ params }: UserListPageProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center text-white text-xl mt-12">
+          <div className="text-center text-text-light dark:text-text-dark text-xl mt-12">
             未找到匹配的用户。
           </div>
         )}

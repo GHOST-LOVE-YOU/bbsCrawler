@@ -4,9 +4,15 @@ import prisma from "@lib/db";
 import { UserTag } from "@prisma/client";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { toZonedTime } from "date-fns-tz";
-import { setHours, setMilliseconds, setMinutes, setSeconds, subDays } from "date-fns";
+import {
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+  subDays,
+} from "date-fns";
 
-export async function addBotUser(name: string) {
+export async function addBot(name: string) {
   const newUser = await prisma.user.create({
     data: {
       name: name,
@@ -31,16 +37,16 @@ export async function clientGetUser() {
   return user;
 }
 
-export async function getUser(name: string, tag: UserTag) {
+export async function autoGetBot(name: string) {
   return (
     (await prisma.user.findFirst({
       where: {
         name,
         tag: {
-          has: tag,
+          has: UserTag.bot,
         },
       },
-    })) ?? (await addBotUser(name))
+    })) ?? (await addBot(name))
   );
 }
 
@@ -106,7 +112,8 @@ export async function getOptimizedUserData(userId: string) {
   const now = new Date();
   const currentTimeInBeijing = toZonedTime(now, beijingTimeZone);
   const previousMorning8AM = setMilliseconds(
-    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0), 0
+    setSeconds(setMinutes(setHours(subDays(currentTimeInBeijing, 1), 8), 0), 0),
+    0
   );
 
   const user = await prisma.user.findUnique({
@@ -114,16 +121,16 @@ export async function getOptimizedUserData(userId: string) {
     include: {
       posts: {
         where: {
-          createdAt: { gte: previousMorning8AM }
+          createdAt: { gte: previousMorning8AM },
         },
         select: {
           id: true,
           topic: true,
-        }
+        },
       },
       comments: {
         where: {
-          time: { gte: previousMorning8AM }
+          time: { gte: previousMorning8AM },
         },
         select: {
           postId: true,
@@ -136,15 +143,15 @@ export async function getOptimizedUserData(userId: string) {
           },
         },
         orderBy: {
-          time: 'desc',
+          time: "desc",
         },
       },
       _count: {
         select: {
           posts: true,
           comments: true,
-        }
-      }
+        },
+      },
     },
   });
 
@@ -153,7 +160,8 @@ export async function getOptimizedUserData(userId: string) {
   }
 
   const joinedDays = Math.floor(
-    (new Date().getTime() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+    (new Date().getTime() - new Date(user.createdAt).getTime()) /
+      (1000 * 60 * 60 * 24)
   );
 
   return {

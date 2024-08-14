@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { withAccelerate } from '@prisma/extension-accelerate';
 import { sendMessage } from "./notifications/server-utils";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient().$extends({
+  return new PrismaClient().$extends(withAccelerate()).$extends({
     query: {
       message: {
         async create({ args, query }) {

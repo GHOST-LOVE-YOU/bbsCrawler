@@ -23,9 +23,11 @@ export default async function SettingsLayout({
   }
   const avatarUrl = user.avatar ? user.avatar : await getAvatarUrl(user.id);
   return (
-    <div className="p-4">
-      <UserProfileHeader avatarUrl={avatarUrl} userName={user.name} />
-      <UserProfileSettings>{children}</UserProfileSettings>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <UserProfileHeader avatarUrl={avatarUrl} userName={user.name} />
+        <UserProfileSettings>{children}</UserProfileSettings>
+      </div>
     </div>
   );
 }

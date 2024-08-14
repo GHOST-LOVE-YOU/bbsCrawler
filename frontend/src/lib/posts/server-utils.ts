@@ -2,34 +2,23 @@ import "server-only";
 
 import prisma from "@lib/db";
 import { autoPostSchema } from "@lib/validations";
-import { getUser } from "@lib/user/server-utils";
-import {
-  subDays,
-  setHours,
-  setMinutes,
-  setSeconds,
-  setMilliseconds,
-  format,
-} from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { autoGetBot } from "@lib/user/server-utils";
 
 // ---- auto ----
-export async function checkPostExistByByrId(byr_id: string) {
-  return await prisma.post.findUnique({
-    where: {
-      byr_id,
-    },
-  });
-}
-
 export async function autoGetPost(data: unknown) {
   const validatedPost = autoPostSchema.parse(data);
 
-  const post = await checkPostExistByByrId(validatedPost.byr_id);
-  if (post) {
-    return { created: false, post };
+  const existingPost = await prisma.post.findUnique({
+    where: {
+      byr_id: validatedPost.byr_id,
+    },
+  });
+
+  if (existingPost) {
+    return { created: false, post: existingPost };
   }
-  const user = await getUser(validatedPost.userName, "bot");
+
+  const user = await autoGetBot(validatedPost.userName);
   const { userName, ...postData } = validatedPost;
   const newPost = await prisma.post.create({
     data: {
@@ -38,6 +27,7 @@ export async function autoGetPost(data: unknown) {
       userId: user.id,
     },
   });
+
   // 有一个新帖子发布了
   return { created: true, post: newPost };
 }
@@ -68,26 +58,42 @@ export async function userGetPost(
           },
         },
       },
+      cacheStrategy: { ttl: 60, swr: 120 }, // Cache for 1 minute, serve stale for up to 2 minutes
     }),
-    prisma.post.count(),
+    prisma.post.count({
+      cacheStrategy: { ttl: 300, swr: 600 }, // Cache count for 5 minutes, serve stale for up to 10 minutes
+    }),
   ]);
 
   const maxPage = Math.ceil(totalCount / pageSize);
 
-  const formattedPosts = posts.map(({ id, topic, user, comments }) => ({
-    postId: id,
-    topic,
-    userName: user.name,
-    userId: user.id,
-    userAvatar: user.avatar,
-    commentCount: comments.length,
-    latestCommentTime: comments[0]?.time || null,
-    latestCommentUserName: comments[0]?.user.name || null,
-    latestCommentUserId: comments[0]?.user.id || null,
-  }));
+  const formattedPosts = posts.map(
+    ({ id, topic, user, comments, createdAt }) => ({
+      postId: id,
+      topic,
+      userName: user.name,
+      userId: user.id,
+      userAvatar: user.avatar,
+      commentCount: comments.length,
+      latestCommentTime: comments[0]?.time || null,
+      latestCommentUserName: comments[0]?.user.name || null,
+      latestCommentUserId: comments[0]?.user.id || null,
+      createdAtTime: createdAt,
+    })
+  );
+
+  const sortedPosts = formattedPosts.sort((a, b) => {
+    if (sortBy === "createdAt") {
+      return b.createdAtTime.getTime() - a.createdAtTime.getTime();
+    } else {
+      const aTime = a.latestCommentTime || a.createdAtTime;
+      const bTime = b.latestCommentTime || b.createdAtTime;
+      return bTime.getTime() - aTime.getTime();
+    }
+  });
 
   return {
-    posts: formattedPosts,
+    posts: sortedPosts,
     maxPage,
   };
 }
@@ -120,6 +126,7 @@ export async function searchPostsByKeyword(keyword: string, page: number) {
           },
         },
       },
+      cacheStrategy: { ttl: 30, swr: 60 }, // Cache for 30 seconds, serve stale for up to 1 minute
     }),
     prisma.post.count({
       where: {
@@ -128,25 +135,95 @@ export async function searchPostsByKeyword(keyword: string, page: number) {
           mode: "insensitive",
         },
       },
+      cacheStrategy: { ttl: 60, swr: 120 }, // Cache count for 1 minute, serve stale for up to 2 minutes
     }),
   ]);
 
   const maxPage = Math.ceil(totalCount / pageSize);
 
-  const formattedPosts = posts.map(({ id, topic, user, comments }) => ({
-    postId: id,
-    topic,
-    userName: user.name,
-    userId: user.id,
-    userAvatar: user.avatar,
-    commentCount: comments.length,
-    latestCommentTime: comments[0]?.time || null,
-    latestCommentUserName: comments[0]?.user.name || null,
-    latestCommentUserId: comments[0]?.user.id || null,
-  }));
+  const formattedPosts = posts.map(
+    ({ id, topic, user, comments, createdAt }) => ({
+      postId: id,
+      topic,
+      userName: user.name,
+      userId: user.id,
+      userAvatar: user.avatar,
+      commentCount: comments.length,
+      latestCommentTime: comments[0]?.time || null,
+      latestCommentUserName: comments[0]?.user.name || null,
+      latestCommentUserId: comments[0]?.user.id || null,
+      createdAtTime: createdAt,
+    })
+  );
 
   return {
     posts: formattedPosts,
+    maxPage,
+  };
+}
+
+export async function searchCommentsByKeyword(keyword: string, page: number) {
+  const pageSize = 10;
+
+  // 首先获取所有匹配的评论
+  const allMatchingComments = await prisma.comment.findMany({
+    where: {
+      content: {
+        contains: keyword,
+        mode: "insensitive",
+      },
+    },
+    orderBy: {
+      time: "desc",
+    },
+    include: {
+      post: {
+        select: {
+          id: true,
+          topic: true,
+        },
+      },
+    },
+  });
+
+  // 过滤掉引用内容
+  const filteredComments = allMatchingComments.filter(comment => {
+    const contentWithoutQuote = comment.content?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, '').trim() || "";
+    return contentWithoutQuote.toLowerCase().includes(keyword.toLowerCase());
+  });
+
+  // 按帖子分组
+  const groupedComments = filteredComments.reduce((acc, comment) => {
+    if (!acc[comment.post.id]) {
+      acc[comment.post.id] = [];
+    }
+    acc[comment.post.id].push(comment);
+    return acc;
+  }, {} as Record<string, typeof filteredComments>);
+
+  // 计算分页
+  const groupKeys = Object.keys(groupedComments);
+  const totalGroups = groupKeys.length;
+  const maxPage = Math.ceil(totalGroups / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  // 获取当前页的评论组
+  const currentPageGroups = groupKeys.slice(startIndex, endIndex);
+
+  // 格式化结果
+  const formattedComments: notifyComment[] = currentPageGroups.flatMap(postId => 
+    groupedComments[postId].map(({ id, content, sequence, post }) => ({
+      id,
+      postId: post.id,
+      postTitle: post.topic,
+      commentSequence: sequence,
+      content: content?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, '').trim() || "--",
+    }))
+  );
+
+  return {
+    comments: formattedComments,
     maxPage,
   };
 }

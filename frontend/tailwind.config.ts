@@ -1,44 +1,42 @@
-import type { Config } from "tailwindcss"
-const { addDynamicIconSelectors } = require('@iconify/tailwind')
+import type { Config } from "tailwindcss";
+const { addDynamicIconSelectors } = require("@iconify/tailwind");
 
 const config = {
-  darkMode: ["class"],
+  darkMode: ["selector"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
-        nodedark: "#272727",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+        primary: {
+          DEFAULT: "#3b82f6",
+          dark: "#2563eb",
         },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        secondary: {
+          DEFAULT: "#10b981",
+          dark: "#059669",
         },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        background: {
+          light: "#f3f4f6",
+          dark: "#1f2937",
+        },
+        text: {
+          light: "#1f2937",
+          dark: "#f3f4f6",
+        },
+        accent: {
+          light: "#6366f1",
+          dark: "#4f46e5",
+        },
+        nodedark: "#1a1a1a",
       },
     },
   },
   plugins: [require("tailwindcss-animate"), addDynamicIconSelectors()],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

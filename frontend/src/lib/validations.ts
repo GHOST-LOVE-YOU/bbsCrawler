@@ -9,13 +9,8 @@ export const autoPostSchema = z
     userName: z.string(),
   })
   .transform((data) => {
-    const adjustTime = (dateString: string): Date => {
-      const date = new Date(dateString);
-      return new Date(date.getTime() - 8 * 60 * 60 * 1000);
-    };
-
     const createdAt =
-      data.createdAt === "unknow" ? new Date() : adjustTime(data.createdAt);
+      data.createdAt === "unknow" ? new Date() : new Date(data.createdAt);
 
     return {
       ...data,

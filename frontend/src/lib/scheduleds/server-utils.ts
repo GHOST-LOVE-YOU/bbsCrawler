@@ -11,9 +11,19 @@ type updateTaskStatusProps = {
 };
 
 // 计算下次运行时间
-async function calculateNextRunTime(cron: string) {
-  const job = schedule.scheduleJob(cron, () => {});
-  return job.nextInvocation();
+async function calculateNextRunTime(cron: string): Promise<Date | null> {
+  try {
+    const job = schedule.scheduleJob(cron, () => {});
+    if (job) {
+      const nextInvocation = job.nextInvocation();
+      job.cancel(); // 取消作业以避免内存泄漏
+      return nextInvocation instanceof Date ? nextInvocation : null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error calculating next run time:", error);
+    return null;
+  }
 }
 
 export async function updateTaskStatus({
@@ -28,7 +38,7 @@ export async function updateTaskStatus({
       data: {
         lastRun: new Date(),
         status: "running",
-        nextRun: nextRun,
+        nextRun: nextRun ? nextRun : undefined,
       },
     });
   } else {

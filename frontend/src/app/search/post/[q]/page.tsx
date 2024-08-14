@@ -20,20 +20,20 @@ export default async function PostListPage({
   const sortBy =
     searchParams.sortBy === "updatedAt" ? "updatedAt" : "createdAt";
   const { posts, maxPage } = await searchPostsByKeyword(q, page);
-  console.log(posts);
+
   return (
     <div className="justify-between">
-      <div className="container mx-auto max-w-5xl bg-nodedark border-black border-2 rounded-xl shadow-2xl my-4 px-6 ">
+      <div className="container mx-auto max-w-5xl bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 border-2 rounded-xl shadow-2xl my-4 px-6">
         <div className="flex flex-row py-4">
           <div className="flex-1">
             <ul>
-              <li className="flex justify-between">
+              <li className="flex justify-between items-center mb-4">
                 <Sortby sortBy={sortBy} />
                 <ParamPagination maxPage={maxPage} />
               </li>
-              <PostList posts={posts} />
+              <PostList posts={posts} sortBy={sortBy} />
             </ul>
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-end pt-4">
               <ParamPagination maxPage={maxPage} />
             </div>
           </div>

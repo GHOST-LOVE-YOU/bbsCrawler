@@ -16,7 +16,6 @@ const navLinks = [
 ];
 
 const UserProfileSettings = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter();
   const [selectedLink, setSelectedLink] = useState("");
 
   useEffect(() => {
@@ -28,11 +27,11 @@ const UserProfileSettings = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="bg-gray-800 text-gray-200 p-6 rounded-lg max-w-4xl mx-auto">
-      <div className="flex mb-6">
+    <div className="bg-gray-800 text-gray-200 p-2 rounded-lg max-w-4xl mx-auto">
+      <div className="flex mb-0">
         <div className="w-1/6 relative">
           <nav>
-            <ul className="space-y-2">
+            <ul className="space-y-2 mb-6">
               {navLinks.map((link) => (
                 <li key={link.href} className="relative">
                   <Link href={link.href}>

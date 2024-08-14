@@ -10,8 +10,6 @@ import {
 } from "@prisma/client";
 
 export async function autoHandleNewComment(comment: Comment) {
-  // console.log("New comment created", comment);
-
   try {
     // 1. 获取评论作者、帖子和帖子作者
     const [commentAuthor, post] = await Promise.all([

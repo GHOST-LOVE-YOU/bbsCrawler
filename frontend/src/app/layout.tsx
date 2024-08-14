@@ -19,8 +19,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="grid-background"></div>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+          if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+          } else {
+            document.documentElement.classList.remove('dark')
+          }
+        `,
+          }}
+        />
+      </head>
+      <body
+        className={`${inter.className} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+      >
+        <div className="md:grid-background"></div>
         <div className="flex flex-col min-h-screen relative z-10">
           <NavBar />
           <main className="flex-grow">{children}</main>

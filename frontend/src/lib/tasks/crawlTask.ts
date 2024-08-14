@@ -9,12 +9,10 @@ const data = JSON.stringify({
   password: process.env.AUTH_BACKEND_PASSWORD,
 });
 
-const CRAWLEE_BACKEND_URL = process.env.CRAWLEE_BACKEND_URL;
-
 const config = {
   method: "post",
   maxBodyLength: Infinity,
-  url: `${CRAWLEE_BACKEND_URL}/crawl`,
+  url: `${process.env.CRAWLEE_BACKEND_URL}/crawl`,
   headers: {
     "Content-Type": "application/json",
   },

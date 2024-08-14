@@ -35,12 +35,12 @@ export default function Sortby({ sortBy }: SortByProp) {
   };
 
   return (
-    <ul className="flex text-white">
+    <ul className="flex text-text-light dark:text-text-dark">
       <li
         onClick={() => handleSort("updatedAt")}
         className={cn(
-          "w-14 rounded-s border-2 m-auto text-center border-[#888888] hover:cursor-pointer",
-          sortBy === "updatedAt" ? "bg-[#888888]" : "bg-dark"
+          "w-14 rounded-s border-2 m-auto text-center border-gray-300 dark:border-gray-700 hover:cursor-pointer",
+          sortBy === "updatedAt" ? "bg-primary dark:bg-primary-dark" : "bg-background-light dark:bg-background-dark"
         )}
       >
         新评论
@@ -48,8 +48,8 @@ export default function Sortby({ sortBy }: SortByProp) {
       <li
         onClick={() => handleSort("createdAt")}
         className={cn(
-          "w-14 rounded-e border-2 m-auto text-center border-[#888888] hover:cursor-pointer",
-          sortBy === "createdAt" ? "bg-[#888888]" : "bg-dark"
+          "w-14 rounded-e border-2 m-auto text-center border-gray-300 dark:border-gray-700 hover:cursor-pointer",
+          sortBy === "createdAt" ? "bg-primary dark:bg-primary-dark" : "bg-background-light dark:bg-background-dark"
         )}
       >
         新帖子

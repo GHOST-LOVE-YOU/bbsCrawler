@@ -1,21 +1,13 @@
 import "server-only";
 
 import prisma from "@lib/db";
-import { getUser } from "@lib/user/server-utils";
+import { autoGetBot } from "@lib/user/server-utils";
 import { commentSchema } from "@lib/validations";
 import { autoHandleNewComment } from "@lib/messages/server-utils";
-import { toZonedTime } from "date-fns-tz";
-import {
-  setHours,
-  setMilliseconds,
-  setMinutes,
-  setSeconds,
-  subDays,
-} from "date-fns";
 
 export async function autoAddComment(Comment: unknown, post_id: string) {
   const validatedComment = commentSchema.parse(Comment);
-  const user = await getUser(validatedComment.userName, "bot");
+  const user = await autoGetBot(validatedComment.userName);
   const { userName, floor, ...commentData } = validatedComment;
   try {
     const newComment = await prisma.comment.create({

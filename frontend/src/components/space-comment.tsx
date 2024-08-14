@@ -59,18 +59,25 @@ export default function SpaceComment({ commentsList }: SpaceCommentProps) {
   const currentGroupedComments = groupedComments.slice(startIndex, endIndex);
 
   if (groupedComments.length === 0) {
-    return <div className="text-center p-4">No comments found</div>;
+    return (
+      <div className="text-center p-4 text-gray-600 dark:text-gray-400">
+        No comments found
+      </div>
+    );
   }
 
   return (
     <div className="space-y-4">
       {currentGroupedComments.map((group, index) => (
-        <Card key={index} className="w-full">
+        <Card
+          key={index}
+          className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+        >
           <CardHeader>
             <CardTitle>
               <Link
                 href={`/post/${group.postId}`}
-                className="text-blue-600 hover:underline"
+                className="text-primary hover:text-primary-dark dark:text-primary-dark dark:hover:text-primary"
               >
                 {group.postTitle}
               </Link>
@@ -79,10 +86,12 @@ export default function SpaceComment({ commentsList }: SpaceCommentProps) {
           <CardContent>
             {group.comments.map((comment, commentIndex) => (
               <div key={commentIndex} className="mb-2 last:mb-0">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Comment #{comment.sequence}
                 </p>
-                <p className="mt-1">{comment.content}</p>
+                <p className="mt-1 text-text-light dark:text-text-dark">
+                  {comment.content}
+                </p>
               </div>
             ))}
           </CardContent>

@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: { userId: string } }) {
     currentUser && !currentUser.tag.includes("bot") && user.tag.includes("bot");
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <Card className="mb-4">
+      <Card className="mb-4 bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 border">
         <CardContent className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-4">
             <Image
@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { userId: string } }) {
               className="w-full h-full object-cover rounded-lg"
             />
             <div>
-              <h1 className="text-2xl font-bold flex items-center">
+              <h1 className="text-2xl font-bold flex items-center text-text-light dark:text-text-dark">
                 {user.name}
                 {user.tag.includes("bot") && (
                   <Badge variant="secondary" className="ml-2">
@@ -48,19 +48,39 @@ export default async function Page({ params }: { params: { userId: string } }) {
                   </Badge>
                 )}
               </h1>
-              <p className="text-stone-700">一句话介绍自己</p>
+              <p className="text-gray-600 dark:text-gray-400">一句话介绍自己</p>
             </div>
           </div>
           {showBindingsButton && <BindingsButton botUserId={user.id} />}
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-stone-600">
-          <TabsTrigger value="overview">概况</TabsTrigger>
-          <TabsTrigger value="topics">主题帖</TabsTrigger>
-          <TabsTrigger value="comments">评论</TabsTrigger>
-          <TabsTrigger value="bookmarks">收藏</TabsTrigger>
+      <Tabs defaultValue="overview" className="w-full ">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+          <TabsTrigger
+            value="overview"
+            className="text-text-light dark:text-text-dark"
+          >
+            概况
+          </TabsTrigger>
+          <TabsTrigger
+            value="topics"
+            className="text-text-light dark:text-text-dark"
+          >
+            主题帖
+          </TabsTrigger>
+          <TabsTrigger
+            value="comments"
+            className="text-text-light dark:text-text-dark"
+          >
+            评论
+          </TabsTrigger>
+          <TabsTrigger
+            value="bookmarks"
+            className="text-text-light dark:text-text-dark"
+          >
+            收藏
+          </TabsTrigger>
         </TabsList>
         <OverviewContent
           joinedDays={joinedDays}
@@ -81,18 +101,18 @@ export default async function Page({ params }: { params: { userId: string } }) {
 }
 
 const StatCard = ({ icon, label, value }: any) => (
-  <Card className="bg-stone-600">
+  <Card className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
     <CardContent className="p-4 flex flex-col items-center">
       {icon}
-      <p className="text-stone-300 text-sm mt-2">{label}</p>
-      <p className="text-stone-100 font-bold">{value}</p>
+      <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">{label}</p>
+      <p className="text-text-light dark:text-text-dark font-bold">{value}</p>
     </CardContent>
   </Card>
 );
 
 const OverviewContent = ({ joinedDays, postCount, commentCount }: any) => (
   <TabsContent value="overview">
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-4 ">
       <StatCard
         icon={<Clock className="w-6 h-6" />}
         label="加入天数"
@@ -115,9 +135,9 @@ const OverviewContent = ({ joinedDays, postCount, commentCount }: any) => (
         value={commentCount}
       />
     </div>
-    <Card className="mt-4 bg-stone-600">
+    <Card className="mt-4 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
       <CardContent className="pt-6">
-        <p className="text-stone-300">没有找到readme🙁</p>
+        <p className="text-gray-600 dark:text-gray-400">没有找到readme🙁</p>
       </CardContent>
     </Card>
   </TabsContent>

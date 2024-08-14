@@ -10,11 +10,11 @@ type InboxContentProps = {
 
 export default function InboxContent({ messages }: InboxContentProps) {
   return (
-    <ScrollArea className="h-[400px]">
+    <ScrollArea className="h-[400px] bg-background-light dark:bg-background-dark">
       {messages.map((message) => (
         <div
           key={message.id}
-          className="p-2 border-b border-gray-600 flex items-start space-x-4"
+          className="p-2 border-b border-gray-200 dark:border-gray-700 flex items-start space-x-4"
         >
           <div className="relative">
             <Avatar className="w-8 h-8 rounded-md">
@@ -22,10 +22,10 @@ export default function InboxContent({ messages }: InboxContentProps) {
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
             {!message.isRead && (
-              <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 dark:bg-red-400 rounded-full"></div>
             )}
           </div>
-          <div className="flex-grow">
+          <div className="flex-grow text-text-light dark:text-text-dark">
             <MarkdownContent content={message.content} />
           </div>
         </div>

@@ -16,24 +16,12 @@
   }
 }
 
-html, body {
-  height: 100%;
-}
-
 body {
-  /* color: rgb(var(--foreground-rgb)); */
-  margin: 0;
-  padding: 0;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark;
 }
 
 .grid-background {
-  background-color: #8b8e94;
+  @apply bg-gray-200 dark:bg-gray-800;
   background-image: linear-gradient(to right, #000 1px, transparent 1px),
     linear-gradient(to bottom, #000 1px, transparent 1px);
   background-size: 30px 30px;
@@ -58,4 +46,3 @@ body {
 main {
   flex: 1;
 }
-

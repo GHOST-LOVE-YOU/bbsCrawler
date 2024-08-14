@@ -23,20 +23,25 @@ export default function SpaceTopic({ topicsList }: SpaceTopicProps) {
 
   if (topicsList.length === 0)
     return (
-      <Card className="mt-4 bg-stone-600 min-h-48 flex justify-center">
-        <CardContent className="flex items-center ">
-          <p className="text-gray-200 text-sm">No topics found</p>
+      <Card className="mt-4 bg-background-light dark:bg-background-dark min-h-48 flex justify-center">
+        <CardContent className="flex items-center">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            No topics found
+          </p>
         </CardContent>
       </Card>
     );
   return (
     <div>
-      <Card className="mt-4 bg-gray-700">
+      <Card className="mt-4 bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-700">
         <CardContent className="p-0">
-          <ul className="divide-y divide-gray-600">
+          <ul className="divide-y divide-gray-300 dark:divide-gray-700">
             {currentTopics.map((topic, index) => (
-              <li key={index} className="px-4 py-3 transition-colors">
-                <p className="text-gray-200 text-sm">
+              <li
+                key={index}
+                className="px-4 py-3 transition-colors border-b border-gray-300 dark:border-gray-700"
+              >
+                <p className="text-text-light dark:text-text-dark text-sm">
                   <Link href={`/post/${topic.id}`}>{topic.topic}</Link>
                 </p>
               </li>

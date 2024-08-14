@@ -51,7 +51,11 @@ const BindingsButton: React.FC<BindingsButtonProps> = ({ botUserId }) => {
   };
 
   return (
-    <Button onClick={handleBindingToggle} disabled={isLoading}>
+    <Button 
+      onClick={handleBindingToggle} 
+      disabled={isLoading}
+      className="bg-primary hover:bg-primary-dark text-white dark:bg-primary-dark dark:hover:bg-primary"
+    >
       {isLoading ? "处理中..." : isBound ? "取消绑定" : "绑定"}
     </Button>
   );

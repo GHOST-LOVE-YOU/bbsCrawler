@@ -3,18 +3,24 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { cn } from "@/lib/utils";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 type ParamPaginationProps = {
   maxPage: number;
+  sortBy?: "createdAt" | "updatedAt";
 };
 
-export default function ParamPagination({ maxPage }: ParamPaginationProps) {
+export default function ParamPagination({
+  maxPage,
+  sortBy,
+}: ParamPaginationProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentPage = Number(searchParams.get("page") || "1");
+  const currentPage = useMemo(() => {
+    return Number(searchParams.get("page") || "1");
+  }, [searchParams]);
 
   const getPages = useCallback(() => {
     let pages = [];
@@ -53,9 +59,13 @@ export default function ParamPagination({ maxPage }: ParamPaginationProps) {
         params.delete("page");
       }
 
+      if (sortBy) {
+        params.set("sortBy", sortBy);
+      }
+
       router.push(`${pathname}?${params.toString()}`);
     },
-    [router, pathname, searchParams, maxPage]
+    [router, pathname, searchParams, maxPage, sortBy]
   );
 
   if (maxPage === 1) {
@@ -64,15 +74,15 @@ export default function ParamPagination({ maxPage }: ParamPaginationProps) {
 
   return (
     <nav
-      className="pr-2 bg-nodedark inline-flex -space-x-px rounded-md shadow-sm h-7"
+      className="pr-2 bg-background-light dark:bg-background-dark inline-flex -space-x-px rounded-md shadow-sm h-7"
       aria-label="Pagination"
     >
       <button
         onClick={() => navigateToPage(currentPage - 1)}
         className={cn(
-          "relative inline-flex items-center rounded-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0",
+          "relative inline-flex items-center rounded-md px-2 py-2 text-text-light dark:text-text-dark ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 focus:z-20 focus:outline-offset-0",
           {
-            "text-gray-400": currentPage === 1,
+            "text-gray-400 dark:text-gray-600": currentPage === 1,
           }
         )}
         disabled={currentPage === 1}
@@ -85,12 +95,12 @@ export default function ParamPagination({ maxPage }: ParamPaginationProps) {
           key={index}
           onClick={() => navigateToPage(page)}
           aria-current={page === currentPage ? "page" : undefined}
-          className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold rounded-md text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+          className={`relative inline-flex items-center px-3 py-2 text-sm font-semibold rounded-md text-text-light dark:text-text-dark focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-primary-dark ${
             page === currentPage
-              ? "z-10 bg-[#3b3b3b]"
+              ? "z-10 bg-primary dark:bg-primary-dark text-white"
               : page === "..."
-              ? "ring-inset ring-gray-300"
-              : "ring-inset ring-gray-300 hover:bg-[#3b3b3b]"
+              ? "ring-1 ring-inset ring-gray-300 dark:ring-gray-700"
+              : "ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
           } ${page === "..." && "hidden md:inline-flex"}`}
         >
           {page}
@@ -98,7 +108,7 @@ export default function ParamPagination({ maxPage }: ParamPaginationProps) {
       ))}
       <button
         onClick={() => navigateToPage(currentPage + 1)}
-        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-white ring-inset ring-gray-300 hover:bg-[#3b3b3b] focus:z-20 focus:outline-offset-0"
+        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-text-light dark:text-text-dark ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 focus:z-20 focus:outline-offset-0"
         disabled={currentPage === maxPage}
       >
         <span className="sr-only">Next</span>
