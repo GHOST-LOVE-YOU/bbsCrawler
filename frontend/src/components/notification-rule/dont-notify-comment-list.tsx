@@ -26,7 +26,7 @@ export default function DontNotifyCommentList() {
           ([postId, { postTitle, comments }]) => (
             <div
               key={postId}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-200 border border-gray-200 dark:border-gray-700"
+              className="bg-background-light dark:bg-background-dark rounded-lg p-4 hover:shadow-md transition-shadow duration-200 border border-gray-300 dark:border-gray-7000"
             >
               <div className="flex justify-between items-center">
                 <h3 className="text-gray-800 dark:text-gray-200 text-base font-medium">
@@ -57,7 +57,7 @@ export default function DontNotifyCommentList() {
           )
         )
       ) : (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-background-light dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700">
           --空--
         </div>
       )}

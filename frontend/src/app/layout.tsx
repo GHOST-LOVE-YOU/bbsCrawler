@@ -35,7 +35,8 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
-        <div className="md:grid-background"></div>
+        <div className="grid-background-md md:hidden"></div>
+        <div className="hidden md:block grid-background"></div>
         <div className="flex flex-col min-h-screen relative z-10">
           <NavBar />
           <main className="flex-grow">{children}</main>

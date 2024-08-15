@@ -1,6 +1,9 @@
 import { updateTaskStatus } from "./scheduleds/server-utils";
 import handleCrawlTask from "./tasks/crawlTask";
 import handleHellolTask from "./tasks/helloTask";
+import handleCleanMessageTask from "./tasks/cleanMessageTask";
+import handleCleanBindingTask from "./tasks/cleanBindingTask";
+import handleCleanNotifyRuleTask from "./tasks/cleanNotifyRuleTask";
 
 async function executeTask(task: any) {
   let taskHandler;
@@ -12,6 +15,15 @@ async function executeTask(task: any) {
       break;
     case "测试任务":
       taskHandler = handleHellolTask;
+      break;
+    case "清理消息":
+      taskHandler = handleCleanMessageTask;
+      break;
+    case "清理绑定":
+      taskHandler = handleCleanBindingTask;
+      break;
+    case "清理通知规则":
+      taskHandler = handleCleanNotifyRuleTask;
       break;
     default:
       console.error("未知任务:", task.name);

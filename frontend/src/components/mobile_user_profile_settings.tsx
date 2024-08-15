@@ -1,14 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { ClientSheetWrapper } from "./client-sheet-wrapper";
-import SideBar from "./sidebar";
+"use client";
 
-export function MobileSidebar() {
+import React from "react";
+import { ClientSheetWrapper } from "./client-sheet-wrapper";
+import UserProfileSettings from "./user_profile_settings";
+import { Button } from "@/components/ui/button";
+
+const MobileUserProfileSettings = () => {
   return (
     <ClientSheetWrapper
       trigger={
         <Button
           variant="outline"
-          className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          className="p-2 bg-background-light dark:bg-background-dark bg-opacity-50 dark:bg-opacity-50 hover:bg-opacity-75 dark:hover:bg-opacity-75 transition-colors duration-200 rounded-r-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -22,14 +25,14 @@ export function MobileSidebar() {
             strokeLinejoin="round"
             className="w-6 h-6"
           >
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
+            <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </Button>
       }
     >
-      <SideBar />
+      <UserProfileSettings />
     </ClientSheetWrapper>
   );
-}
+};
+
+export default MobileUserProfileSettings;

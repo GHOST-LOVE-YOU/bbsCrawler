@@ -23,7 +23,7 @@ export default function NotificationMethodsList() {
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
         通知方式
       </h2>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div className="bg-background-light dark:bg-background-dark rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700">
         {notificationMethods.map((method, index) => {
           const isEnabled =
             !disabledNotificationMethods[

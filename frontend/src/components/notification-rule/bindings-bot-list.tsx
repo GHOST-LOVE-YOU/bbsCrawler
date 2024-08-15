@@ -17,7 +17,7 @@ type BotCardProps = {
 };
 
 const BotCard = ({ bot, onUnbind }: BotCardProps) => (
-  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200 dark:border-gray-700">
+  <div className="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark rounded-lg hover:shadow-md transition-shadow duration-200 border border-gray-300 dark:border-gray-700">
     <div className="flex items-center">
       <Image
         src={bot.avatarUrl}
@@ -64,7 +64,7 @@ export default function BindingsBotList() {
           <BotCard key={bot.id} bot={bot} onUnbind={unBindingBot} />
         ))
       ) : (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-background-light dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-7000">
           --空--
         </div>
       )}

@@ -12,7 +12,7 @@ export default async function notificationOverviewPage() {
   const initialNotifyPostOverview = await getPostNotificationsOverview();
   const initialNotifyCommentOverview = await getCommentNotificationsOverview();
   return (
-    <ScrollArea className="h-[calc(100vh-300px)] pr-0">
+    <ScrollArea className="h-[calc(100vh-100px)] md:h-[calc(100vh-300px)] pr-0">
       <div className="container mx-auto p-4">
         <div className="mb-6 space-y-4">
           <NotificationOverviewProvider

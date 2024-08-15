@@ -2,10 +2,14 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 
-export function SearchInput() {
+export function SearchInput({
+  onSearchComplete,
+}: {
+  onSearchComplete?: () => void;
+}) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -24,17 +28,21 @@ export function SearchInput() {
     setSelectedIndex(0);
   }, [input]);
 
-  const handleSearch = () => {
-    if (selectedIndex === 0) {
+  const handleSearch = (index?: number) => {
+    const searchIndex = index !== undefined ? index : selectedIndex;
+    if (searchIndex === 0) {
       router.push(`/search/post/${input}`);
-    } else if (selectedIndex === 1) {
+    } else if (searchIndex === 1) {
       router.push(`/search/comment/${input}`);
-    } else if (selectedIndex === 2) {
+    } else if (searchIndex === 2) {
       router.push(`/search/member/${input}`);
-    } else if (selectedIndex === 3) {
+    } else if (searchIndex === 3) {
       window.open(`https://www.google.com/search?q=${input}`, "_blank");
     }
     setInput("");
+    if (onSearchComplete) {
+      onSearchComplete();
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,18 +59,9 @@ export function SearchInput() {
     }
   };
 
-  const clearInput = () => {
-    setInput("");
-    inputRef.current?.focus();
-  };
-
   return (
-    <div className="relative">
-      <div
-        className={`transition-all duration-300 ease-in-out ${
-          isFocused ? "w-56" : "w-44"
-        }`}
-      >
+    <div className="relative w-full">
+      <div className="w-full">
         <Input
           ref={inputRef}
           type="text"
@@ -78,13 +77,6 @@ export function SearchInput() {
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600"
           size={20}
         />
-        {input && (
-          <X
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600 cursor-pointer hover:text-gray-600 dark:hover:text-gray-400"
-            size={20}
-            onClick={clearInput}
-          />
-        )}
       </div>
       {options.length > 0 && isFocused && (
         <ul className="absolute z-10 w-full bg-background-light dark:bg-background-dark mt-1 shadow-lg border border-gray-300 dark:border-gray-700 rounded-md">
@@ -97,7 +89,11 @@ export function SearchInput() {
                   : "text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
               onMouseEnter={() => setSelectedIndex(index)}
-              onClick={handleSearch}
+              onMouseDown={(e) => e.preventDefault()} // Prevent blur event
+              onClick={() => {
+                handleSearch(index);
+                inputRef.current?.blur(); // Blur the input after search
+              }}
             >
               {option}
             </li>

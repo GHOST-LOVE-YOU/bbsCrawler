@@ -13,7 +13,7 @@ export default function DontNotifyPostList() {
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">不会通知的帖子</h2>
       {dontNotifyPostList.length > 0 ? (
         dontNotifyPostList.map((post) => (
-          <div key={post.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-200 border border-gray-200 dark:border-gray-700">
+          <div key={post.id} className="bg-background-light dark:bg-background-dark rounded-lg p-4 hover:shadow-md transition-shadow duration-200 border border-gray-300 dark:border-gray-700">
             <div className="flex justify-between items-center">
               <h3 className="text-gray-800 dark:text-gray-200 text-base font-medium">
                 <Link href={`/post/${post.targetId}`} className="hover:underline">
@@ -32,7 +32,7 @@ export default function DontNotifyPostList() {
           </div>
         ))
       ) : (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-background-light dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700">
           --空--
         </div>
       )}

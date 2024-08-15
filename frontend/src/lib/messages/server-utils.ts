@@ -30,8 +30,8 @@ export async function autoHandleNewComment(comment: Comment) {
     }
 
     // 2. 向帖子作者(机器人)发送通知
-    const content1 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[我的帖子](/post/${post.id}) ：${post.topic}`;
-    await sendNotification(post.user, "POST_REPLY", content1);
+    // const content1 = `[${commentAuthor.name}](/space/${commentAuthor.id}) 回复了[我的帖子](/post/${post.id}) ：${post.topic}`;
+    // await sendNotification(post.user, "POST_REPLY", content1);
 
     // 3 & 4. 向满足条件的真实用户发送通知（合并处理）
     await notifyRelevantUsers(post, commentAuthor, post.user);
@@ -264,7 +264,7 @@ async function handleQuotedCommentNotification(
       const content = `[${commentAuthor.name}](/space/${commentAuthor.id}) 在[帖子](/post/${post.id})中回复了[${quotedAuthor.name}](/space/${quotedAuthor.id})的[评论](/post/${post.id}?sequence=${matchedComment.sequence})：${newComment.content}`;
 
       // 通知被引用的评论作者（机器人）
-      await sendNotification(quotedAuthor, "COMMENT_REPLY", content);
+      // await sendNotification(quotedAuthor, "COMMENT_REPLY", content);
 
       // 通知相关的真实用户（合并处理）
       await notifyRelevantUsersForQuotedComment(
@@ -351,4 +351,13 @@ export async function userGetUnreadMessageCount(): Promise<number> {
   });
 
   return unreadCount;
+}
+
+// 删除存在时间超过30天的消息
+export async function deleteOldMessages() {
+  await prisma.message.deleteMany({
+    where: {
+      createdAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+    },
+  });
 }

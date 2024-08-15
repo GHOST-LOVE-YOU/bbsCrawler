@@ -3,6 +3,7 @@
 import { Logo } from "./logo";
 import { MobileSidebar } from "./mobile-sidebar";
 import { SearchInput } from "./search_input";
+import MobileSearchInput from "./mobile-search_input";
 import { ThemeToggle } from "./theme-toggle";
 
 export default function NavBar() {
@@ -15,8 +16,11 @@ export default function NavBar() {
             <Logo />
           </div>
           <div className="flex flex-row items-center space-x-2 sm:space-x-4">
-            <div className="flex-none">
+            <div className="flex-none hidden md:block">
               <SearchInput />
+            </div>
+            <div className="flex-none md:hidden">
+              <MobileSearchInput />
             </div>
             <div className="flex-none">
               <ThemeToggle />

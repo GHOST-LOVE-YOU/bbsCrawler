@@ -35,7 +35,7 @@ export default async function ReplyList({ comments, op }: ReplyListProps) {
       {comments.map((comment) => (
         <div
           key={comment.sequence}
-          className="flex flex-col py-2 border-gray-300 dark:border-gray-700 border-b-2"
+          className="flex flex-col py-2 border-gray-300 dark:border-gray-700 border-b-2 break-words whitespace-pre-wrap"
         >
           <div className="flex flex-row">
             <div className="flex-none">
@@ -73,7 +73,7 @@ export default async function ReplyList({ comments, op }: ReplyListProps) {
             </div>
           </div>
           <div
-            className="pt-5 text-text-light dark:text-text-dark leading-8 text-xl"
+            className="pt-5 text-text-light dark:text-text-dark leading-8 text-xl break-words whitespace-pre-wrap"
             dangerouslySetInnerHTML={{ __html: comment.content || "" }}
           />
           <div className="flex flex-1 justify-end text-gray-500 dark:text-gray-400">

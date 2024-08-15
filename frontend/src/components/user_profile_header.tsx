@@ -13,9 +13,9 @@ export default async function UserProfileHeader({
   userName,
 }: UserProfileHeaderProps) {
   return (
-    <div className="flex items-center space-x-2 mb-4 max-w-4xl mx-auto">
+    <div className="flex items-center space-x-2 mb-4 max-w-4xl mx-auto bg-background-light dark:bg-background-dark">
       <Avatar className="w-12 h-12">
-        <AvatarImage src={avatarUrl} alt="nezuko" />
+        <AvatarImage src={avatarUrl} alt={userName} />
         <AvatarFallback>NC</AvatarFallback>
       </Avatar>
       <div>

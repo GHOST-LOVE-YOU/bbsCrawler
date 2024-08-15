@@ -39,7 +39,7 @@ export default function Home({
   return (
     <div className="justify-between">
       <ServiceWorkerRegistration />
-      <div className="container mx-auto max-w-5xl bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 border-2 rounded-xl shadow-2xl md:my-4 md:px-2 sm:px-6">
+      <div className="container mx-auto max-w-5xl bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 border-2 rounded-xl shadow-2xl my-2 md:my-4 md:px-2 sm:px-6">
         <Suspense fallback={<Loading />}>
           <div className="flex flex-col md:flex-row p-1">
             <div className="flex-1 w-full md:w-auto">

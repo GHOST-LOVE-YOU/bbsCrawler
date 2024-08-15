@@ -21,8 +21,8 @@ export default async function SideBar() {
   }
 
   return (
-    <div className="flex-none w-full pl-2 md:w-60 h-full">
-      <div className="flex flex-col bg-background-light dark:bg-background-dark p-4 rounded-lg shadow-md">
+    <div className="flex-none w-full md:pl-2 md:w-60 h-full">
+      <div className="flex flex-col bg-background-light dark:bg-background-dark md:p-4 rounded-lg shadow-md">
         {isLoggedin ? (
           <>
             <UserInfo user={user} />

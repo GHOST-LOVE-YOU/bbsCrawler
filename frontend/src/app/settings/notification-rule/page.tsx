@@ -23,7 +23,7 @@ export default async function NotificationRulePage() {
   } = await getAllNotificationLists();
 
   return (
-    <ScrollArea className="h-[calc(100vh-300px)] pr-4">
+    <ScrollArea className="h-[calc(100vh-200px)] md:h-[calc(100vh-300px)] pr-4">
       <div className="space-y-8">
         <NotificationProvider
           initialEmailNotification={emailNotification}

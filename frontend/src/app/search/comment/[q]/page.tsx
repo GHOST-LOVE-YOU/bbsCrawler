@@ -50,15 +50,23 @@ export default async function CommentListPage({
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center mb-8">
           <MessageSquare className="text-text-light dark:text-text-dark mr-3 h-8 w-8" />
-          <h1 className="text-text-light dark:text-text-dark text-3xl font-bold">搜索评论</h1>
+          <h1 className="text-text-light dark:text-text-dark text-3xl font-bold">
+            搜索评论
+          </h1>
         </div>
         {Object.keys(groupedComments).length > 0 ? (
           <div className="space-y-4">
             {Object.values(groupedComments).map((group) => (
-              <Card key={group.postId} className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+              <Card
+                key={group.postId}
+                className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 break-words"
+              >
                 <CardHeader>
                   <CardTitle>
-                    <Link href={`/post/${group.postId}`} className="text-primary hover:text-primary-dark dark:text-primary-dark dark:hover:text-primary">
+                    <Link
+                      href={`/post/${group.postId}`}
+                      className="text-primary hover:text-primary-dark dark:text-primary-dark dark:hover:text-primary"
+                    >
                       {group.postTitle}
                     </Link>
                   </CardTitle>
@@ -69,7 +77,7 @@ export default async function CommentListPage({
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Comment #{comment.commentSequence}
                       </p>
-                      <p className="mt-1 text-text-light dark:text-text-dark">
+                      <p className="mt-1 text-text-light dark:text-text-dark break-words">
                         {comment.content}
                       </p>
                     </div>

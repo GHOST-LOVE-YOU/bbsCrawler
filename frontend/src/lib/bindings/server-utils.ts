@@ -41,3 +41,8 @@ export async function userGetBindingsBotList() {
     throw new Error("Failed to fetch binding bots");
   }
 }
+
+// 清理所有绑定机器人
+export async function cleanAllBindings() {
+  await prisma.userBinding.deleteMany();
+}
