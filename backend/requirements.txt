@@ -1,6 +1,5 @@
-fastapi==0.111.0
-crawlee==0.1.2
+fastapi
+crawlee
 crawlee[beautifulsoup]
 crawlee[playwright]
-# playwright install
 pytz

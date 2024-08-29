@@ -12,15 +12,22 @@ type RequestBody = {
   auth: string;
 };
 
+// 设置 VAPID 详情
+webpush.setVapidDetails(
+  "mailto:kamado@nezuko.me",
+  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+  process.env.VAPID_PRIVATE_KEY!
+);
+
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<ResponseData>> {
   const notificationPayload = {
     title: "New Notification",
     body: "This is a new notification",
-    icon: "https://some-image-url.jpg",
+    icon: "https://orlco.com/icon.png",
     data: {
-      url: "https://example.com",
+      url: "https://orlco.com",
     },
   };
 
