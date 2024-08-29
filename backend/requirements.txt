@@ -1,5 +1,0 @@
-fastapi
-crawlee
-crawlee[beautifulsoup]
-crawlee[playwright]
-pytz
