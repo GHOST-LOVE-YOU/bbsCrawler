@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserTag {
+  bot
+  user // 用户
+  developer // 开发
+  manager // 管理
+}
+
+model User {
+  id                      String                   @id @default(uuid())
+  kinde_id                String?                  @unique @default(dbgenerated("NULL"))
+  name                    String
+  avatar                  String?
+  tag                     UserTag[]
+  createdAt               DateTime                 @default(now())
+  // 内容
+  posts                   Post[]
+  comments                Comment[]
+  // 通知
+  emailNotification       EmailNotification?
+  telegramNotification    TelegramNotification?
+  browserPushNotification BrowserPushNotification?
+  // 消息设置
+  inbox                   Inbox?
+  userBindings            UserBinding[]            @relation("BindingUser")
+  botBindings             UserBinding[]            @relation("BindingBot")
+  notificationRules       NotificationRule[]
+}
+
+model UserBinding {
+  id     String @id @default(uuid())
+  userId String
+  botId  String
+  user   User   @relation("BindingUser", fields: [userId], references: [id])
+  bot    User   @relation("BindingBot", fields: [botId], references: [id])
+}
+
+enum PostSection {
+  IWhisper
+  Feedback
+}
+
+model Post {
+  id        String      @id @default(uuid())
+  byr_id    String?     @unique @default(dbgenerated("NULL"))
+  topic     String
+  section   PostSection
+  updatedAt DateTime
+  createdAt DateTime
+
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+}
+
+model Comment {
+  id       String   @id @default(uuid())
+  sequence Int
+  content  String?
+  like     Int
+  dislike  Int
+  time     DateTime
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([postId, sequence])
+}
+
+model BrowserPushNotification {
+  id        String   @id @default(uuid())
+  endpoint  String
+  p256dh    String
+  auth      String
+  disable   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+}
+
+model TelegramNotification {
+  id        String   @id @default(uuid())
+  chatId    String
+  disable   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+}
+
+model EmailNotification {
+  id        String   @id @default(uuid())
+  email     String
+  disable   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+}
+
+enum MessagesType {
+  POST_REPLY
+  COMMENT_REPLY
+  WATCHED_POST_NEW_COMMENT
+  WATCHED_COMMENT_NEW_QUOTED
+}
+
+model Inbox {
+  id       String    @id @default(uuid())
+  userId   String    @unique
+  user     User      @relation(fields: [userId], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id        String       @id @default(uuid())
+  inboxId   String
+  type      MessagesType
+  content   String
+  isRead    Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  inbox     Inbox        @relation(fields: [inboxId], references: [id])
+}
+
+model NotificationRule {
+  id         String                 @id @default(uuid())
+  userId     String
+  targetType NotificationTargetType
+  targetId   String
+  action     NotificationAction
+  createdAt  DateTime               @default(now())
+  user       User                   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, targetType, targetId])
+  @@index([targetType, targetId])
+  @@index([userId, action])
+}
+
+enum NotificationTargetType {
+  POST
+  COMMENT
+}
+
+enum NotificationAction {
+  NOTIFY
+  DONT_NOTIFY
+}
