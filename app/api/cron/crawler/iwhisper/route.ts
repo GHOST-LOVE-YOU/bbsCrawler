@@ -2,6 +2,8 @@
 import { NextResponse } from "next/server";
 import { crawlAndStoreIWhisper } from "@/lib/crawlee/iwhisper";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   console.log("Starting iWhisper crawler");
   try {

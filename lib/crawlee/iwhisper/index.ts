@@ -1,22 +1,18 @@
-import { PlaywrightCrawler, log } from "crawlee";
-import { router } from "./routes";
-import { v4 as uuidv4 } from "uuid";
+import { fetchPost, storePost } from "./utils";
 
 export const crawlAndStoreIWhisper = async () => {
-  log.setLevel(log.LEVELS.DEBUG);
-  const crawlId = uuidv4();
-  
-  const crawler = new PlaywrightCrawler({
-    maxRequestsPerCrawl: 20,
-    requestHandler: router,
-  });
-
-  await crawler.addRequests([
-    {
-      url: "https://bbs.byr.cn/#!board/IWhisper",
-      uniqueKey: `https://bbs.byr.cn/#!board/IWhisper:${crawlId}`,
-    },
-  ]);
-
-  await crawler.run();
+  try {
+    const data = await fetchPost();
+    if (!data) {
+      console.error("No data received from fetchPost");
+      return;
+    }
+    for (const post of data) {
+      await storePost(post);
+    }
+    console.log("Successfully crawled and stored posts");
+  } catch (error) {
+    console.error("Error in crawlAndStoreIWhisper:", error);
+    throw error;
+  }
 };

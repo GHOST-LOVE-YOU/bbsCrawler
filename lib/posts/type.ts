@@ -31,3 +31,12 @@ type crawlPost = {
   page: string;
   comments: crawlComment[];
 };
+
+type BackendResponse = {
+  count: number;
+  desc: boolean;
+  items: crawlPost[];
+  limit: number;
+  offset: number;
+  total: number;
+}
