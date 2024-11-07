@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from "next/server";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -19,4 +20,26 @@ export function floorToSequence(floor: string): number {
     return parseInt(match[1], 10);
   }
   throw new Error("Invalid floor description");
+}
+
+export function apiAuth(req: NextRequest) {
+  if (req.nextUrl.pathname.startsWith("/api/cron/")) {
+    const BACKEND_AUTH_USERNAME = process.env.BACKEND_AUTH_USERNAME || "";
+    const BACKEND_AUTH_PASSWORD = process.env.BACKEND_AUTH_PASSWORD || "";
+
+    const authHeader = req.headers.get("authorization");
+
+    if (!authHeader) return false;
+
+    const [type, credentials] = authHeader.split(" ");
+    if (type !== "Basic" || !credentials) return false;
+
+    const decodedCredentials = atob(credentials);
+    const [username, password] = decodedCredentials.split(":");
+
+    return (
+      username === BACKEND_AUTH_USERNAME && password === BACKEND_AUTH_PASSWORD
+    );
+  }
+  return true;
 }
