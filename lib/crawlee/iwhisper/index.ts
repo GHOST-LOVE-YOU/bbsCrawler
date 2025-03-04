@@ -8,6 +8,9 @@ export const crawlAndStoreIWhisper = async () => {
       return;
     }
     for (const post of data) {
+      if (post.topic === "") {
+        continue;
+      }
       await storePost(post);
     }
     console.log("Successfully crawled and stored posts");
