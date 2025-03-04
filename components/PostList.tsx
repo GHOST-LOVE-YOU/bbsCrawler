@@ -33,7 +33,9 @@ export default function PostList({ posts, sortBy }: PostListProps) {
             </Link>
             <div className="flex-grow">
               <p className="text-base sm:text-lg md:text-xl font-semibold truncate hover:text-stone-600 dark:hover:text-stone-300 cursor-pointer">
-                <Link href={`/post/${post.postId}`} className="truncate">{post.topic}</Link>
+                <Link href={`/post/${post.postId}`} className="truncate">
+                  {post.topic}
+                </Link>
               </p>
               <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm dark:text-stone-400 text-stone-600">
                 <div className="flex items-center space-x-1 hover:text-stone-900 dark:hover:text-stone-50 cursor-pointer">
@@ -58,10 +60,12 @@ export default function PostList({ posts, sortBy }: PostListProps) {
                   <span className="icon-[bx--time-five]" />
                   <span>
                     {sortBy === "createdAt"
-                      ? moment(post.createdAtTime).fromNow()
+                      ? moment(post.createdAtTime).subtract(8, "h").fromNow()
                       : post.latestCommentTime
-                      ? moment(post.latestCommentTime).fromNow()
-                      : "N/A"}
+                        ? moment(post.latestCommentTime)
+                            .subtract(8, "h")
+                            .fromNow()
+                        : "N/A"}
                   </span>
                 </div>
               </div>
