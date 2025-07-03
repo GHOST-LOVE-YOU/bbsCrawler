@@ -139,18 +139,12 @@ export function GuestInfo() {
         欢迎来到BYR IWhisper!
       </p>
       <p className="pt-1 font-mono text-justify">
-        该项目源于BYR论坛悄悄话的浏览器通知,后来觉得反正都爬取了帖子内容,不如做一个论坛吧,方便毕业生访问.为了防止滥用,登录是必须的.
+        该项目源于BYR论坛悄悄话的浏览器通知,后来觉得反正都爬取了帖子内容,不如做一个论坛吧,方便毕业生访问.为了防止滥用,登录是必须的.(违反版规,
+        注册关闭)
       </p>
       <LoginLink postLoginRedirectURL="/">
-        <button className="rounded-md p-1 mt-2 w-16">
-          登录
-        </button>
+        <button className="rounded-md p-1 mt-2 w-16">登录</button>
       </LoginLink>
-      <RegisterLink postLoginRedirectURL="/">
-        <button className="text-white rounded-md p-1 mt-2 w-16 ml-5">
-          注册
-        </button>
-      </RegisterLink>
     </div>
   );
 }
