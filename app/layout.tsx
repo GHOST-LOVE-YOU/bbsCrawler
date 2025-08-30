@@ -49,7 +49,7 @@ export default function RootLayout({
         <div className="grid-background-md md:hidden" />
         <div className="hidden md:block grid-background" />
         <NavBar />
-        <main className="flex-grow md:pt-4">
+        <main className="grow md:pt-4">
           <div className="container mx-auto max-w-5xl bg-slate-50 dark:bg-slate-900 md:rounded-xl md:shadow-3xl border-2 border-slate-200 dark:border-slate-700 p-2 md:py-4">
             {children}
           </div>

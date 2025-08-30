@@ -23,7 +23,7 @@ export function InboxContentLoading() {
           className="p-2 border-b border-gray-200 dark:border-gray-700 flex items-start space-x-4"
         >
           <Skeleton className="w-8 h-8 rounded-md" />
-          <div className="flex-grow space-y-2">
+          <div className="grow space-y-2">
             <Skeleton className="w-3/4 h-4" />
             <Skeleton className="w-1/2 h-4" />
           </div>

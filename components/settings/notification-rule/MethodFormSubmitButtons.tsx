@@ -45,14 +45,14 @@ export function MethodFormSubmitButtons({ form }: MethodFormSubmitButtonsProps) 
     <>
       <button
         type="submit"
-        className="mt-4 p-2 bg-blue-500 text-white rounded mr-2"
+        className="mt-4 p-2 bg-blue-500 text-white rounded-sm mr-2"
       >
         Submit
       </button>
       <button
         type="button"
         onClick={handleTestClick}
-        className="mt-4 p-2 bg-yellow-500 text-white rounded"
+        className="mt-4 p-2 bg-yellow-500 text-white rounded-sm"
       >
         Test
       </button>

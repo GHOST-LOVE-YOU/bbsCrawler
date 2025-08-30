@@ -48,7 +48,7 @@ export default async function ReplyList({ comments, op }: ReplyListProps) {
                     </Link>
                   </div>
                   {comment.userId === op && (
-                    <div className="ml-1 px-1 border-2 border-accent-light dark:border-accent-dark rounded h-7 text-accent-light dark:text-accent-dark text-sm flex items-center justify-center">
+                    <div className="ml-1 px-1 border-2 border-accent-light dark:border-accent-dark rounded-sm h-7 text-accent-light dark:text-accent-dark text-sm flex items-center justify-center">
                       楼主
                     </div>
                   )}

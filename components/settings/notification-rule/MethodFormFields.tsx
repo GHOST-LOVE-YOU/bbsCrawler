@@ -42,7 +42,7 @@ export function MethodFormFields({ actionType, form }: MethodFormFieldsProps) {
                     />
                   ) : (
                     <Input
-                      className="flex-grow border-gray-400 border-[1px]"
+                      className="grow border-gray-400 border"
                       {...formField}
                       value={formField.value ? formField.value.toString() : ""}
                     />

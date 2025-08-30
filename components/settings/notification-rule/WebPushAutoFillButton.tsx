@@ -41,7 +41,7 @@ export function WebPushAutoFillButton({ form }: WebPushAutoFillButtonProps) {
         <button
           type="button"
           onClick={handleAutoFill}
-          className="mt-2 p-2 bg-green-500 text-white rounded"
+          className="mt-2 p-2 bg-green-500 text-white rounded-sm"
         >
           Auto Fill Browser Push Data
         </button>

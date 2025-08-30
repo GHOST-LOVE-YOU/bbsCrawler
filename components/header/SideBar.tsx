@@ -160,7 +160,7 @@ export function SideBarLoading() {
               <div className="flex-1">
                 <Skeleton className="h-4 w-24 mt-4" />
                 <div className="flex my-2">
-                  <Skeleton className="w-20 h-6 rounded" />
+                  <Skeleton className="w-20 h-6 rounded-sm" />
                 </div>
               </div>
             </div>
@@ -169,14 +169,14 @@ export function SideBarLoading() {
             <div className="flex flex-row">
               <div className="flex basis-1/2">
                 <div className="flex flex-col space-y-2">
-                  <Skeleton className="w-14 h-6 rounded" />
-                  <Skeleton className="w-14 h-6 rounded" />
+                  <Skeleton className="w-14 h-6 rounded-sm" />
+                  <Skeleton className="w-14 h-6 rounded-sm" />
                 </div>
               </div>
               <div className="flex basis-1/2">
                 <div className="flex flex-col space-y-2">
-                  <Skeleton className="w-14 h-6 rounded" />
-                  <Skeleton className="w-14 h-6 rounded" />
+                  <Skeleton className="w-14 h-6 rounded-sm" />
+                  <Skeleton className="w-14 h-6 rounded-sm" />
                 </div>
               </div>
             </div>

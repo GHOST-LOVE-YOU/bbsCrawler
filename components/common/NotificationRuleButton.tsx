@@ -70,7 +70,7 @@ export default function NotificationRuleButton({
         <Button
           onClick={toggleNotificationRule}
           disabled={isLoading}
-          variant={isBound ? "default" : "outline"}
+          variant={isBound ? "default" : "outline-solid"}
           size="sm"
           className={cn(
             "text-text-light dark:text-text-dark",

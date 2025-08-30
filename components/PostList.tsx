@@ -21,7 +21,7 @@ export default function PostList({ posts, sortBy }: PostListProps) {
             <Link
               href={`/space/${post.userId}`}
               passHref
-              className="flex-shrink-0"
+              className="shrink-0"
             >
               <Image
                 src={getAvatarUrl(post.userId)}
@@ -31,7 +31,7 @@ export default function PostList({ posts, sortBy }: PostListProps) {
                 className="rounded-full"
               />
             </Link>
-            <div className="flex-grow">
+            <div className="grow">
               <p className="text-base sm:text-lg md:text-xl font-semibold truncate hover:text-stone-600 dark:hover:text-stone-300 cursor-pointer">
                 <Link href={`/post/${post.postId}`} className="truncate">
                   {post.topic}

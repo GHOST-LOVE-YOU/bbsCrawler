@@ -31,7 +31,7 @@ export default function Sortby() {
       <li
         onClick={() => handleSort("updatedAt")}
         className={cn(
-          "w-14 rounded-s border-[1px] m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
+          "w-14 rounded-s border m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
           sortBy === "updatedAt"
             ? "bg-slate-400 dark:bg-slate-50 text-stone-50 dark:text-stone-900"
             : ""
@@ -42,7 +42,7 @@ export default function Sortby() {
       <li
         onClick={() => handleSort("createdAt")}
         className={cn(
-          "w-14 rounded-e border-[1px] border-s-0 m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
+          "w-14 rounded-e border border-s-0 m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
           sortBy === "createdAt"
             ? "bg-slate-400 dark:bg-slate-50 text-stone-50 dark:text-stone-900"
             : ""
@@ -59,14 +59,14 @@ export function SortbyLoading() {
     <ul className="flex">
       <li
         className={cn(
-          "w-14 rounded-s border-[1px] m-auto text-center border-stone-300 dark:border-stone-700"
+          "w-14 rounded-s border m-auto text-center border-stone-300 dark:border-stone-700"
         )}
       >
         新评论
       </li>
       <li
         className={cn(
-          "w-14 rounded-e border-[1px] border-s-0 m-auto text-center border-stone-300 dark:border-stone-700"
+          "w-14 rounded-e border border-s-0 m-auto text-center border-stone-300 dark:border-stone-700"
         )}
       >
         新帖子

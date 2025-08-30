@@ -25,7 +25,7 @@ export default function InboxContent({ messages }: InboxContentProps) {
               <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 dark:bg-red-400 rounded-full"></div>
             )}
           </div>
-          <div className="flex-grow text-text-light dark:text-text-dark">
+          <div className="grow text-text-light dark:text-text-dark">
             <MarkdownContent content={message.content} />
           </div>
         </div>
