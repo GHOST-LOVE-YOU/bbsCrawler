@@ -6,16 +6,15 @@ import { searchPostsByKeyword } from "@/lib/posts/server-utils";
 import { Suspense } from "react";
 
 type PostListPageProps = {
-  params: {
+  params: Promise<{
     q: string;
-  };
-  searchParams: { [key: string]: string | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
-export default async function PostListPage({
-  params,
-  searchParams,
-}: PostListPageProps) {
+export default async function PostListPage(props: PostListPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (process.env.NODE_ENV === "development") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }

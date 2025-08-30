@@ -5,20 +5,19 @@ import { searchCommentsByKeyword } from "@/lib/posts/server-utils";
 import CommentCard from "@/components/CommentCard";
 
 type CommentListPageProps = {
-  params: {
+  params: Promise<{
     q: string;
-  };
-  searchParams: { [key: string]: string | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 type GroupedComments = {
   [key: string]: CardComment;
 };
 
-export default async function CommentListPage({
-  params,
-  searchParams,
-}: CommentListPageProps) {
+export default async function CommentListPage(props: CommentListPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (process.env.NODE_ENV === "development") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }

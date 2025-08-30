@@ -14,7 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import BindingsButton from "@/components/common/BindingsButton";
 import SpaceComment from "@/components/space/SpaceComment";
 
-export default async function Page({ params }: { params: { userId: string } }) {
+export default async function Page(props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const user = await getUserByUserId(params.userId);
   if (!user) {
     return <div>User not found</div>;

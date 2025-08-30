@@ -62,12 +62,13 @@ const UserCard: React.FC<{ user: User }> = ({ user }) => (
 );
 
 type UserListPageProps = {
-  params: {
+  params: Promise<{
     q: string;
-  };
+  }>;
 };
 
-export default async function UserListPage({ params }: UserListPageProps) {
+export default async function UserListPage(props: UserListPageProps) {
+  const params = await props.params;
   const q = params.q;
   const users: User[] = await searchUserByName(q);
 

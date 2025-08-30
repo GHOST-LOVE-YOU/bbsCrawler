@@ -6,13 +6,15 @@ import ReplyList from "@/components/ReplyList";
 import Loading from "./loading";
 
 type postPageProps = {
-  params: {
+  params: Promise<{
     postId: string;
-  };
-  searchParams: { [key: string]: string | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
-export default function PostPage({ params, searchParams }: postPageProps) {
+export default async function PostPage(props: postPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const postId = params.postId;
   const page = parseInt(searchParams.page || "1");
 
