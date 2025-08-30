@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import "./globals.css";
-import NavBar from "@/components/header/NavBar";
-import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/Footer";
+import NavBar from "@/components/header/NavBar";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -45,12 +46,38 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <div className="grid-background-md md:hidden" />
-        <div className="hidden md:block grid-background" />
+      <body
+        className={`
+          ${inter.className}
+          flex min-h-screen flex-col
+        `}
+      >
+        <div
+          className={`
+            grid-background-md
+            md:hidden
+          `}
+        />
+        <div
+          className={`
+            grid-background hidden
+            md:block
+          `}
+        />
         <NavBar />
-        <main className="grow md:pt-4">
-          <div className="container mx-auto max-w-5xl bg-slate-50 dark:bg-slate-900 md:rounded-xl md:shadow-3xl border-2 border-slate-200 dark:border-slate-700 p-2 md:py-4">
+        <main
+          className={`
+            grow
+            md:pt-4
+          `}
+        >
+          <div
+            className={`
+              md:shadow-3xl md:rounded-xl md:py-4
+              container mx-auto max-w-5xl border-2 border-slate-200 bg-slate-50 p-2
+              dark:border-slate-700 dark:bg-slate-900
+            `}
+          >
             {children}
           </div>
         </main>

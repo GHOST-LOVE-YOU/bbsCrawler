@@ -1,5 +1,6 @@
-import SideBar, { SideBarLoading } from "@/components/header/SideBar";
 import { Suspense } from "react";
+
+import SideBar, { SideBarLoading } from "@/components/header/SideBar";
 
 export default function RootLayout({
   children,
@@ -7,9 +8,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col md:flex-row p-1">
-      <div className="flex-1 w-full md:w-auto">{children}</div>
-      <div className="hidden md:block">
+    <div
+      className={`
+        flex flex-col p-1
+        md:flex-row
+      `}
+    >
+      <div
+        className={`
+          w-full flex-1
+          md:w-auto
+        `}
+      >
+        {children}
+      </div>
+      <div
+        className={`
+          hidden
+          md:block
+        `}
+      >
         <Suspense fallback={<SideBarLoading />}>
           <SideBar />
         </Suspense>

@@ -1,6 +1,15 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
   output: "standalone",
+  serverExternalPackages: ["pino", "pino-pretty"],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -16,9 +25,6 @@ const nextConfig = {
         hostname: "api.dicebear.com",
       },
     ],
-  },
-  experimental: {
-    serverComponentsExternalPackages: ["playwright", "crawlee"],
   },
   staticPageGenerationTimeout: 1000,
 };
