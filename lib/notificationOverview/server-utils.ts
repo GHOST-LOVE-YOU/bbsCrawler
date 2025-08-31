@@ -1,15 +1,16 @@
 import "server-only";
-import prisma from "@/lib/db";
-import { clientGetUser } from "@/lib/user/server-utils";
 import { NotificationAction, NotificationTargetType } from "@prisma/client";
-import { toZonedTime } from "date-fns-tz";
 import {
   setHours,
-  setMilliseconds, 
+  setMilliseconds,
   setMinutes,
   setSeconds,
   subDays,
 } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
+
+import prisma from "@/lib/db";
+import { clientGetUser } from "@/lib/user/server-utils";
 
 export async function getPostNotificationsOverview() {
   const user = await clientGetUser();

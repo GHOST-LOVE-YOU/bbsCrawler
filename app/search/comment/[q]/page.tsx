@@ -1,8 +1,9 @@
-import React from "react";
 import { MessageSquare } from "lucide-react";
+import React from "react";
+
+import CommentCard from "@/components/CommentCard";
 import ParamPagination from "@/components/common/ParamPagination";
 import { searchCommentsByKeyword } from "@/lib/posts/server-utils";
-import CommentCard from "@/components/CommentCard";
 
 type CommentListPageProps = {
   params: Promise<{
@@ -47,11 +48,26 @@ export default async function CommentListPage(props: CommentListPageProps) {
   });
 
   return (
-    <div className="p-6 bg-background-light dark:bg-background-dark">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center mb-8">
-          <MessageSquare className="text-text-light dark:text-text-dark mr-3 h-8 w-8" />
-          <h1 className="text-text-light dark:text-text-dark text-3xl font-bold">
+    <div
+      className={`
+        bg-background-light p-6
+        dark:bg-background-dark
+      `}
+    >
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-8 flex items-center">
+          <MessageSquare
+            className={`
+              text-text-light mr-3 h-8 w-8
+              dark:text-text-dark
+            `}
+          />
+          <h1
+            className={`
+              text-text-light text-3xl font-bold
+              dark:text-text-dark
+            `}
+          >
             搜索评论
           </h1>
         </div>
@@ -65,7 +81,12 @@ export default async function CommentListPage(props: CommentListPageProps) {
             </div>
           </div>
         ) : (
-          <div className="text-center text-text-light dark:text-text-dark text-xl mt-12">
+          <div
+            className={`
+              text-text-light mt-12 text-center text-xl
+              dark:text-text-dark
+            `}
+          >
             未找到匹配的评论。
           </div>
         )}

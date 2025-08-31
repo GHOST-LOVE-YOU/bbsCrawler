@@ -19,7 +19,7 @@ type CardComment = {
   postId: string;
   postTitle: string;
   comments: {
-    id?:string,
+    id?: string;
     sequence: number;
     content: string;
   }[];

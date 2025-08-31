@@ -1,8 +1,10 @@
 import { Suspense } from "react";
-import ParamPagination from "@/components/common/ParamPagination";
-import { getCommentsByPage } from "@/lib/comments/server-utils";
+
 import NotificationRuleButton from "@/components/common/NotificationRuleButton";
+import ParamPagination from "@/components/common/ParamPagination";
 import ReplyList from "@/components/ReplyList";
+import { getCommentsByPage } from "@/lib/comments/server-utils";
+
 import Loading from "./loading";
 
 type postPageProps = {
@@ -20,7 +22,13 @@ export default async function PostPage(props: postPageProps) {
 
   return (
     <div className="justify-between">
-      <div className="container mx-auto max-w-5xl border-gray-300 dark:border-gray-700 md:border-2 rounded-xl md:shadow-2xl md:px-6 md:py-4 px-2">
+      <div
+        className={`
+        container mx-auto max-w-5xl rounded-xl border-gray-300 px-2
+        md:border-2 md:px-6 md:py-4 md:shadow-2xl
+        dark:border-gray-700
+      `}
+      >
         <PostContent postId={postId} page={page} />
       </div>
     </div>
@@ -31,10 +39,20 @@ async function PostContent({ postId, page }: { postId: string; page: number }) {
   const result = await getCommentsByPage(postId, page);
 
   return (
-    <div className="flex-1 py-2 md:px-2">
+    <div
+      className={`
+      flex-1 py-2
+      md:px-2
+    `}
+    >
       <Suspense fallback={<Loading />}>
         <div className="flex flex-row items-center space-x-4">
-          <div className="text-2xl cursor-pointer font-extrabold hover:text-stone-500">
+          <div
+            className={`
+            cursor-pointer text-2xl font-extrabold
+            hover:text-stone-500
+          `}
+          >
             {result.postTitle}
           </div>
           <NotificationRuleButton

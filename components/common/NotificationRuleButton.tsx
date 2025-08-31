@@ -1,9 +1,10 @@
 "use client";
 
 import { NotificationAction, NotificationTargetType } from "@prisma/client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Loader2, Bell, BellOff } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type NotificationRuleButtonProps = {
@@ -73,13 +74,25 @@ export default function NotificationRuleButton({
           variant={isBound ? "default" : "outline-solid"}
           size="sm"
           className={cn(
-            "text-text-light dark:text-text-dark",
-            "hover:text-primary dark:hover:text-primary-dark",
-            "bg-background-light dark:bg-background-dark",
-            "border border-gray-300 dark:border-gray-700",
+            `
+              text-text-light
+              dark:text-text-dark
+            `,
+            `
+              hover:text-primary
+              dark:hover:text-primary-dark
+            `,
+            `
+              bg-background-light
+              dark:bg-background-dark
+            `,
+            `
+              border border-gray-300
+              dark:border-gray-700
+            `,
             "transition-colors duration-200",
             {
-              "bg-primary dark:bg-primary-dark text-white": isBound,
+              "bg-primary text-white dark:bg-primary-dark": isBound,
             }
           )}
         >

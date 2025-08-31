@@ -1,6 +1,7 @@
-import { TNotification } from "@/lib/validations";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { TNotification } from "@/lib/validations";
 
 type WebPushAutoFillButtonProps = {
   form: UseFormReturn<Partial<TNotification>>;
@@ -41,7 +42,7 @@ export function WebPushAutoFillButton({ form }: WebPushAutoFillButtonProps) {
         <button
           type="button"
           onClick={handleAutoFill}
-          className="mt-2 p-2 bg-green-500 text-white rounded-sm"
+          className="mt-2 rounded-sm bg-green-500 p-2 text-white"
         >
           Auto Fill Browser Push Data
         </button>

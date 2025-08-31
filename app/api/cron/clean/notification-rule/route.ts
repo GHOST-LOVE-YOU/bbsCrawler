@@ -1,6 +1,7 @@
 // 每天北京时间早上5点 cron: 0 0 5 * * *
-import { cleanOldNotificationRules } from "@/lib/notificationRule/server-utils";
 import { NextResponse } from "next/server";
+
+import { cleanOldNotificationRules } from "@/lib/notificationRule/server-utils";
 
 export async function GET() {
   try {

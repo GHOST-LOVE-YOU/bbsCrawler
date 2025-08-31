@@ -39,4 +39,4 @@ type BackendResponse = {
   limit: number;
   offset: number;
   total: number;
-}
+};

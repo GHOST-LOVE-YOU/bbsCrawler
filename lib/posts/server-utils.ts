@@ -1,8 +1,8 @@
 import "server-only";
 
 import prisma from "@/lib/db";
-import { autoPostSchema } from "@/lib/validations";
 import { autoGetBot } from "@/lib/user/server-utils";
+import { autoPostSchema } from "@/lib/validations";
 
 // ---- auto ----
 export async function autoGetPost(data: unknown) {
@@ -38,8 +38,8 @@ export async function userGetPost(
   sortBy: "createdAt" | "updatedAt"
 ) {
   // Simulating a delay for development purposes
-  if (process.env.NODE_ENV === 'development') {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  if (process.env.NODE_ENV === "development") {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
   const pageSize = 50;
   const skip = pageSize * (page - 1);
@@ -63,8 +63,7 @@ export async function userGetPost(
         },
       },
     }),
-    prisma.post.count({
-    }),
+    prisma.post.count({}),
   ]);
 
   const maxPage = Math.ceil(totalCount / pageSize);
@@ -187,19 +186,25 @@ export async function searchCommentsByKeyword(keyword: string, page: number) {
   });
 
   // 过滤掉引用内容
-  const filteredComments = allMatchingComments.filter(comment => {
-    const contentWithoutQuote = comment.content?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, '').trim() || "";
+  const filteredComments = allMatchingComments.filter((comment) => {
+    const contentWithoutQuote =
+      comment.content
+        ?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, "")
+        .trim() || "";
     return contentWithoutQuote.toLowerCase().includes(keyword.toLowerCase());
   });
 
   // 按帖子分组
-  const groupedComments = filteredComments.reduce((acc, comment) => {
-    if (!acc[comment.post.id]) {
-      acc[comment.post.id] = [];
-    }
-    acc[comment.post.id].push(comment);
-    return acc;
-  }, {} as Record<string, typeof filteredComments>);
+  const groupedComments = filteredComments.reduce(
+    (acc, comment) => {
+      if (!acc[comment.post.id]) {
+        acc[comment.post.id] = [];
+      }
+      acc[comment.post.id].push(comment);
+      return acc;
+    },
+    {} as Record<string, typeof filteredComments>
+  );
 
   // 计算分页
   const groupKeys = Object.keys(groupedComments);
@@ -212,14 +217,18 @@ export async function searchCommentsByKeyword(keyword: string, page: number) {
   const currentPageGroups = groupKeys.slice(startIndex, endIndex);
 
   // 格式化结果
-  const formattedComments: notifyComment[] = currentPageGroups.flatMap(postId => 
-    groupedComments[postId].map(({ id, content, sequence, post }) => ({
-      id,
-      postId: post.id,
-      postTitle: post.topic,
-      commentSequence: sequence,
-      content: content?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, '').trim() || "--",
-    }))
+  const formattedComments: notifyComment[] = currentPageGroups.flatMap(
+    (postId) =>
+      groupedComments[postId].map(({ id, content, sequence, post }) => ({
+        id,
+        postId: post.id,
+        postTitle: post.topic,
+        commentSequence: sequence,
+        content:
+          content
+            ?.replace(/【\s*在.*?的大作中提到:\s*】[\s\S]*?(?=\n|$)/g, "")
+            .trim() || "--",
+      }))
   );
 
   return {

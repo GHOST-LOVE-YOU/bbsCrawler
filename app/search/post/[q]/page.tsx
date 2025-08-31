@@ -1,9 +1,10 @@
+import { Suspense } from "react";
+
 import ParamPagination from "@/components/common/ParamPagination";
 import SideBar, { SideBarLoading } from "@/components/header/SideBar";
 import PostList from "@/components/PostList";
 import Sortby from "@/components/Sortby";
 import { searchPostsByKeyword } from "@/lib/posts/server-utils";
-import { Suspense } from "react";
 
 type PostListPageProps = {
   params: Promise<{
@@ -25,9 +26,19 @@ export default async function PostListPage(props: PostListPageProps) {
   const { posts, maxPage } = await searchPostsByKeyword(q, page);
 
   return (
-    <div className="flex flex-col md:flex-row p-1">
-      <div className="flex-1 w-full md:w-auto">
-        <div className="flex justify-between items-center">
+    <div
+      className={`
+        flex flex-col p-1
+        md:flex-row
+      `}
+    >
+      <div
+        className={`
+          w-full flex-1
+          md:w-auto
+        `}
+      >
+        <div className="flex items-center justify-between">
           <Sortby />
           <ParamPagination maxPage={maxPage} />
         </div>
@@ -36,7 +47,12 @@ export default async function PostListPage(props: PostListPageProps) {
           <ParamPagination maxPage={maxPage} />
         </div>
       </div>
-      <div className="hidden md:block">
+      <div
+        className={`
+          hidden
+          md:block
+        `}
+      >
         <Suspense fallback={<SideBarLoading />}>
           <SideBar />
         </Suspense>

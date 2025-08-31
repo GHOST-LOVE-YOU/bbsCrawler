@@ -1,8 +1,10 @@
-import Image from "next/legacy/image";
 import moment from "moment";
+import Image from "next/legacy/image";
 import "moment/locale/zh-cn";
-import { getAvatarUrl } from "@/lib/user/server-utils";
 import Link from "next/link";
+
+import { getAvatarUrl } from "@/lib/user/server-utils";
+
 import { Skeleton } from "./ui/skeleton";
 
 moment.locale("zh-cn");
@@ -14,15 +16,27 @@ interface PostListProps {
 
 export default function PostList({ posts, sortBy }: PostListProps) {
   return (
-    <ul className="divide-y divide-stone-200 dark:divide-stone-800 w-full">
+    <ul
+      className={`
+        w-full divide-y divide-stone-200
+        dark:divide-stone-800
+      `}
+    >
       {posts.map((post) => (
-        <li key={post.postId} className="md:pt-3 md:pb-1 py-1">
-          <div className="flex items-start space-x-2 sm:space-x-4">
-            <Link
-              href={`/space/${post.userId}`}
-              passHref
-              className="shrink-0"
-            >
+        <li
+          key={post.postId}
+          className={`
+            py-1
+            md:pt-3 md:pb-1
+          `}
+        >
+          <div
+            className={`
+              flex items-start space-x-2
+              sm:space-x-4
+            `}
+          >
+            <Link href={`/space/${post.userId}`} passHref className="shrink-0">
               <Image
                 src={getAvatarUrl(post.userId)}
                 alt="User avatar"
@@ -32,17 +46,42 @@ export default function PostList({ posts, sortBy }: PostListProps) {
               />
             </Link>
             <div className="grow">
-              <p className="text-base sm:text-lg md:text-xl font-semibold truncate hover:text-stone-600 dark:hover:text-stone-300 cursor-pointer">
+              <p
+                className={`
+                  cursor-pointer truncate text-base font-semibold
+                  hover:text-stone-600
+                  sm:text-lg
+                  md:text-xl
+                  dark:hover:text-stone-300
+                `}
+              >
                 <Link href={`/post/${post.postId}`} className="truncate">
                   {post.topic}
                 </Link>
               </p>
-              <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm dark:text-stone-400 text-stone-600">
-                <div className="flex items-center space-x-1 hover:text-stone-900 dark:hover:text-stone-50 cursor-pointer">
+              <div
+                className={`
+                  flex flex-wrap items-center gap-2 text-xs text-stone-600
+                  md:text-sm
+                  dark:text-stone-400
+                `}
+              >
+                <div
+                  className={`
+                    flex cursor-pointer items-center space-x-1
+                    hover:text-stone-900
+                    dark:hover:text-stone-50
+                  `}
+                >
                   <span className="icon-[ph--user]" />
                   <Link href={`/space/${post.userId}`}>{post.userName}</Link>
                 </div>
-                <div className="hidden sm:flex items-center space-x-1">
+                <div
+                  className={`
+                    hidden items-center space-x-1
+                    sm:flex
+                  `}
+                >
                   <span className="icon-[clarity--eye-show-line]" />
                   <span>000</span>
                 </div>
@@ -50,7 +89,13 @@ export default function PostList({ posts, sortBy }: PostListProps) {
                   <span className="icon-[tabler--message]" />
                   <span>{post.commentCount}</span>
                 </div>
-                <div className="flex items-center space-x-1 hover:text-stone-900 dark:hover:text-stone-50 cursor-pointer">
+                <div
+                  className={`
+                    flex cursor-pointer items-center space-x-1
+                    hover:text-stone-900
+                    dark:hover:text-stone-50
+                  `}
+                >
                   <span className="icon-[carbon--user-activity]" />
                   <Link href={`/space/${post.latestCommentUserId}`}>
                     {post.latestCommentUserName}
@@ -73,7 +118,12 @@ export default function PostList({ posts, sortBy }: PostListProps) {
           </div>
         </li>
       ))}
-      <div className="border-b border-stone-200 dark:border-stone-800 w-full" />
+      <div
+        className={`
+          w-full border-b border-stone-200
+          dark:border-stone-800
+        `}
+      />
     </ul>
   );
 }
@@ -84,18 +134,26 @@ export function PostListLoading() {
       {[...Array(10)].map((_, index) => (
         <div
           key={index}
-          className="py-2 border-gray-300 dark:border-gray-700 border-b-2"
+          className={`
+            border-b-2 border-gray-300 py-2
+            dark:border-gray-700
+          `}
         >
           <li>
             <div className="flex flex-row">
               <div className="flex-none pt-1">
-                <Skeleton className="w-10 h-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
               </div>
-              <div className="px-2 flex-1">
+              <div className="flex-1 px-2">
                 <div className="flex flex-col">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="mb-2 h-6 w-3/4" />
                 </div>
-                <div className="inline-flex font-sans text-text-light dark:text-text-dark space-x-4">
+                <div
+                  className={`
+                    text-text-light inline-flex space-x-4 font-sans
+                    dark:text-text-dark
+                  `}
+                >
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-4 w-16" />
                   <Skeleton className="h-4 w-16" />

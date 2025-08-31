@@ -1,8 +1,10 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import React from "react";
+
 import { cn } from "@/lib/utils";
+
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface PostCardProps {
   post: {
@@ -21,14 +23,22 @@ const PostCard = ({
   smallText,
 }: PostCardProps) => {
   return (
-    <Card className="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-gray-700">
+    <Card
+      className={`
+        w-full border border-gray-300 bg-slate-50
+        dark:border-gray-700 dark:bg-slate-900
+      `}
+    >
       <CardHeader className="py-3">
         <div className="flex items-center justify-between">
           <CardTitle>
             <Link
               href={`/post/${post.id}`}
               className={cn(
-                "hover:text-stone-500 dark:hover:text-stone-500",
+                `
+                  hover:text-stone-500
+                  dark:hover:text-stone-500
+                `,
                 smallText ? "text-lg" : ""
               )}
             >

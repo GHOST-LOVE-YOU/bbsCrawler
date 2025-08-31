@@ -1,6 +1,7 @@
+import axios, { AxiosResponse } from "axios";
+
 import { autoAddComment } from "@/lib/comments/server-utils";
 import { autoGetPost } from "@/lib/posts/server-utils";
-import axios, { AxiosResponse } from "axios";
 
 const BACKEND_AUTH_USERNAME = process.env.BACKEND_AUTH_USERNAME || "";
 const BACKEND_AUTH_PASSWORD = process.env.BACKEND_AUTH_PASSWORD || "";
@@ -28,7 +29,7 @@ export const storePost = async (postDatas: crawlPost) => {
           dislike: comment.dislike,
           time: comment.time,
         },
-        post.id,
+        post.id
       );
     }
   } catch (error) {
@@ -36,13 +37,13 @@ export const storePost = async (postDatas: crawlPost) => {
   }
 };
 
-let config = {
+const config = {
   method: "get",
   maxBodyLength: Infinity,
   url: BACKEND_URL,
   headers: {
     Authorization: `Basic ${Buffer.from(
-      `${BACKEND_AUTH_USERNAME}:${BACKEND_AUTH_PASSWORD}`,
+      `${BACKEND_AUTH_USERNAME}:${BACKEND_AUTH_PASSWORD}`
     ).toString("base64")}`,
   },
 };

@@ -1,9 +1,10 @@
 "use server";
 
+import { NotificationAction, NotificationTargetType } from "@prisma/client";
+
 import prisma from "@/lib/db";
 import { clientGetUser } from "@/lib/user/server-utils";
 import { browserPushSchema } from "@/lib/validations";
-import { NotificationAction, NotificationTargetType } from "@prisma/client";
 
 export async function addNotification(data: unknown) {
   const user = await clientGetUser();

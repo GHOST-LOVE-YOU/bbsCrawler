@@ -1,7 +1,9 @@
 import React from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageWithAvatar } from "@/lib/messages/server-utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import MarkdownContent from "../MarkdownContent";
 
 type InboxContentProps = {
@@ -10,22 +12,40 @@ type InboxContentProps = {
 
 export default function InboxContent({ messages }: InboxContentProps) {
   return (
-    <ScrollArea className="h-[400px] bg-background-light dark:bg-background-dark">
+    <ScrollArea
+      className={`
+        bg-background-light h-[400px]
+        dark:bg-background-dark
+      `}
+    >
       {messages.map((message) => (
         <div
           key={message.id}
-          className="p-2 border-b border-gray-200 dark:border-gray-700 flex items-start space-x-4"
+          className={`
+            flex items-start space-x-4 border-b border-gray-200 p-2
+            dark:border-gray-700
+          `}
         >
           <div className="relative">
-            <Avatar className="w-8 h-8 rounded-md">
+            <Avatar className="h-8 w-8 rounded-md">
               <AvatarImage src={message.avatarUrl as string} alt="Avatar" />
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
             {!message.isRead && (
-              <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 dark:bg-red-400 rounded-full"></div>
+              <div
+                className={`
+                  absolute top-0 right-0 h-3 w-3 rounded-full bg-red-500
+                  dark:bg-red-400
+                `}
+              ></div>
             )}
           </div>
-          <div className="grow text-text-light dark:text-text-dark">
+          <div
+            className={`
+              text-text-light grow
+              dark:text-text-dark
+            `}
+          >
             <MarkdownContent content={message.content} />
           </div>
         </div>

@@ -1,8 +1,10 @@
 import React, { Suspense } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import Loading from "./loading";
+
 import InboxContent from "@/components/inbox/InboxContent";
 import InboxHeader from "@/components/inbox/InboxHeader";
+import { Card, CardContent } from "@/components/ui/card";
+
+import Loading from "./loading";
 
 async function InboxPostContent() {
   const { userGetMessages } = await import("@/lib/messages/server-utils");

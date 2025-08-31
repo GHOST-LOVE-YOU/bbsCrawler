@@ -1,8 +1,9 @@
 // SearchInput.tsx
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+
 import { Input } from "../ui/input";
 
 export function SearchInput({
@@ -65,7 +66,10 @@ export function SearchInput({
         <Input
           ref={inputRef}
           type="text"
-          className="w-full h-8 bg-slate-100 dark:bg-slate-900 pl-2 pr-10"
+          className={`
+            h-8 w-full bg-slate-100 pr-10 pl-2
+            dark:bg-slate-900
+          `}
           placeholder="Search"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -74,20 +78,34 @@ export function SearchInput({
           onBlur={() => setIsFocused(false)}
         />
         <Search
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-600"
+          className={`
+            absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400
+            dark:text-gray-600
+          `}
           size={20}
         />
       </div>
       {options.length > 0 && isFocused && (
-        <ul className="absolute z-10 w-full bg-slate-100 dark:bg-slate-900 mt-1 shadow-lg border border-slate-200 dark:border-slate-700 rounded-md">
+        <ul
+          className={`
+            absolute z-10 mt-1 w-full rounded-md border border-slate-200 bg-slate-100 shadow-lg
+            dark:border-slate-700 dark:bg-slate-900
+          `}
+        >
           {options.map((option, index) => (
             <li
               key={option}
-              className={`px-2 py-1 cursor-pointer ${
-                index === selectedIndex
-                  ? "text-slate-500"
-                  : "text-black dark:text-white"
-              }`}
+              className={`
+                cursor-pointer px-2 py-1
+                ${
+                  index === selectedIndex
+                    ? "text-slate-500"
+                    : `
+                      text-black
+                      dark:text-white
+                    `
+                }
+              `}
               onMouseEnter={() => setSelectedIndex(index)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {

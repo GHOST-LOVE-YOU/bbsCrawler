@@ -1,16 +1,23 @@
 "use client";
 
 import React from "react";
-import { useNotificationRule } from "@/providers/NotificationRuleProvider";
-import EmptyCard from "./EmptyCard";
+
 import PostCard from "@/components/PostCard";
+import { useNotificationRule } from "@/providers/NotificationRuleProvider";
+
+import EmptyCard from "./EmptyCard";
 
 export default function DontNotifyPostList() {
   const { dontNotifyPostList, unclaim } = useNotificationRule();
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+      <h2
+        className={`
+          mb-3 text-lg font-semibold text-gray-900
+          dark:text-gray-100
+        `}
+      >
         不会通知的帖子
       </h2>
       {dontNotifyPostList.length > 0 ? (

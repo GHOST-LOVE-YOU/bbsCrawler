@@ -1,9 +1,7 @@
 import "server-only";
 
-import prisma from "@/lib/db";
-import { UserTag } from "@prisma/client";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { toZonedTime } from "date-fns-tz";
+import { UserTag } from "@prisma/client";
 import {
   setHours,
   setMilliseconds,
@@ -11,11 +9,14 @@ import {
   setSeconds,
   subDays,
 } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
+
+import prisma from "@/lib/db";
 
 export async function addBot(name: string) {
   const newUser = await prisma.user.create({
     data: {
-      name: name,
+      name,
       tag: [UserTag.bot],
     },
   });

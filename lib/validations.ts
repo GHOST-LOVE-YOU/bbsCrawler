@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { floorToSequence } from "./utils";
 
 export const autoPostSchema = z

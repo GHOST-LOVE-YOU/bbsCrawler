@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 const InboxHeader = () => {
   const pathname = usePathname();
@@ -22,22 +22,24 @@ const InboxHeader = () => {
   };
 
   return (
-    <div className="flex justify-between items-center bg-gray-600 rounded-t-xl">
-      <div className="flex items-center space-x-2 ">
+    <div className="flex items-center justify-between rounded-t-xl bg-gray-600">
+      <div className="flex items-center space-x-2">
         <div className="flex items-center space-x-2">
           <Link
             href="/inbox/comment"
-            className={`px-2 py-1 rounded-ss-xl ${
-              isAtMe ? "bg-green-500 text-white" : "text-green-500"
-            }`}
+            className={`
+              rounded-ss-xl px-2 py-1
+              ${isAtMe ? "bg-green-500 text-white" : "text-green-500"}
+            `}
           >
             @我
           </Link>
           <Link
             href="/inbox/post"
-            className={`px-2 py-1 ${
-              isReplyTopic ? "bg-green-500 text-white" : "text-green-500"
-            }`}
+            className={`
+              px-2 py-1
+              ${isReplyTopic ? "bg-green-500 text-white" : "text-green-500"}
+            `}
           >
             回复主题
           </Link>
@@ -45,7 +47,10 @@ const InboxHeader = () => {
       </div>
       <span
         onClick={handleReadAll}
-        className="text-green-500 pr-2 hover:cursor-pointer"
+        className={`
+          pr-2 text-green-500
+          hover:cursor-pointer
+        `}
       >
         全部标为已读
       </span>

@@ -1,7 +1,8 @@
 "use server";
 
-import prisma from "@/lib/db";
 import { MessagesType } from "@prisma/client";
+
+import prisma from "@/lib/db";
 
 const NotificationTitle: Record<MessagesType, string> = {
   POST_REPLY: "有人回复了你的帖子",

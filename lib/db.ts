@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+
 import { sendMessage } from "./notifications/server-utils";
 
 const prismaClientSingleton = () => {

@@ -1,5 +1,6 @@
 // 每5分钟执行一次 cron: 0 */5 * * * *
 import { NextResponse } from "next/server";
+
 import { crawlAndStoreIWhisper } from "@/lib/crawlee/iwhisper";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export async function GET() {
     } else {
       return NextResponse.json(
         { error: "An unknown error occurred" },
-        { status: 500 },
+        { status: 500 }
       );
     }
   }

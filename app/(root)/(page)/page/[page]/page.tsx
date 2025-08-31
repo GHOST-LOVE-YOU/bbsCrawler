@@ -3,12 +3,10 @@ import PostList from "@/components/PostList";
 import Sortby from "@/components/Sortby";
 import { userGetPost } from "@/lib/posts/server-utils";
 
-const Home = async (
-  props: {
-    searchParams: Promise<{ [key: string]: string | undefined }>;
-    params: Promise<{ page: string }>;
-  }
-) => {
+const Home = async (props: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+  params: Promise<{ page: string }>;
+}) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const sortBy =
@@ -17,7 +15,7 @@ const Home = async (
   const { posts, maxPage } = await userGetPost(page, sortBy);
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <Sortby />
         <PagePagination maxPage={maxPage} />
       </div>

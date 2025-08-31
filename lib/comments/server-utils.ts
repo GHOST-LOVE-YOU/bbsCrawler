@@ -1,9 +1,9 @@
 import "server-only";
 
 import prisma from "@/lib/db";
+import { autoHandleNewComment } from "@/lib/messages/server-utils";
 import { autoGetBot } from "@/lib/user/server-utils";
 import { commentSchema } from "@/lib/validations";
-import { autoHandleNewComment } from "@/lib/messages/server-utils";
 
 export async function autoAddComment(Comment: unknown, post_id: string) {
   const validatedComment = commentSchema.parse(Comment);
@@ -44,8 +44,8 @@ export async function autoAddComment(Comment: unknown, post_id: string) {
 
 export async function getCommentsByPage(postId: string, page: number) {
   // Sleep for a short duration to prevent rate limiting (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  if (process.env.NODE_ENV === "development") {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
   // 确定分页参数
   const pageSize = 10;

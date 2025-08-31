@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+
 import { cn } from "@/lib/utils";
 
 export default function Sortby() {
@@ -31,9 +32,16 @@ export default function Sortby() {
       <li
         onClick={() => handleSort("updatedAt")}
         className={cn(
-          "w-14 rounded-s border m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
+          `
+            m-auto w-14 rounded-s border border-stone-300 text-center
+            hover:cursor-pointer
+            dark:border-stone-700
+          `,
           sortBy === "updatedAt"
-            ? "bg-slate-400 dark:bg-slate-50 text-stone-50 dark:text-stone-900"
+            ? `
+              bg-slate-400 text-stone-50
+              dark:bg-slate-50 dark:text-stone-900
+            `
             : ""
         )}
       >
@@ -42,9 +50,16 @@ export default function Sortby() {
       <li
         onClick={() => handleSort("createdAt")}
         className={cn(
-          "w-14 rounded-e border border-s-0 m-auto text-center border-stone-300 dark:border-stone-700 hover:cursor-pointer",
+          `
+            m-auto w-14 rounded-e border border-s-0 border-stone-300 text-center
+            hover:cursor-pointer
+            dark:border-stone-700
+          `,
           sortBy === "createdAt"
-            ? "bg-slate-400 dark:bg-slate-50 text-stone-50 dark:text-stone-900"
+            ? `
+              bg-slate-400 text-stone-50
+              dark:bg-slate-50 dark:text-stone-900
+            `
             : ""
         )}
       >
@@ -59,14 +74,20 @@ export function SortbyLoading() {
     <ul className="flex">
       <li
         className={cn(
-          "w-14 rounded-s border m-auto text-center border-stone-300 dark:border-stone-700"
+          `
+            m-auto w-14 rounded-s border border-stone-300 text-center
+            dark:border-stone-700
+          `
         )}
       >
         新评论
       </li>
       <li
         className={cn(
-          "w-14 rounded-e border border-s-0 m-auto text-center border-stone-300 dark:border-stone-700"
+          `
+            m-auto w-14 rounded-e border border-s-0 border-stone-300 text-center
+            dark:border-stone-700
+          `
         )}
       >
         新帖子

@@ -1,5 +1,6 @@
 // 每天北京时间早上八点 cron: 0 0 8 * * *
 import { NextResponse } from "next/server";
+
 import { cleanAllBindings } from "@/lib/bindings/server-utils";
 
 export async function GET() {

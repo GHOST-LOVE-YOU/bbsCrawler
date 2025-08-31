@@ -1,25 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { Form } from "@/components/ui/form";
+import { NotificationType } from "@/lib/notifications/type";
 import {
   browserPushSchema,
   emailSchema,
   telegramSchema,
   TNotification,
 } from "@/lib/validations";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { NotificationType } from "@/lib/notifications/type";
 import {
   BrowserPushNotification,
   EmailNotification,
   TelegramNotification,
   useNotificationMethod,
 } from "@/providers/NotificationMethodProvider";
-import { Form } from "@/components/ui/form";
-import { WebPushAutoFillButton } from "./WebPushAutoFillButton";
-import { MethodFormSubmitButtons } from "./MethodFormSubmitButtons";
+
 import { MethodFormFields } from "./MethodFormFields";
+import { MethodFormSubmitButtons } from "./MethodFormSubmitButtons";
+import { WebPushAutoFillButton } from "./WebPushAutoFillButton";
 
 type MethodFormProps = {
   actionType: NotificationType;
@@ -55,8 +57,8 @@ export default function MethodForm({
       break;
   }
   const form = useForm({
-    resolver: resolver,
-    defaultValues: defaultValues,
+    resolver,
+    defaultValues,
   });
 
   const handleSubmit = async (data: Partial<TNotification>) => {

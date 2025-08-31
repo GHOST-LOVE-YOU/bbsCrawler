@@ -1,7 +1,8 @@
-import prisma from "@/lib/db";
-import { clientGetUser } from "@/lib/user/server-utils";
 import { NotificationTargetType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+
+import prisma from "@/lib/db";
+import { clientGetUser } from "@/lib/user/server-utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
       where: {
         userId_targetType_targetId: {
           userId: user.id,
-          targetType: targetType,
+          targetType,
           targetId: commentId,
         },
       },

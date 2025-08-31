@@ -55,10 +55,13 @@ export async function getAllNotificationLists(): Promise<NotificationLists> {
       where: { id: { in: postIds } },
       select: { id: true, topic: true },
     });
-    const postsMap = posts.reduce((map, post) => {
-      map[post.id] = post;
-      return map;
-    }, {} as Record<string, { id: string; topic: string }>);
+    const postsMap = posts.reduce(
+      (map, post) => {
+        map[post.id] = post;
+        return map;
+      },
+      {} as Record<string, { id: string; topic: string }>
+    );
 
     // Fetch all relevant comments in a single query
     const commentIds = [...notifyCommentRules, ...dontNotifyCommentRules].map(
@@ -78,10 +81,13 @@ export async function getAllNotificationLists(): Promise<NotificationLists> {
         },
       },
     });
-    const commentsMap = comments.reduce((map, comment) => {
-      map[comment.id] = comment;
-      return map;
-    }, {} as Record<string, (typeof comments)[0]>);
+    const commentsMap = comments.reduce(
+      (map, comment) => {
+        map[comment.id] = comment;
+        return map;
+      },
+      {} as Record<string, (typeof comments)[0]>
+    );
 
     // Create the final lists
     const notifyPostList = notifyPostRules.map((rule) => ({

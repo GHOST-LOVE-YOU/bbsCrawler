@@ -1,7 +1,8 @@
+import { NotificationAction } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+
 import prisma from "@/lib/db";
 import { clientGetUser } from "@/lib/user/server-utils";
-import { NextRequest, NextResponse } from "next/server";
-import { NotificationAction } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,8 +24,8 @@ export async function POST(req: NextRequest) {
       where: {
         userId_targetType_targetId: {
           userId: user.id,
-          targetType: targetType,
-          targetId: targetId,
+          targetType,
+          targetId,
         },
       },
       update: {
@@ -32,8 +33,8 @@ export async function POST(req: NextRequest) {
       },
       create: {
         userId: user.id,
-        targetType: targetType,
-        targetId: targetId,
+        targetType,
+        targetId,
         action: action as NotificationAction,
       },
     });
@@ -68,8 +69,8 @@ export async function DELETE(req: NextRequest) {
       where: {
         userId_targetType_targetId: {
           userId: user.id,
-          targetType: targetType,
-          targetId: targetId,
+          targetType,
+          targetId,
         },
       },
     });

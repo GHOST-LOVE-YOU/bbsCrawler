@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
 import { Search } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+
 import { SearchInput } from "./SearchInput";
 
 export default function MobileSearchInput() {
@@ -35,7 +36,9 @@ export default function MobileSearchInput() {
         onClick={() => setIsOpen(true)}
       />
       {isOpen && (
-        <div className="fixed top-40 left-0 right-0 rounded-md shadow-lg z-50 flex items-center mx-2">
+        <div
+          className={`fixed top-40 right-0 left-0 z-50 mx-2 flex items-center rounded-md shadow-lg`}
+        >
           <SearchInput onSearchComplete={handleSearchComplete} />
         </div>
       )}
