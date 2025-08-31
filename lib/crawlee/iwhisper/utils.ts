@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import { autoAddComment } from "@/lib/comments/server-utils";
+import logger from "@/lib/logger";
 import { autoGetPost } from "@/lib/posts/server-utils";
 
 const BACKEND_AUTH_USERNAME = process.env.BACKEND_AUTH_USERNAME || "";
@@ -33,7 +34,7 @@ export const storePost = async (postDatas: crawlPost) => {
       );
     }
   } catch (error) {
-    console.error("something wired occur:", error);
+    logger.error("something wired occur:", error);
   }
 };
 
