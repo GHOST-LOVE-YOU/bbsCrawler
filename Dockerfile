@@ -36,6 +36,9 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Copy Prisma client files to standalone output
+RUN cp -r node_modules/.prisma .next/standalone/node_modules/ || true
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
