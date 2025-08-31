@@ -37,7 +37,7 @@ RUN \
   fi
 
 # Copy Prisma client files to standalone output
-RUN cp -r node_modules/.prisma .next/standalone/node_modules/ || true
+RUN cp -r node_modules/.prisma .next/standalone/ || true
 
 # Production image, copy all the files and run next
 FROM base AS runner
