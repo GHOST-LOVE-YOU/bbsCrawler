@@ -12,16 +12,19 @@ const Home = async (props: {
   const page = Number(searchParams.page) || 1;
   const { posts, maxPage } = await userGetPost(page, sortBy);
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <Sortby />
-        <PagePagination maxPage={maxPage} />
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1>
+        <div className="flex items-center gap-4">
+          <Sortby />
+          <PagePagination maxPage={maxPage} />
+        </div>
       </div>
       <PostList sortBy={sortBy} posts={posts} />
-      <div className="flex justify-end py-2">
+      <div className="flex justify-end">
         <PagePagination maxPage={maxPage} />
       </div>
-    </>
+    </div>
   );
 };
 

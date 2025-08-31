@@ -6,26 +6,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <div
-      className={`
-      flex flex-col rounded-xl
-      md:border-2 md:border-gray-300 md:p-4
-      dark:border-gray-700
-    `}
-    >
-      <div className="flex flex-row items-center space-x-4">
-        <div
-          className={`
-          cursor-pointer text-2xl font-extrabold
-          hover:text-stone-500
-        `}
-        >
-          <Skeleton className="h-8 w-64" />
+    <div className="container mx-auto px-4 py-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="card md:shadow-lg md:rounded-xl">
+          <div className="p-4 md:p-6 space-y-6">            
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">              <Skeleton className="h-8 md:h-10 w-full max-w-md" />
+            </div>
+            
+            <ReplyListLoading />
+            
+            <div className="flex justify-end pt-4">
+              <ParamPaginationLoading />
+            </div>
+          </div>
         </div>
-      </div>
-      <ReplyListLoading />
-      <div className="flex justify-end pt-2">
-        <ParamPaginationLoading />
       </div>
     </div>
   );

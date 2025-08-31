@@ -21,15 +21,13 @@ export default async function PostPage(props: postPageProps) {
   const page = parseInt(searchParams.page || "1");
 
   return (
-    <div className="justify-between">
-      <div
-        className={`
-        container mx-auto max-w-5xl rounded-xl border-gray-300 px-2
-        md:border-2 md:px-6 md:py-4 md:shadow-2xl
-        dark:border-gray-700
-      `}
-      >
-        <PostContent postId={postId} page={page} />
+    <div className="container mx-auto px-4 py-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="card card-hover md:shadow-lg md:rounded-xl">
+          <div className="p-4 md:p-6">
+            <PostContent postId={postId} page={page} />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -39,33 +37,26 @@ async function PostContent({ postId, page }: { postId: string; page: number }) {
   const result = await getCommentsByPage(postId, page);
 
   return (
-    <div
-      className={`
-      flex-1 py-2
-      md:px-2
-    `}
-    >
-      <Suspense fallback={<Loading />}>
-        <div className="flex flex-row items-center space-x-4">
-          <div
-            className={`
-            cursor-pointer text-2xl font-extrabold
-            hover:text-stone-500
-          `}
-          >
-            {result.postTitle}
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">
+        <h1 className="text-2xl md:text-3xl font-bold text-text-primary leading-tight">
+          {result.postTitle}
+        </h1>
+        <NotificationRuleButton
+          targetType="POST"
+          targetId={postId}
+          action="NOTIFY"
+        />
+      </div>
+      
+      <div className="space-y-6">
+        <Suspense fallback={<Loading />}>
+          <ReplyList comments={result.comments} op={result.op} />
+          <div className="flex justify-end pt-4">
+            <ParamPagination maxPage={result.maxPage} />
           </div>
-          <NotificationRuleButton
-            targetType="POST"
-            targetId={postId}
-            action="NOTIFY"
-          />
-        </div>
-        <ReplyList comments={result.comments} op={result.op} />
-        <div className="flex justify-end pt-2">
-          <ParamPagination maxPage={result.maxPage} />
-        </div>
-      </Suspense>
+        </Suspense>
+      </div>
     </div>
   );
 }

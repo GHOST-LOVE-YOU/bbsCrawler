@@ -1,43 +1,25 @@
 export default function Footer() {
   return (
-    <footer
-      className={`
-        mt-4 w-full border-t border-slate-200 bg-slate-50
-        dark:border-slate-700 dark:bg-slate-900
-      `}
-    >
-      <div className="container mx-auto max-w-5xl">
-        <div className="text-center">
-          UI完全
-          <span
-            className={`
-              text-gray-600 line-through
-              dark:text-gray-400
-            `}
-          >
-            {" "}
-            参考{" "}
-          </span>
-          抄袭{" "}
-          <a
-            href="https://www.nodeseek.com/"
-            className={`
-              text-green-400
-              hover:underline
-              dark:text-green-500
-            `}
-          >
-            nodeseek
-          </a>
-          , 仅作学习用处
-        </div>
-        <div
-          className={`
-            pt-2 text-center text-gray-600
-            dark:text-gray-400
-          `}
-        >
-          Copyright © 2024 - 2024 All rights Reserved
+    <footer className="w-full border-t border-border bg-background-secondary">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center space-y-4">
+          <div className="text-text-secondary">
+            <p className="text-sm">
+              UI设计灵感来源于{" "}
+              <a
+                href="https://www.nodeseek.com/"
+                className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 underline underline-offset-4 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                nodeseek
+              </a>
+              {" "}，仅作学习用途
+            </p>
+          </div>
+          <div className="text-text-tertiary text-xs">
+            Copyright © 2024 - {new Date().getFullYear()} All rights reserved
+          </div>
         </div>
       </div>
     </footer>

@@ -11,65 +11,38 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export default function NavBar() {
   return (
-    <header
-      className={`
-        h-12 w-full border-b border-slate-200 bg-slate-50
-        dark:border-slate-700 dark:bg-slate-900
-      `}
-    >
-      <div className="container px-0">
-        <div className="flex h-full flex-row items-center justify-between">
-          <div
-            className={`
-              flex flex-row items-center space-x-2
-              sm:space-x-4
-            `}
-          >
+    <header className="h-16 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-full items-center justify-between">
+          <div className="flex items-center space-x-4">
             <MobileSidebar />
             <Logo />
-            <nav className="hidden md:flex items-center space-x-4 ml-4">
+            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
               {topBoards.slice(0, 4).map((board) => (
                 <Link
                   key={board.label}
                   href={`/areas/${board.label}`}
-                  className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+                  className="px-3 py-2 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-colors"
                 >
                   {board.name}
                 </Link>
               ))}
               <Link
                 href="/areas"
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+                className="px-3 py-2 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-colors"
               >
                 更多
               </Link>
             </nav>
           </div>
-          <div
-            className={`
-              flex flex-row items-center space-x-2
-              sm:space-x-4
-            `}
-          >
-            <div
-              className={`
-                hidden flex-none
-                md:block
-              `}
-            >
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="hidden md:block">
               <SearchInput />
             </div>
-            <div
-              className={`
-                flex-none
-                md:hidden
-              `}
-            >
+            <div className="md:hidden">
               <MobileSearchInput />
             </div>
-            <div className="flex-none">
-              <ThemeToggle />
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </div>
