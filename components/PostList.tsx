@@ -12,9 +12,10 @@ moment.locale("zh-cn");
 interface PostListProps {
   posts: listPost[];
   sortBy: sortByType;
+  area?: string;
 }
 
-export default function PostList({ posts, sortBy }: PostListProps) {
+export default function PostList({ posts, sortBy, area }: PostListProps) {
   return (
     <ul
       className={`
@@ -45,73 +46,96 @@ export default function PostList({ posts, sortBy }: PostListProps) {
                 className="rounded-full"
               />
             </Link>
-            <div className="grow">
-              <p
-                className={`
-                  cursor-pointer truncate text-base font-semibold
-                  hover:text-stone-600
-                  sm:text-lg
-                  md:text-xl
-                  dark:hover:text-stone-300
-                `}
-              >
-                <Link href={`/post/${post.postId}`} className="truncate">
-                  {post.topic}
-                </Link>
-              </p>
-              <div
-                className={`
-                  flex flex-wrap items-center gap-2 text-xs text-stone-600
-                  md:text-sm
-                  dark:text-stone-400
-                `}
-              >
+            <div className="w-full">
+              <div className="flex items-start space-x-3">
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={`
+                      cursor-pointer truncate text-base font-semibold
+                      hover:text-stone-600
+                      sm:text-lg
+                      md:text-xl
+                      dark:hover:text-stone-300
+                    `}
+                  >
+                    <Link href={`/post/${post.postId}`} className="truncate">
+                      {post.topic}
+                    </Link>
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2 flex items-center justify-between">
                 <div
                   className={`
-                    flex cursor-pointer items-center space-x-1
-                    hover:text-stone-900
-                    dark:hover:text-stone-50
+                    flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-600
+                    md:text-sm
+                    dark:text-stone-400
                   `}
                 >
-                  <span className="icon-[ph--user]" />
-                  <Link href={`/space/${post.userId}`}>{post.userName}</Link>
+                  <div
+                    className={`
+                      flex cursor-pointer items-center space-x-1
+                      hover:text-stone-900
+                      dark:hover:text-stone-50
+                    `}
+                  >
+                    <span className="icon-[ph--user]" />
+                    <Link href={`/space/${post.userId}`}>{post.userName}</Link>
+                  </div>
+                  <div
+                    className={`
+                      hidden items-center space-x-1
+                      sm:flex
+                    `}
+                  >
+                    <span className="icon-[clarity--eye-show-line]" />
+                    <span>000</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="icon-[tabler--message]" />
+                    <span>{post.commentCount}</span>
+                  </div>
+                  <div
+                    className={`
+                      flex cursor-pointer items-center space-x-1
+                      hover:text-stone-900
+                      dark:hover:text-stone-50
+                    `}
+                  >
+                    <span className="icon-[carbon--user-activity]" />
+                    <Link href={`/space/${post.latestCommentUserId}`}>
+                      {post.latestCommentUserName}
+                    </Link>
+                  </div>
+                  <div
+                    className={`
+                      flex items-center space-x-1 text-xs text-stone-600
+                      dark:text-stone-400
+                    `}
+                  >
+                    <span className="icon-[bx--time-five]" />
+                    <span>
+                      {sortBy === "createdAt"
+                        ? moment(post.createdAtTime).subtract(8, "h").fromNow()
+                        : post.latestCommentTime
+                          ? moment(post.latestCommentTime)
+                              .subtract(8, "h")
+                              .fromNow()
+                          : "N/A"}
+                    </span>
+                  </div>
                 </div>
-                <div
-                  className={`
-                    hidden items-center space-x-1
-                    sm:flex
-                  `}
-                >
-                  <span className="icon-[clarity--eye-show-line]" />
-                  <span>000</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <span className="icon-[tabler--message]" />
-                  <span>{post.commentCount}</span>
-                </div>
-                <div
-                  className={`
-                    flex cursor-pointer items-center space-x-1
-                    hover:text-stone-900
-                    dark:hover:text-stone-50
-                  `}
-                >
-                  <span className="icon-[carbon--user-activity]" />
-                  <Link href={`/space/${post.latestCommentUserId}`}>
-                    {post.latestCommentUserName}
-                  </Link>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <span className="icon-[bx--time-five]" />
-                  <span>
-                    {sortBy === "createdAt"
-                      ? moment(post.createdAtTime).subtract(8, "h").fromNow()
-                      : post.latestCommentTime
-                        ? moment(post.latestCommentTime)
-                            .subtract(8, "h")
-                            .fromNow()
-                        : "N/A"}
-                  </span>
+                <div className="flex items-center space-x-2">
+                  {area && (
+                    <span
+                      className={`
+                        inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs
+                        font-medium text-blue-800
+                      `}
+                    >
+                      {area}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

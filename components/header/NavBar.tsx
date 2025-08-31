@@ -1,5 +1,8 @@
 // NavBar.tsx
 
+import Link from "next/link";
+
+import { topBoards } from "@/constants/board";
 import { Logo } from "./Logo";
 import MobileSearchInput from "./MobileSearchInput";
 import { MobileSidebar } from "./MobileSidebar";
@@ -24,6 +27,23 @@ export default function NavBar() {
           >
             <MobileSidebar />
             <Logo />
+            <nav className="hidden md:flex items-center space-x-4 ml-4">
+              {topBoards.slice(0, 4).map((board) => (
+                <Link
+                  key={board.label}
+                  href={`/areas/${board.label}`}
+                  className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+                >
+                  {board.name}
+                </Link>
+              ))}
+              <Link
+                href="/areas"
+                className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+              >
+                更多
+              </Link>
+            </nav>
           </div>
           <div
             className={`

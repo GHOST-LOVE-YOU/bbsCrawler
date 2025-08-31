@@ -1,3 +1,30 @@
+export const topBoards = [
+  {
+    name: "悄悄话",
+    label: "IWhisper",
+  },
+  {
+    name: "跳蚤市场",
+    label: "Advertising",
+  },
+  {
+    name: "谈天说地",
+    label: "Talking",
+  },
+  {
+    name: "情感的天空",
+    label: "Feeling",
+  },
+  {
+    name: "缘来如此",
+    label: "Friends",
+  },
+  {
+    name: "反馈",
+    label: "Feedback",
+  }
+];
+
 export const boardLabels = [
   {
     name: "本站站务",

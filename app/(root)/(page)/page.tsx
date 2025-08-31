@@ -3,18 +3,17 @@ import PostList from "@/components/PostList";
 import Sortby from "@/components/Sortby";
 import { userGetPost } from "@/lib/posts/server-utils";
 
-const Home = async (
-  props: {
-    searchParams: Promise<{ [key: string]: string | undefined }>;
-  }
-) => {
+const Home = async (props: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) => {
   const searchParams = await props.searchParams;
   const sortBy =
     searchParams.sortBy === "updatedAt" ? "updatedAt" : "createdAt";
-  const { posts, maxPage } = await userGetPost(1, sortBy);
+  const page = Number(searchParams.page) || 1;
+  const { posts, maxPage } = await userGetPost(page, sortBy);
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <Sortby />
         <PagePagination maxPage={maxPage} />
       </div>

@@ -39,7 +39,6 @@ export async function autoAddComment(Comment: unknown, postId: string) {
     // 有一个新评论发布了
     await autoHandleNewComment(newComment);
   } catch (e) {
-    logger.error("出现奇怪的问题: " + String(e));
     return { message: "评论已存在", success: false };
   }
   logger.info("评论添加成功");

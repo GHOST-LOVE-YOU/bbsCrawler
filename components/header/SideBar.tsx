@@ -1,13 +1,10 @@
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Image from "next/legacy/image";
 import Link from "next/link";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { topBoards } from "@/constants/board";
 import { userGetUnreadMessageCount } from "@/lib/messages/server-utils";
 import { getAvatarUrl, getUserByKindeId } from "@/lib/user/server-utils";
 
@@ -41,9 +38,13 @@ export default async function SideBar() {
           <>
             <UserInfo user={user} />
             <UserActions />
+            <AreaNavigation />
           </>
         ) : (
-          <GuestInfo />
+          <>
+            <GuestInfo />
+            <AreaNavigation />
+          </>
         )}
       </div>
     </div>
@@ -222,6 +223,46 @@ export function GuestInfo() {
       <LoginLink postLoginRedirectURL="/">
         <button className="mt-2 w-16 rounded-md p-1">登录</button>
       </LoginLink>
+    </div>
+  );
+}
+
+export function AreaNavigation() {
+  return (
+    <div className="mt-4">
+      <h3
+        className={`
+          mb-2 text-sm font-semibold text-gray-700
+          dark:text-gray-300
+        `}
+      >
+        热门版块
+      </h3>
+      <div className="space-y-1">
+        {topBoards.map((board) => (
+          <Link
+            key={board.label}
+            href={`/areas/${board.label}`}
+            className={`
+              block rounded-md px-2 py-1 text-sm text-gray-600 transition-colors
+              hover:bg-gray-100 hover:text-blue-600
+              dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400
+            `}
+          >
+            {board.name}
+          </Link>
+        ))}
+        <Link
+          href="/areas"
+          className={`
+            block rounded-md px-2 py-1 text-sm text-blue-600 transition-colors
+            hover:bg-gray-100 hover:text-blue-700
+            dark:text-blue-400 dark:hover:bg-gray-800 dark:hover:text-blue-300
+          `}
+        >
+          所有版块
+        </Link>
+      </div>
     </div>
   );
 }

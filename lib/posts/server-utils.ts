@@ -1,5 +1,7 @@
 import "server-only";
 
+import { PostArea } from "@prisma/client";
+
 import prisma from "@/lib/db";
 import { autoGetBot } from "@/lib/user/server-utils";
 import { autoPostSchema } from "@/lib/validations";
@@ -34,19 +36,23 @@ export async function autoGetPost(data: unknown) {
 // ---- user ----
 export async function userGetPost(
   page: number,
-  sortBy: "createdAt" | "updatedAt"
+  sortBy: "createdAt" | "updatedAt",
+  area?: string
 ) {
   // Simulating a delay for development purposes
   if (process.env.NODE_ENV === "development") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
-  const pageSize = 50;
+  const pageSize = 10;
   const skip = pageSize * (page - 1);
+
+  const whereClause = area ? { area: area as PostArea } : {};
 
   const [posts, totalCount] = await prisma.$transaction([
     prisma.post.findMany({
       skip,
       take: pageSize,
+      where: whereClause,
       orderBy: {
         [sortBy]: "desc",
       },
@@ -62,7 +68,7 @@ export async function userGetPost(
         },
       },
     }),
-    prisma.post.count({}),
+    prisma.post.count({ where: whereClause }),
   ]);
 
   const maxPage = Math.ceil(totalCount / pageSize);

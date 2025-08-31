@@ -40,6 +40,7 @@ export const storePost = async (postDatas: crawlPost) => {
     }
   } catch (error) {
     logger.error("出现奇怪的问题: " + String(error));
+    logger.info("post: " + JSON.stringify(postDatas));
   }
 };
 

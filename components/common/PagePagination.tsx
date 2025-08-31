@@ -18,9 +18,9 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
   const sortBy = sortByParam === "updatedAt" ? "updatedAt" : "createdAt";
 
   const currentPage = useMemo(() => {
-    const pageMatch = pathname.match(/\/page\/(\d+)/);
-    return pageMatch ? parseInt(pageMatch[1], 10) : 1;
-  }, [pathname]);
+    const pageParam = searchParams.get("page");
+    return pageParam ? parseInt(pageParam, 10) : 1;
+  }, [searchParams]);
 
   const getPages = useCallback(() => {
     let pages = [];
@@ -52,17 +52,20 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
     (page: number | string) => {
       if (typeof page === "string" || page < 1 || page > maxPage) return;
 
-      let url = page > 1 ? `/page/${page}` : "/";
-
-      if (sortBy === "updatedAt") {
-        const params = new URLSearchParams(searchParams);
-        params.set("sortBy", sortBy);
-        url += `?${params.toString()}`;
+      const params = new URLSearchParams(searchParams);
+      
+      if (page > 1) {
+        params.set("page", page.toString());
+      } else {
+        params.delete("page");
       }
+
+      const queryString = params.toString();
+      const url = queryString ? `${pathname}?${queryString}` : pathname;
 
       router.push(url);
     },
-    [router, searchParams, maxPage, sortBy]
+    [router, searchParams, maxPage, pathname]
   );
 
   return (
