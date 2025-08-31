@@ -13,7 +13,12 @@ const Home = async (props: {
   const { posts, maxPage } = await userGetPost(page, sortBy);
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div
+        className={`
+          flex flex-col items-center justify-between gap-4
+          sm:flex-row
+        `}
+      >
         <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1>
         <div className="flex items-center gap-4">
           <Sortby />

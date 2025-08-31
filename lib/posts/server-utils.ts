@@ -43,7 +43,7 @@ export async function userGetPost(
   if (process.env.NODE_ENV === "development") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
-  const pageSize = 10;
+  const pageSize = 50;
   const skip = pageSize * (page - 1);
 
   const whereClause = area ? { area: area as PostArea } : {};

@@ -53,7 +53,7 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
       if (typeof page === "string" || page < 1 || page > maxPage) return;
 
       const params = new URLSearchParams(searchParams);
-      
+
       if (page > 1) {
         params.set("page", page.toString());
       } else {

@@ -42,7 +42,7 @@ export default function Loading() {
     <div className="flex items-center justify-center">
       <Card
         className={`
-          w-full max-w-4xl bg-slate-50
+          w-full max-w-full bg-slate-50
           dark:bg-slate-900
         `}
       >

@@ -32,7 +32,7 @@ export default async function Page(props: {
   const showBindingsButton =
     currentUser && !currentUser.tag.includes("bot") && user.tag.includes("bot");
   return (
-    <div className="container mx-auto max-w-4xl p-4">
+    <div className="container mx-auto max-w-full p-4">
       <Card
         className={`
           bg-background-light mb-4 border border-gray-300

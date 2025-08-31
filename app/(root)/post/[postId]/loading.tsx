@@ -7,14 +7,36 @@ import { Skeleton } from "@/components/ui/skeleton";
 const Loading = () => {
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="card md:shadow-lg md:rounded-xl">
-          <div className="p-4 md:p-6 space-y-6">            
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">              <Skeleton className="h-8 md:h-10 w-full max-w-md" />
+      <div className="mx-auto max-w-full">
+        <div
+          className={`
+            card
+            md:rounded-xl md:shadow-lg
+          `}
+        >
+          <div
+            className={`
+              space-y-6 p-4
+              md:p-6
+            `}
+          >
+            <div
+              className={`
+                flex flex-col gap-4 border-b border-border pb-4
+                sm:flex-row sm:items-center sm:justify-between
+              `}
+            >
+              {" "}
+              <Skeleton
+                className={`
+                  h-8 w-full max-w-full
+                  md:h-10
+                `}
+              />
             </div>
-            
+
             <ReplyListLoading />
-            
+
             <div className="flex justify-end pt-4">
               <ParamPaginationLoading />
             </div>

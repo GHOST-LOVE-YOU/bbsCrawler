@@ -1,17 +1,10 @@
 import Link from "next/link";
 
-import { topBoards, boardLabels } from "@/constants/board";
+import { boardLabels } from "@/constants/board";
 
 export default function AreasPage() {
-  const allBoards = boardLabels.flatMap((category) =>
-    category.boards.map((board) => ({
-      ...board,
-      category: category.name,
-    }))
-  );
-
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4">
       <div className="mb-8">
         <h1 className="mb-4 text-3xl font-bold">所有版块</h1>
         <p className="mb-6 text-gray-600">
