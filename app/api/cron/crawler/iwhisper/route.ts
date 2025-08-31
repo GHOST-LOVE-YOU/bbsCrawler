@@ -12,7 +12,7 @@ export async function GET() {
     await crawlAndStoreIWhisper();
     return NextResponse.json({ message: "采集iWhisper帖子成功" });
   } catch (error) {
-    logger.error("采集iWhisper帖子失败:", error);
+    logger.error("采集iWhisper帖子失败: " + String(error));
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     } else {

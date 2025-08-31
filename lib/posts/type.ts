@@ -25,6 +25,7 @@ type sortByType = "createdAt" | "updatedAt";
 
 type crawlPost = {
   byr_id: string;
+  area: string;
   topic: string;
   author: string;
   time: string;

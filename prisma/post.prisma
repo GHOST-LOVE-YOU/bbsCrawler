@@ -1,4 +1,4 @@
-enum PostSection {
+enum PostArea {
   Advice
   Announce
   BBShelp

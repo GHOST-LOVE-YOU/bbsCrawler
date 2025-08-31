@@ -55,7 +55,7 @@ model Post {
   id        String      @id @default(uuid())
   byr_id    String?     @unique @default(dbgenerated("NULL"))
   topic     String
-  section   PostSection
+  area   PostArea
   updatedAt DateTime
   createdAt DateTime
 
@@ -159,3 +159,4 @@ enum NotificationAction {
   NOTIFY
   DONT_NOTIFY
 }
+

@@ -18,12 +18,11 @@ export async function autoGetPost(data: unknown) {
     return { created: false, post: existingPost };
   }
 
-  const user = await autoGetBot(validatedPost.userName);
-  const { userName, ...postData } = validatedPost;
+  const user = await autoGetBot(validatedPost.author);
+  const { author, ...postData } = validatedPost;
   const newPost = await prisma.post.create({
     data: {
       ...postData,
-      section: "IWhisper",
       userId: user.id,
     },
   });

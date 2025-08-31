@@ -1,11 +1,3 @@
-type notifyComment = {
-  id: string;
-  postId: string;
-  postTitle: string;
-  commentSequence: number;
-  content: string;
-};
-
 type crawlComment = {
   author: string;
   content: string;
@@ -13,6 +5,14 @@ type crawlComment = {
   like: number;
   dislike: number;
   time: string;
+};
+
+type notifyComment = {
+  id: string;
+  postId: string;
+  postTitle: string;
+  commentSequence: number;
+  content: string;
 };
 
 type CardComment = {

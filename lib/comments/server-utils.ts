@@ -5,10 +5,12 @@ import { autoHandleNewComment } from "@/lib/messages/server-utils";
 import { autoGetBot } from "@/lib/user/server-utils";
 import { commentSchema } from "@/lib/validations";
 
-export async function autoAddComment(Comment: unknown, post_id: string) {
+import logger from "../logger";
+
+export async function autoAddComment(Comment: unknown, postId: string) {
   const validatedComment = commentSchema.parse(Comment);
-  const user = await autoGetBot(validatedComment.userName);
-  const { userName, floor, ...commentData } = validatedComment;
+  const user = await autoGetBot(validatedComment.author);
+  const { author, floor, ...commentData } = validatedComment;
   try {
     const newComment = await prisma.comment.create({
       data: {
@@ -20,7 +22,7 @@ export async function autoAddComment(Comment: unknown, post_id: string) {
         },
         post: {
           connect: {
-            id: post_id,
+            id: postId,
           },
         },
       },
@@ -28,7 +30,7 @@ export async function autoAddComment(Comment: unknown, post_id: string) {
     // 更新post的updatedAt
     await prisma.post.update({
       where: {
-        id: post_id,
+        id: postId,
       },
       data: {
         updatedAt: commentData.time,
@@ -37,13 +39,15 @@ export async function autoAddComment(Comment: unknown, post_id: string) {
     // 有一个新评论发布了
     await autoHandleNewComment(newComment);
   } catch (e) {
-    return { message: "Comment already exists", success: false };
+    logger.error("出现奇怪的问题: " + String(e));
+    return { message: "评论已存在", success: false };
   }
-  return { message: "Comment added successfully", success: true };
+  logger.info("评论添加成功");
+  return { message: "评论添加成功", success: true };
 }
 
 export async function getCommentsByPage(postId: string, page: number) {
-  // Sleep for a short duration to prevent rate limiting (only in development)
+  // 睡眠一下以防止频率限制（只在开发环境）
   if (process.env.NODE_ENV === "development") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }

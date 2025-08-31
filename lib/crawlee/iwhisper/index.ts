@@ -17,7 +17,7 @@ export const crawlAndStoreIWhisper = async () => {
     }
     logger.info("成功爬取并存储帖子");
   } catch (error) {
-    logger.error("爬取并存储帖子失败:", error);
+    logger.error("爬取并存储帖子失败: " + String(error));
     throw error;
   }
 };
