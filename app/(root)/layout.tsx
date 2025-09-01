@@ -10,8 +10,8 @@ export default function RootLayout({
   return (
     <div
       className={`
-        flex flex-col p-1
-        md:flex-row
+        flex flex-col
+        md:flex-row md:p-1
       `}
     >
       <div

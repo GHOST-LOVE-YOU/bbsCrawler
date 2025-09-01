@@ -12,10 +12,9 @@ moment.locale("zh-cn");
 interface PostListProps {
   posts: listPost[];
   sortBy: sortByType;
-  area?: string;
 }
 
-export default function PostList({ posts, sortBy, area }: PostListProps) {
+export default function PostList({ posts, sortBy }: PostListProps) {
   return (
     <ul
       className={`
@@ -46,8 +45,13 @@ export default function PostList({ posts, sortBy, area }: PostListProps) {
                 className="rounded-full"
               />
             </Link>
-            <div className="w-full">
-              <div className="flex items-start space-x-3">
+            <div className="min-w-0 flex-1">
+              <div
+                className={`
+                  flex items-start
+                  md:space-x-3
+                `}
+              >
                 <div className="min-w-0 flex-1">
                   <p
                     className={`
@@ -126,14 +130,14 @@ export default function PostList({ posts, sortBy, area }: PostListProps) {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {area && (
+                  {post.area && (
                     <span
                       className={`
                         inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs
                         font-medium text-blue-800
                       `}
                     >
-                      {area}
+                      {post.area}
                     </span>
                   )}
                 </div>
@@ -178,10 +182,30 @@ export function PostListLoading() {
                     dark:text-text-dark
                   `}
                 >
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-4 w-24" />
+                  <Skeleton
+                    className={`
+                      h-4 w-10
+                      md:w-20
+                    `}
+                  />
+                  <Skeleton
+                    className={`
+                      h-4 w-8
+                      md:w-16
+                    `}
+                  />
+                  <Skeleton
+                    className={`
+                      h-4 w-8
+                      md:w-16
+                    `}
+                  />
+                  <Skeleton
+                    className={`
+                      h-4 w-12
+                      md:w-24
+                    `}
+                  />
                   <Skeleton className="h-4 w-32" />
                 </div>
               </div>

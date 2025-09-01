@@ -119,7 +119,7 @@
   --spacing-xs: 0.125rem;
   --spacing-sm: 0.25rem;
   --spacing-md: 0.5rem;
-  --spacing-lg: 1rem;
+  /* --spacing-lg: 1rem; */
   --spacing-xl: 1.5rem;
   --spacing-2xl: 2rem;
   --spacing-3xl: 3rem;
@@ -290,7 +290,7 @@
 /* Utility Classes */
 @utility container {
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: 0.3rem;
 
   @media (width >= 640px) {
     padding-inline: 2rem;

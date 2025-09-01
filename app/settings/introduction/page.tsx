@@ -1,5 +1,5 @@
 // app/settings/introduction/page.tsx
-import React, { use } from "react";
+import React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

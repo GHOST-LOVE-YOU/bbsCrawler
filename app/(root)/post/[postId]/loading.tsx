@@ -6,7 +6,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div
+      className={`
+        container mx-auto
+        md:px-4 md:py-6
+      `}
+    >
       <div className="mx-auto max-w-full">
         <div
           className={`

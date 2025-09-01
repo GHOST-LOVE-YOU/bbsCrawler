@@ -15,6 +15,7 @@ const Home = async (props: {
     {
       postId: "1",
       topic: "在爬其它板块的内容, 担心服务器吃不消, 暂停爬取iwhisper新数据",
+      area: "Advice",
       userName: "admin",
       userId: "1",
       userAvatar: null,
@@ -27,6 +28,7 @@ const Home = async (props: {
     {
       postId: "2",
       topic: "数据迁移中, 爬取结束后统一恢复数据",
+      area: "Advice",
       userName: "admin",
       userId: "1",
       userAvatar: null,
@@ -38,22 +40,26 @@ const Home = async (props: {
     },
   ];
   return (
-    <div className="space-y-6">
+    <div>
       <div
         className={`
           flex flex-col items-center justify-between gap-4
           sm:flex-row
         `}
       >
-        <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1>
-        <div className="flex items-center gap-4">
-          <Sortby />
-          <PagePagination maxPage={maxPage} />
+        {/* <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1> */}
+        <div className="flex w-full items-center justify-between gap-4">
+          <div>
+            <Sortby />
+          </div>
+          <div>
+            <PagePagination maxPage={maxPage} />
+          </div>
         </div>
       </div>
       <PostList sortBy="createdAt" posts={topPosts} />
       <PostList sortBy={sortBy} posts={posts} />
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-2">
         <PagePagination maxPage={maxPage} />
       </div>
     </div>

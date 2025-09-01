@@ -3,7 +3,12 @@
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function ClientSheetWrapper({
   children,
@@ -29,6 +34,7 @@ export function ClientSheetWrapper({
           dark:bg-slate-800
         `}
       >
+        <SheetTitle />
         {children}
       </SheetContent>
     </Sheet>

@@ -74,9 +74,10 @@ export async function userGetPost(
   const maxPage = Math.ceil(totalCount / pageSize);
 
   const formattedPosts = posts.map(
-    ({ id, topic, user, comments, createdAt }) => ({
+    ({ id, topic, area, user, comments, createdAt }) => ({
       postId: id,
       topic,
+      area,
       userName: user.name,
       userId: user.id,
       userAvatar: user.avatar,
@@ -146,9 +147,10 @@ export async function searchPostsByKeyword(keyword: string, page: number) {
   const maxPage = Math.ceil(totalCount / pageSize);
 
   const formattedPosts = posts.map(
-    ({ id, topic, user, comments, createdAt }) => ({
+    ({ id, topic, area, user, comments, createdAt }) => ({
       postId: id,
       topic,
+      area,
       userName: user.name,
       userId: user.id,
       userAvatar: user.avatar,

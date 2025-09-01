@@ -12,7 +12,7 @@ export default function Loading() {
     >
       <div
         className={`
-          w-full flex-1 space-y-4
+          w-full flex-1
           md:w-auto
         `}
       >
