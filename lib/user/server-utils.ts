@@ -65,10 +65,10 @@ export const getAvatarUrl = (userId: string) => {
   return `https://api.dicebear.com/9.x/micah/jpg?seed=${userId}&backgroundColor=${backColor}`;
 };
 
-export async function getUserByKindeId(kinde_id: string, given_name: string) {
+export async function getUserByKindeId(kindeId: string, givenName: string) {
   // Query the user by kinde_id
   let user = await prisma.user.findUnique({
-    where: { kinde_id },
+    where: { kinde_id: kindeId },
   });
 
   // If the user exists, return it
@@ -79,8 +79,8 @@ export async function getUserByKindeId(kinde_id: string, given_name: string) {
   // If the user does not exist, create a new user with the user tag
   user = await prisma.user.create({
     data: {
-      kinde_id,
-      name: given_name,
+      kinde_id: kindeId,
+      name: givenName,
       tag: { set: ["user"] },
     },
   });

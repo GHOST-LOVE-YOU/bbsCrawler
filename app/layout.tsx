@@ -70,7 +70,7 @@ export default function RootLayout({
           <div
             className={`
               mx-auto py-2
-              md:container md:px-4 md:py-8
+              md:container md:px-4 md:py-2
             `}
           >
             <div className="mx-auto max-w-6xl">{children}</div>

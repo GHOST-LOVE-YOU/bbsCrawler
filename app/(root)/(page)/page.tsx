@@ -38,7 +38,7 @@ const Home = async (props: {
     },
   ];
   return (
-    <div className="md:space-y-6">
+    <div>
       <div
         className={`
           flex flex-col items-center justify-between gap-4

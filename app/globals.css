@@ -118,7 +118,7 @@
   /* Spacing Scale */
   --spacing-xs: 0.125rem;
   --spacing-sm: 0.25rem;
-  --spacing-md: 0.5rem;
+  /* --spacing-md: 0.5rem; */
   --spacing-lg: 1rem;
   --spacing-xl: 1.5rem;
   --spacing-2xl: 2rem;
@@ -574,3 +574,4 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-secondary-400 dark:bg-secondary-500;
 }
+

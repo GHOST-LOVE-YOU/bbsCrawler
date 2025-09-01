@@ -9,7 +9,7 @@ export default async function SettingsHeader() {
   const user = await clientGetUser();
   const kindeUser = await getUser();
   const avatarUrl =
-    user && user.avatar ? getAvatarUrl(user.avatar) : "/default-avatar.png";
+    user && user.avatar ? user.avatar : await getAvatarUrl(user!.id);
 
   return (
     <div className="mb-6 flex items-center space-x-4">
