@@ -11,7 +11,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "BBS Crawler - Modern Forum Interface",
-  description: "A modern, responsive forum interface with flat design aesthetics",
+  description:
+    "A modern, responsive forum interface with flat design aesthetics",
 };
 
 export default function RootLayout({
@@ -66,10 +67,13 @@ export default function RootLayout({
         />
         <NavBar />
         <main className="flex-1">
-          <div className="container mx-auto px-4 py-6 md:py-8">
-            <div className="max-w-6xl mx-auto">
-              {children}
-            </div>
+          <div
+            className={`
+              mx-auto py-2
+              md:container md:px-4 md:py-8
+            `}
+          >
+            <div className="mx-auto max-w-6xl">{children}</div>
           </div>
         </main>
         <Toaster />

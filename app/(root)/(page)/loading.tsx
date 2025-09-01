@@ -12,8 +12,8 @@ export default function Loading() {
     >
       <div
         className={`
-          w-full flex-1 space-y-4
-          md:w-auto
+          w-full flex-1
+          md:w-auto md:space-y-4
         `}
       >
         <div className="flex items-center justify-between">

@@ -92,7 +92,7 @@ export default function NotificationRuleButton({
             `,
             "transition-colors duration-200",
             {
-              "bg-primary text-white dark:bg-primary-dark": isBound,
+              "bg-primary dark:bg-primary-dark": isBound,
             }
           )}
         >

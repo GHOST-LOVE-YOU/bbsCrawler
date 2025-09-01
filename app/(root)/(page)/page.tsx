@@ -38,22 +38,26 @@ const Home = async (props: {
     },
   ];
   return (
-    <div className="space-y-6">
+    <div className="md:space-y-6">
       <div
         className={`
           flex flex-col items-center justify-between gap-4
           sm:flex-row
         `}
       >
-        <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1>
-        <div className="flex items-center gap-4">
-          <Sortby />
-          <PagePagination maxPage={maxPage} />
+        {/* <h1 className="text-3xl font-bold text-text-primary">最新帖子</h1> */}
+        <div className="flex w-full items-center justify-between gap-4">
+          <div>
+            <Sortby />
+          </div>
+          <div>
+            <PagePagination maxPage={maxPage} />
+          </div>
         </div>
       </div>
       <PostList sortBy="createdAt" posts={topPosts} />
       <PostList sortBy={sortBy} posts={posts} />
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-2">
         <PagePagination maxPage={maxPage} />
       </div>
     </div>
