@@ -8,8 +8,8 @@ export default async function SettingsHeader() {
   const { getUser } = getKindeServerSession();
   const user = await clientGetUser();
   const kindeUser = await getUser();
-  const avatarUrl =
-    user && user.avatar ? user.avatar : await getAvatarUrl(user!.id);
+  const idSeed = user?.id ?? kindeUser?.id ?? "guest";
+  const avatarUrl = user?.avatar ?? (await getAvatarUrl(idSeed));
 
   return (
     <div className="mb-6 flex items-center space-x-4">
