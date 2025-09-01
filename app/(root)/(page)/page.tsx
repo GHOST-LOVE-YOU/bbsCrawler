@@ -15,6 +15,7 @@ const Home = async (props: {
     {
       postId: "1",
       topic: "在爬其它板块的内容, 担心服务器吃不消, 暂停爬取iwhisper新数据",
+      area: "Advice",
       userName: "admin",
       userId: "1",
       userAvatar: null,
@@ -27,6 +28,7 @@ const Home = async (props: {
     {
       postId: "2",
       topic: "数据迁移中, 爬取结束后统一恢复数据",
+      area: "Advice",
       userName: "admin",
       userId: "1",
       userAvatar: null,

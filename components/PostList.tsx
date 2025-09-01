@@ -12,10 +12,9 @@ moment.locale("zh-cn");
 interface PostListProps {
   posts: listPost[];
   sortBy: sortByType;
-  area?: string;
 }
 
-export default function PostList({ posts, sortBy, area }: PostListProps) {
+export default function PostList({ posts, sortBy }: PostListProps) {
   return (
     <ul
       className={`
@@ -131,14 +130,14 @@ export default function PostList({ posts, sortBy, area }: PostListProps) {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {area && (
+                  {post.area && (
                     <span
                       className={`
                         inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs
                         font-medium text-blue-800
                       `}
                     >
-                      {area}
+                      {post.area}
                     </span>
                   )}
                 </div>

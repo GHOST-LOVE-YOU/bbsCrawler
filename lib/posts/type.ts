@@ -11,6 +11,7 @@ type notifyPostOverView = {
 
 type listPost = {
   postId: string;
+  area: string;
   topic: string;
   userName: string;
   userId: string;
