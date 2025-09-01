@@ -13,7 +13,7 @@ export default async function UserProfilePage() {
   if (!user) {
     return null;
   }
-  const avatarUrl = user.avatar ? user.avatar : await getAvatarUrl(user!.id);
+  const avatarUrl = user.avatar ? user.avatar : await getAvatarUrl(user.id);
   return (
     <div className="p-4">
       <div>
