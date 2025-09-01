@@ -49,16 +49,13 @@ model UserBinding {
   bot    User   @relation("BindingBot", fields: [botId], references: [id])
 }
 
-enum PostSection {
-  IWhisper
-  Feedback
-}
+
 
 model Post {
   id        String      @id @default(uuid())
   byr_id    String?     @unique @default(dbgenerated("NULL"))
   topic     String
-  section   PostSection
+  area   PostArea
   updatedAt DateTime
   createdAt DateTime
 
@@ -162,3 +159,4 @@ enum NotificationAction {
   NOTIFY
   DONT_NOTIFY
 }
+

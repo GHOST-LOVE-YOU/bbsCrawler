@@ -1,11 +1,17 @@
 import React from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
-import { InboxHeaderLoading } from "../comment/loading";
-import { InboxContentLoading } from "../comment/loading";
+
+import { InboxHeaderLoading, InboxContentLoading } from "../comment/loading";
 
 export default function Loading() {
   return (
-    <Card className="w-full bg-slate-50 dark:bg-slate-900">
+    <Card
+      className={`
+        w-full bg-slate-50
+        dark:bg-slate-900
+      `}
+    >
       <CardContent className="p-0">
         <InboxHeaderLoading />
         <InboxContentLoading />

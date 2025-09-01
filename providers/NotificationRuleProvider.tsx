@@ -1,10 +1,11 @@
 "use client";
 
+import React, { createContext, useContext, useState } from "react";
+
 import { useToast } from "@/components/ui/use-toast";
 import { deletebindingBot, deleteNotificationRule } from "@/lib/actions";
 import { BindingsBot } from "@/lib/bindings/type";
 import { unclaimType } from "@/lib/notificationRule/type";
-import React, { createContext, useContext, useState } from "react";
 
 type NotificationRuleContextType = {
   bindingsBotList: BindingsBot[];

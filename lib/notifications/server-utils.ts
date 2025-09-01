@@ -1,8 +1,9 @@
 import "server-only";
 
-import { clientGetUser } from "@/lib/user/server-utils";
-import prisma from "@/lib/db";
 import { MessagesType } from "@prisma/client";
+
+import prisma from "@/lib/db";
+import { clientGetUser } from "@/lib/user/server-utils";
 
 export async function getNotifications() {
   const user = await clientGetUser();

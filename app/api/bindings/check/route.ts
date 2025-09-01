@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import prisma from "@/lib/db";
 import { clientGetUser } from "@/lib/user/server-utils";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
     const binding = await prisma.userBinding.findFirst({
       where: {
         userId: user.id,
-        botId: botId,
+        botId,
       },
     });
 

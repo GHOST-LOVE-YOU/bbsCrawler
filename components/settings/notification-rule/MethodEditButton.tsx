@@ -2,6 +2,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { flushSync } from "react-dom";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import NotificationForm from "./MethodForm";
-import { flushSync } from "react-dom";
 import { NotificationType } from "@/lib/notifications/type";
+
+import NotificationForm from "./MethodForm";
 
 type NofiticationButtonProps = {
   actionType: NotificationType;

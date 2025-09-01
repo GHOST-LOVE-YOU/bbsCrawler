@@ -4,9 +4,19 @@ import { SortbyLoading } from "@/components/Sortby";
 
 export default function Loading() {
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="flex-1 w-full md:w-auto space-y-4">
-        <div className="flex justify-between items-center">
+    <div
+      className={`
+        flex flex-col
+        md:flex-row
+      `}
+    >
+      <div
+        className={`
+          w-full flex-1 space-y-4
+          md:w-auto
+        `}
+      >
+        <div className="flex items-center justify-between">
           <SortbyLoading />
           <PagePaginationLoading />
         </div>

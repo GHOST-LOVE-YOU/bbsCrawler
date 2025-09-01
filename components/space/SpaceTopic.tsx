@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import React, { useState } from "react";
+
+import { Card, CardContent } from "@/components/ui/card";
+
 import SpacePagination from "./SpacePagination";
 import PostCard from "../PostCard";
 
@@ -24,7 +26,12 @@ export default function SpaceTopic({ topicsList }: SpaceTopicProps) {
 
   if (topicsList.length === 0)
     return (
-      <Card className="mt-4 min-h-48 flex justify-center bg-slate-50 dark:bg-slate-900">
+      <Card
+        className={`
+          mt-4 flex min-h-48 justify-center bg-slate-50
+          dark:bg-slate-900
+        `}
+      >
         <CardContent className="flex items-center">
           <p className="text-xl">最近没有发布新帖子</p>
         </CardContent>
@@ -35,7 +42,7 @@ export default function SpaceTopic({ topicsList }: SpaceTopicProps) {
       {currentTopics.map((topic) => (
         <PostCard key={topic.id} post={topic} />
       ))}
-      <div className="flex mt-4">
+      <div className="mt-4 flex">
         {totalPages > 1 && (
           <SpacePagination
             currentPage={currentPage}

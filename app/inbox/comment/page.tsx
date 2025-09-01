@@ -1,5 +1,5 @@
-import InboxHeader from "@/components/inbox/InboxHeader";
 import InboxContent from "@/components/inbox/InboxContent";
+import InboxHeader from "@/components/inbox/InboxHeader";
 
 async function InboxCommentContent() {
   const { userGetMessages } = await import("@/lib/messages/server-utils");

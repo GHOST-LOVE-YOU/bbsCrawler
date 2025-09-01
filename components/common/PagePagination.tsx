@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
+
+import { cn } from "@/lib/utils";
 
 type PagePaginationProps = {
   maxPage: number;
@@ -17,9 +18,9 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
   const sortBy = sortByParam === "updatedAt" ? "updatedAt" : "createdAt";
 
   const currentPage = useMemo(() => {
-    const pageMatch = pathname.match(/\/page\/(\d+)/);
-    return pageMatch ? parseInt(pageMatch[1], 10) : 1;
-  }, [pathname]);
+    const pageParam = searchParams.get("page");
+    return pageParam ? parseInt(pageParam, 10) : 1;
+  }, [searchParams]);
 
   const getPages = useCallback(() => {
     let pages = [];
@@ -51,28 +52,38 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
     (page: number | string) => {
       if (typeof page === "string" || page < 1 || page > maxPage) return;
 
-      let url = page > 1 ? `/page/${page}` : "/";
+      const params = new URLSearchParams(searchParams);
 
-      if (sortBy === "updatedAt") {
-        const params = new URLSearchParams(searchParams);
-        params.set("sortBy", sortBy);
-        url += `?${params.toString()}`;
+      if (page > 1) {
+        params.set("page", page.toString());
+      } else {
+        params.delete("page");
       }
+
+      const queryString = params.toString();
+      const url = queryString ? `${pathname}?${queryString}` : pathname;
 
       router.push(url);
     },
-    [router, searchParams, maxPage, sortBy]
+    [router, searchParams, maxPage, pathname]
   );
 
   return (
     <nav
-      className="md:pr-2 inline-flex -space-x-px text-sm"
+      className={`
+        inline-flex -space-x-px text-sm
+        md:pr-2
+      `}
       aria-label="Pagination"
     >
       <button
         onClick={() => navigateToPage(currentPage - 1)}
         className={cn(
-          "relative inline-flex items-center rounded-md hover:bg-slate-300 dark:hover:bg-slate-700 cursor-pointer",
+          `
+            relative inline-flex cursor-pointer items-center rounded-md
+            hover:bg-slate-300
+            dark:hover:bg-slate-700
+          `,
           {
             "text-stone-400 dark:text-stone-600": currentPage === 1,
           },
@@ -80,20 +91,30 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
         )}
         disabled={currentPage === 1}
       >
-        <span className="icon-[material-symbols--arrow-back-2] w-5 h-5" />
+        <span className="icon-[material-symbols--arrow-back-2] h-5 w-5" />
       </button>
       {getPages().map((page, index) => (
         <button
           key={index}
           onClick={() => navigateToPage(page)}
           aria-current={page === currentPage ? "page" : undefined}
-          className={`relative inline-flex items-center px-1.5 text-sm font-semibold rounded-md focus:z-20 hover:bg-slate-300 dark:hover:bg-slate-700  ${
-            page === currentPage
-              ? "z-10 bg-slate-300 dark:bg-slate-700 text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700"
-              : page === "..."
-              ? ""
-              : ""
-          } ${page === "..." && "inline-flex"}`}
+          className={`
+            relative inline-flex items-center rounded-md px-1.5 text-sm font-semibold
+            hover:bg-slate-300
+            focus:z-20
+            dark:hover:bg-slate-700
+            ${
+              page === currentPage
+                ? `
+                  z-10 bg-slate-300 text-white ring-1 ring-gray-300 ring-inset
+                  dark:bg-slate-700 dark:ring-gray-700
+                `
+                : page === "..."
+                  ? ""
+                  : ""
+            }
+            ${page === "..." && ""}
+          `}
         >
           {page}
         </button>
@@ -101,7 +122,11 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
       <button
         onClick={() => navigateToPage(currentPage + 1)}
         className={cn(
-          "relative inline-flex items-center rounded-md hover:bg-slate-300 dark:hover:bg-slate-700 cursor-pointer",
+          `
+            relative inline-flex cursor-pointer items-center rounded-md
+            hover:bg-slate-300
+            dark:hover:bg-slate-700
+          `,
           {
             "text-gray-400 dark:text-gray-600": currentPage === maxPage,
           },
@@ -109,7 +134,7 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
         )}
         disabled={currentPage === maxPage}
       >
-        <span className="icon-[material-symbols--play-arrow-rounded] w-5 h-5" />
+        <span className="icon-[material-symbols--play-arrow-rounded] h-5 w-5" />
       </button>
     </nav>
   );
@@ -118,19 +143,22 @@ export default function PagePagination({ maxPage }: PagePaginationProps) {
 export function PagePaginationLoading() {
   return (
     <nav
-      className="md:pr-2 inline-flex -space-x-px text-sm"
+      className={`
+        inline-flex -space-x-px text-sm
+        md:pr-2
+      `}
       aria-label="Pagination"
     >
       <button
         className="relative inline-flex items-center rounded-md p-[-6px]"
         disabled
       >
-        <span className="icon-[material-symbols--arrow-back-2] w-5 h-5" />
+        <span className="icon-[material-symbols--arrow-back-2] h-5 w-5" />
       </button>
       {[1, 2, 3].map((page) => (
         <button
           key={page}
-          className="relative inline-flex items-center px-1.5 text-sm font-semibold rounded-md"
+          className="relative inline-flex items-center rounded-md px-1.5 text-sm font-semibold"
         >
           {page}
         </button>
@@ -139,7 +167,7 @@ export function PagePaginationLoading() {
         className="relative inline-flex items-center rounded-md p-[-6px]"
         disabled
       >
-        <span className="icon-[material-symbols--play-arrow-rounded] w-5 h-5" />
+        <span className="icon-[material-symbols--play-arrow-rounded] h-5 w-5" />
       </button>
     </nav>
   );

@@ -1,8 +1,9 @@
 "use client";
 
+import React, { createContext, use, useContext, useState } from "react";
+
 import { useToast } from "@/components/ui/use-toast";
 import { addNotification } from "@/lib/actions";
-import React, { createContext, use, useContext, useState } from "react";
 
 export type EmailNotification = {
   disable: boolean;
@@ -82,7 +83,7 @@ export const NotificationMethodProvider: React.FC<
         ({
           ...prevState,
           ...newState,
-        } as EmailNotification)
+        }) as EmailNotification
     );
 
     // TODO: Update the email notification state on your backend
@@ -96,7 +97,7 @@ export const NotificationMethodProvider: React.FC<
         ({
           ...prevState,
           ...newState,
-        } as TelegramNotification)
+        }) as TelegramNotification
     );
 
     // TODO: Update the Telegram notification state on your backend
@@ -110,7 +111,7 @@ export const NotificationMethodProvider: React.FC<
         ({
           ...prevState,
           ...newState,
-        } as BrowserPushNotification)
+        }) as BrowserPushNotification
     );
 
     const error = await addNotification(newState);

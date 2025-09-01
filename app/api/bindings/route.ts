@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import prisma from "@/lib/db";
 import { clientGetUser } from "@/lib/user/server-utils";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     const existingBinding = await prisma.userBinding.findFirst({
       where: {
         userId: user.id,
-        botId: botId,
+        botId,
       },
     });
 
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     const binding = await prisma.userBinding.create({
       data: {
         userId: user.id,
-        botId: botId,
+        botId,
       },
     });
 
@@ -90,7 +91,7 @@ export async function DELETE(req: NextRequest) {
     const result = await prisma.userBinding.deleteMany({
       where: {
         userId: user.id,
-        botId: botId,
+        botId,
       },
     });
 

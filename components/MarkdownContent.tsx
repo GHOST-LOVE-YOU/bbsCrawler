@@ -39,7 +39,13 @@ const MarkdownContent = ({ content }: MarkdownContentProps) => {
           );
         },
         a: ({ node, ...props }) => (
-          <a className="text-blue-400 hover:underline" {...props} />
+          <a
+            className={`
+              text-blue-400
+              hover:underline
+            `}
+            {...props}
+          />
         ),
       }}
     >

@@ -1,5 +1,3 @@
-import { clientGetUser, getAvatarUrl } from "@/lib/user/server-utils";
-import prisma from "../db";
 import {
   Comment,
   User,
@@ -8,6 +6,10 @@ import {
   Post,
   MessagesType,
 } from "@prisma/client";
+
+import { clientGetUser, getAvatarUrl } from "@/lib/user/server-utils";
+
+import prisma from "../db";
 
 export async function autoHandleNewComment(comment: Comment) {
   try {
@@ -157,7 +159,7 @@ function extractQuotedComment(
   }
 
   // 处理引用的内容，移除 HTML 标签但保留 <br>
-  let quotedContent = contentMatch[1]
+  const quotedContent = contentMatch[1]
     .replace(/<font class="f006">: /g, "")
     .replace(/<\/font>/g, "")
     .replace(/^: /gm, "") // 移除每行开头的 ": "

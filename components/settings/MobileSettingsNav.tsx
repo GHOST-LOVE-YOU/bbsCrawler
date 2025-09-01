@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+
 import { Button } from "@/components/ui/button";
-import { ClientSheetWrapper } from "../header/ClientSheetWrapper";
+
 import SettingsNav from "./SettingsNav";
+import { ClientSheetWrapper } from "../header/ClientSheetWrapper";
 
 const MobileUserProfileSettings = () => {
   return (
@@ -11,7 +13,12 @@ const MobileUserProfileSettings = () => {
       trigger={
         <Button
           variant="outline"
-          className="p-2 bg-background-light dark:bg-background-dark bg-opacity-50 dark:bg-opacity-50 hover:bg-opacity-75 dark:hover:bg-opacity-75 transition-colors duration-200 rounded-r-md"
+          className={`
+            bg-background-light bg-opacity-50 rounded-r-md p-2 transition-colors duration-200
+            dark:bg-background-dark dark:bg-opacity-50
+            hover:bg-opacity-75
+            dark:hover:bg-opacity-75
+          `}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +30,7 @@ const MobileUserProfileSettings = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-6 h-6"
+            className="h-6 w-6"
           >
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>

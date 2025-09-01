@@ -38,7 +38,10 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({ content }) => {
 
   return (
     <div
-      className="text-text-light dark:text-text-dark break-words whitespace-pre-wrap"
+      className={`
+        text-text-light break-words whitespace-pre-wrap
+        dark:text-text-dark
+      `}
       dangerouslySetInnerHTML={{ __html: formattedContent }}
     />
   );

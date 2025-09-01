@@ -1,19 +1,47 @@
+import React from "react";
+
 import { ParamPaginationLoading } from "@/components/common/ParamPagination";
 import { ReplyListLoading } from "@/components/ReplyList";
 import { Skeleton } from "@/components/ui/skeleton";
-import React from "react";
 
 const Loading = () => {
   return (
-    <div className="flex flex-col md:border-2 md:border-gray-300 dark:border-gray-700 md:p-4 rounded-xl">
-      <div className="flex flex-row items-center space-x-4">
-        <div className="text-2xl cursor-pointer font-extrabold hover:text-stone-500">
-          <Skeleton className="h-8 w-64" />
+    <div className="container mx-auto px-4 py-6">
+      <div className="mx-auto max-w-full">
+        <div
+          className={`
+            card
+            md:rounded-xl md:shadow-lg
+          `}
+        >
+          <div
+            className={`
+              space-y-6 p-4
+              md:p-6
+            `}
+          >
+            <div
+              className={`
+                flex flex-col gap-4 border-b border-border pb-4
+                sm:flex-row sm:items-center sm:justify-between
+              `}
+            >
+              {" "}
+              <Skeleton
+                className={`
+                  h-8 w-full max-w-full
+                  md:h-10
+                `}
+              />
+            </div>
+
+            <ReplyListLoading />
+
+            <div className="flex justify-end pt-4">
+              <ParamPaginationLoading />
+            </div>
+          </div>
         </div>
-      </div>
-      <ReplyListLoading />
-      <div className="flex justify-end pt-2">
-        <ParamPaginationLoading />
       </div>
     </div>
   );

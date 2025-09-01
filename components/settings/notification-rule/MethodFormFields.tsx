@@ -1,8 +1,7 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+
 import { Checkbox } from "@/components/ui/checkbox";
-import { TNotification, typeFieldMap } from "@/lib/validations";
-import { NotificationType } from "@/lib/notifications/type";
 import {
   FormControl,
   FormField,
@@ -11,6 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { NotificationType } from "@/lib/notifications/type";
+import { TNotification, typeFieldMap } from "@/lib/validations";
 
 type MethodFormFieldsProps = {
   actionType: NotificationType;
@@ -28,8 +29,8 @@ export function MethodFormFields({ actionType, form }: MethodFormFieldsProps) {
             control={form.control}
             name={field as keyof TNotification}
             render={({ field: formField }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                <FormLabel className="flex-none w-1/4">
+              <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                <FormLabel className="w-1/4 flex-none">
                   {field.charAt(0).toUpperCase() + field.slice(1)}
                 </FormLabel>
                 <FormControl>
@@ -42,7 +43,7 @@ export function MethodFormFields({ actionType, form }: MethodFormFieldsProps) {
                     />
                   ) : (
                     <Input
-                      className="flex-grow border-gray-400 border-[1px]"
+                      className="grow border border-gray-400"
                       {...formField}
                       value={formField.value ? formField.value.toString() : ""}
                     />

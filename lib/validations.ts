@@ -1,12 +1,15 @@
+import { PostArea } from "@prisma/client";
 import { z } from "zod";
+
 import { floorToSequence } from "./utils";
 
 export const autoPostSchema = z
   .object({
     byr_id: z.string(),
+    area: z.nativeEnum(PostArea),
     topic: z.string(),
     createdAt: z.string(),
-    userName: z.string(),
+    author: z.string(),
   })
   .transform((data) => {
     const createdAt =
@@ -21,7 +24,7 @@ export const autoPostSchema = z
 
 export const commentSchema = z
   .object({
-    userName: z.string(),
+    author: z.string(),
     content: z.string(),
     floor: z.string(),
     like: z.number(),

@@ -4,9 +4,18 @@ import Link from "next/link";
 export function Logo() {
   return (
     <Link href="/" className="flex flex-col items-center">
-      <div className="relative w-[120px] h-[50px] md:w-[180px] md:h-[50px]">
+      <div
+        className={`
+          relative h-[50px] w-[120px]
+          md:h-[50px] md:w-[180px]
+        `}
+      >
         <Image
-          className="hidden dark:block hover:scale-110 transition-transform duration-200"
+          className={`
+            hidden transition-transform duration-200
+            hover:scale-110
+            dark:block
+          `}
           src="/logo.png"
           alt="logo"
           fill
@@ -14,7 +23,11 @@ export function Logo() {
           style={{ objectFit: "contain" }}
         />
         <Image
-          className="block dark:hidden hover:scale-110 transition-transform duration-200"
+          className={`
+            block transition-transform duration-200
+            hover:scale-110
+            dark:hidden
+          `}
           src="/logo-dark.png"
           alt="logo"
           fill

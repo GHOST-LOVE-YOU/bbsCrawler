@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
 const navLinks = [
   { href: "/settings/introduction", label: "个人信息" },
@@ -28,23 +28,24 @@ const SettingsNav = () => {
   };
 
   return (
-    <div className=" p-2 rounded-lg">
+    <div className="rounded-lg p-2">
       <nav>
         <ul className="space-y-2">
           {navLinks.map((link) => (
             <li key={link.href} className="relative">
               <div
                 onClick={() => handleLinkClick(link.href)}
-                className={`block p-2 cursor-pointer ${
-                  selectedLink === link.href ? "text-green-500" : ""
-                }`}
+                className={`
+                  block cursor-pointer p-2
+                  ${selectedLink === link.href ? "text-green-500" : ""}
+                `}
               >
                 {link.label}
               </div>
               {selectedLink === link.href && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute left-0 top-0 h-full w-1 bg-green-500"
+                  className="absolute top-0 left-0 h-full w-1 bg-green-500"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

@@ -1,14 +1,17 @@
-import { NotificationType } from "@/lib/notifications/type";
-import { TNotification } from "@/lib/validations";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { NotificationType } from "@/lib/notifications/type";
+import { TNotification } from "@/lib/validations";
 
 type MethodFormSubmitButtonsProps = {
   actionType: NotificationType;
   form: UseFormReturn<Partial<TNotification>>;
 };
 
-export function MethodFormSubmitButtons({ form }: MethodFormSubmitButtonsProps) {
+export function MethodFormSubmitButtons({
+  form,
+}: MethodFormSubmitButtonsProps) {
   const { getValues } = form;
 
   const handleTestClick = async () => {
@@ -45,14 +48,14 @@ export function MethodFormSubmitButtons({ form }: MethodFormSubmitButtonsProps) 
     <>
       <button
         type="submit"
-        className="mt-4 p-2 bg-blue-500 text-white rounded mr-2"
+        className="mt-4 mr-2 rounded-sm bg-blue-500 p-2 text-white"
       >
         Submit
       </button>
       <button
         type="button"
         onClick={handleTestClick}
-        className="mt-4 p-2 bg-yellow-500 text-white rounded"
+        className="mt-4 rounded-sm bg-yellow-500 p-2 text-white"
       >
         Test
       </button>

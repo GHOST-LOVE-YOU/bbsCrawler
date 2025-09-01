@@ -1,7 +1,8 @@
-import { clientGetUser } from "@/lib/user/server-utils";
-import { NextRequest, NextResponse } from "next/server";
 import { MessagesType } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+
 import prisma from "@/lib/db";
+import { clientGetUser } from "@/lib/user/server-utils";
 
 export async function GET(req: NextRequest) {
   const user = await clientGetUser();
