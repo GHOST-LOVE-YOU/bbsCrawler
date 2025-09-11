@@ -4,12 +4,12 @@ import { pipeline } from "node:stream/promises";
 import path from "path";
 
 import { NextResponse } from "next/server";
-import unzipper from "unzipper";
 
 import { processIWhisperDir } from "@/lib/crawlee/iwhisper";
 import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
@@ -36,6 +36,7 @@ export async function POST(request: Request) {
     const nodeReadable = Readable.fromWeb(
       request.body as unknown as ReadableStream
     );
+    const unzipper = (await import("unzipper")).default;
     const extract = unzipper.Parse({ forceStream: true });
 
     // Start piping request into unzip parser
