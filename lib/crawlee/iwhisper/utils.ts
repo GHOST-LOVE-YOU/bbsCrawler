@@ -44,6 +44,66 @@ export const storePost = async (postDatas: crawlPost) => {
   }
 };
 
+/**
+ * 以流式方式迭代帖子，避免一次性将所有本地 JSON 加载到内存。
+ */
+export async function* iteratePosts(): AsyncGenerator<crawlPost> {
+  if (FETCHMODE === "local") {
+    for await (const { post } of iterateLocalPosts()) {
+      yield post;
+    }
+  } else {
+    yield* iterateWebPosts();
+  }
+}
+
+/**
+ * 本地模式流式迭代，返回帖子和文件路径，用于处理后删除文件
+ */
+export async function* iterateLocalPostEntries(): AsyncGenerator<{ post: crawlPost; filePath: string }> {
+  if (FETCHMODE === "local") {
+    yield* iterateLocalPosts();
+  }
+}
+
+async function* iterateWebPosts(): AsyncGenerator<crawlPost> {
+  try {
+    const response: AxiosResponse<BackendResponse> = await axios.request(config);
+    const items = response.data.items || [];
+    for (const item of items) {
+      yield item as crawlPost;
+    }
+  } catch (error) {
+    logger.error("获取帖子失败: " + String(error));
+  }
+}
+
+async function* iterateLocalPosts(): AsyncGenerator<{ post: crawlPost; filePath: string }> {
+  logger.info("使用本地模式爬取帖子(流式)");
+  try {
+    const storageDir = path.join(process.cwd(), "storage");
+    const dir = await fs.opendir(storageDir);
+    try {
+      for await (const dirent of dir) {
+        if (!dirent.isFile()) continue;
+        if (!dirent.name.endsWith(".json")) continue;
+        const filePath = path.join(storageDir, dirent.name);
+        try {
+          const fileContent = await fs.readFile(filePath, "utf-8");
+          const postData = JSON.parse(fileContent) as crawlPost;
+          yield { post: postData, filePath };
+        } catch (error) {
+          logger.error(`读取文件 ${dirent.name} 失败: ` + String(error));
+        }
+      }
+    } finally {
+      await dir.close();
+    }
+  } catch (error) {
+    logger.error("读取本地帖子失败: " + String(error));
+  }
+}
+
 const config = {
   method: "get",
   maxBodyLength: Infinity,
@@ -74,22 +134,26 @@ const fetchPostLocal = async (): Promise<crawlPost[]> => {
   logger.info("使用本地模式爬取帖子");
   try {
     const storageDir = path.join(process.cwd(), "storage");
-    const files = await fs.readdir(storageDir);
-    const jsonFiles = files.filter((file) => file.endsWith(".json"));
-
+    // 为保持兼容性，此函数仍一次性返回数组，但实现改为流式累积，
+    // 若数据量过大请改用 iteratePosts()。
     const posts: crawlPost[] = [];
-
-    for (const file of jsonFiles) {
-      try {
-        const filePath = path.join(storageDir, file);
-        const fileContent = await fs.readFile(filePath, "utf-8");
-        const postData = JSON.parse(fileContent) as crawlPost;
-        posts.push(postData);
-      } catch (error) {
-        logger.error(`读取文件 ${file} 失败: ` + String(error));
+    const dir = await fs.opendir(storageDir);
+    try {
+      for await (const dirent of dir) {
+        if (!dirent.isFile()) continue;
+        if (!dirent.name.endsWith(".json")) continue;
+        try {
+          const filePath = path.join(storageDir, dirent.name);
+          const fileContent = await fs.readFile(filePath, "utf-8");
+          const postData = JSON.parse(fileContent) as crawlPost;
+          posts.push(postData);
+        } catch (error) {
+          logger.error(`读取文件 ${dirent.name} 失败: ` + String(error));
+        }
       }
+    } finally {
+      await dir.close();
     }
-
     logger.info(`从本地读取了 ${posts.length} 个帖子`);
     return posts;
   } catch (error) {
