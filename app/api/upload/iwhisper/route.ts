@@ -10,6 +10,7 @@ import logger from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const maxDuration = 3000000;
 
 export async function POST(request: Request) {
   try {
