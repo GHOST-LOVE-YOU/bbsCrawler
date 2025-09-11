@@ -50,54 +50,68 @@ export async function POST(request: Request) {
     // Start piping request into unzip parser
     nodeReadable.pipe(extract);
 
-    let fileCount = 0;
-    // Sequentially extract JSON files with backpressure
-    for await (const entry of extract) {
-      const entryPath = String(entry.path || "");
-      const normalized = path.normalize(entryPath).replace(/^[/\\]+/, "");
-      const destPath = path.join(baseUploadDir, normalized);
+    // 在后台异步处理解压和导入
+    const processInBackground = async () => {
+      let fileCount = 0;
+      try {
+        // Sequentially extract JSON files with backpressure
+        for await (const entry of extract) {
+          const entryPath = String(entry.path || "");
+          const normalized = path.normalize(entryPath).replace(/^[/\\]+/, "");
+          const destPath = path.join(baseUploadDir, normalized);
 
-      if (entry.type === "Directory") {
-        entry.autodrain();
-        continue;
+          if (entry.type === "Directory") {
+            entry.autodrain();
+            continue;
+          }
+
+          if (!destPath.endsWith(".json")) {
+            entry.autodrain();
+            continue;
+          }
+
+          // Prevent ZipSlip: ensure path is within baseUploadDir
+          const resolved = path.resolve(destPath);
+          if (!resolved.startsWith(path.resolve(baseUploadDir) + path.sep)) {
+            logger.warn(`跳过潜在危险路径: ${destPath}`);
+            entry.autodrain();
+            continue;
+          }
+
+          const destDir = path.dirname(resolved);
+          await fs.mkdir(destDir, { recursive: true });
+          await pipeline(entry, createWriteStream(resolved));
+          fileCount++;
+          
+          if (fileCount % 1000 === 0) {
+            logger.info(`已解压 ${fileCount} 个 JSON 文件`);
+          }
+
+          // 每解压 10000 个文件后稍作停顿，避免内存压力
+          if (fileCount % 10000 === 0) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        }
+
+        logger.info(`ZIP 解压完成, 共解压 ${fileCount} 个 JSON 文件`);
+
+        // Start import after extraction is complete
+        logger.info("开始后台导入数据");
+        await processIWhisperDir(baseUploadDir);
+        logger.info("后台导入完成");
+      } catch (error) {
+        logger.error("后台处理失败: " + String(error));
       }
+    };
 
-      if (!destPath.endsWith(".json")) {
-        entry.autodrain();
-        continue;
-      }
-
-      // Prevent ZipSlip: ensure path is within baseUploadDir
-      const resolved = path.resolve(destPath);
-      if (!resolved.startsWith(path.resolve(baseUploadDir) + path.sep)) {
-        logger.warn(`跳过潜在危险路径: ${destPath}`);
-        entry.autodrain();
-        continue;
-      }
-
-      const destDir = path.dirname(resolved);
-      await fs.mkdir(destDir, { recursive: true });
-      await pipeline(entry, createWriteStream(resolved));
-      fileCount++;
-      
-      if (fileCount % 1000 === 0) {
-        logger.info(`已解压 ${fileCount} 个 JSON 文件`);
-      }
-    }
-
-    logger.info(`ZIP 解压完成, 共解压 ${fileCount} 个 JSON 文件`);
-
-    // Start background import
-    logger.info("开始后台导入数据");
-    processIWhisperDir(baseUploadDir).catch((err) => {
-      logger.error("后台导入失败: " + String(err));
-    });
+    // 立即返回响应，避免超时
+    processInBackground();
 
     return NextResponse.json(
       { 
-        message: "上传并解压完成, 已开始后台导入", 
+        message: "上传已接收, 正在后台解压和导入", 
         dir: baseUploadDir,
-        fileCount 
+        status: "processing"
       },
       { status: 202 }
     );
