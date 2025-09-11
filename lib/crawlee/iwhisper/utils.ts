@@ -82,22 +82,19 @@ async function* iterateLocalPosts(): AsyncGenerator<{ post: crawlPost; filePath:
   logger.info("使用本地模式爬取帖子(流式)");
   try {
     const storageDir = path.join(process.cwd(), "storage");
-    const dir = await fs.opendir(storageDir);
-    try {
-      for await (const dirent of dir) {
-        if (!dirent.isFile()) continue;
-        if (!dirent.name.endsWith(".json")) continue;
-        const filePath = path.join(storageDir, dirent.name);
-        try {
-          const fileContent = await fs.readFile(filePath, "utf-8");
-          const postData = JSON.parse(fileContent) as crawlPost;
-          yield { post: postData, filePath };
-        } catch (error) {
-          logger.error(`读取文件 ${dirent.name} 失败: ` + String(error));
-        }
+    // 使用 readdir 而不是 opendir，避免异步生成器中的目录句柄生命周期问题
+    const files = await fs.readdir(storageDir);
+    const jsonFiles = files.filter(file => file.endsWith(".json"));
+    
+    for (const fileName of jsonFiles) {
+      const filePath = path.join(storageDir, fileName);
+      try {
+        const fileContent = await fs.readFile(filePath, "utf-8");
+        const postData = JSON.parse(fileContent) as crawlPost;
+        yield { post: postData, filePath };
+      } catch (error) {
+        logger.error(`读取文件 ${fileName} 失败: ` + String(error));
       }
-    } finally {
-      await dir.close();
     }
   } catch (error) {
     logger.error("读取本地帖子失败: " + String(error));
