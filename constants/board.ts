@@ -1,4 +1,14 @@
-export const topBoards = [
+type Board = {
+  name: string;
+  label: string;
+};
+
+type BoardGroup = {
+  name: string;
+  boards: Board[];
+};
+
+export const topBoards: Board[] = [
   {
     name: "悄悄话",
     label: "IWhisper",
@@ -25,7 +35,7 @@ export const topBoards = [
   }
 ];
 
-export const boardLabels = [
+export const boardLabels: BoardGroup[] = [
   {
     name: "本站站务",
     boards: [

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import PagePagination from "@/components/common/PagePagination";
 import PostList from "@/components/PostList";
 import Sortby from "@/components/Sortby";
-import { topBoards } from "@/constants/board";
+import { boardLabels, topBoards } from "@/constants/board";
 import { userGetPost } from "@/lib/posts/server-utils";
 
 interface AreaPageProps {
@@ -26,9 +26,14 @@ export default async function AreaPage({
   const { area } = await params;
   const searchParamsData = await searchParams;
 
-  // 验证area是否在topBoards中
-  const validAreas = topBoards.map((b) => b.label);
-  if (!validAreas.includes(area)) {
+  function isValidArea(area: string): boolean {
+    return boardLabels.some((group) =>
+      group.boards.some((board) => board.label === area)
+    );
+  }
+
+  // 验证area是否有效
+  if (!isValidArea(area)) {
     notFound();
   }
 
