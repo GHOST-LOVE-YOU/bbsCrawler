@@ -8,6 +8,16 @@ import { autoPostSchema } from "@/lib/validations";
 
 // ---- auto ----
 export async function autoGetPost(data: unknown) {
+  if (data.author === null && data.time === null) {
+    if (data.byr_id) {
+      const existingPost = await prisma.post.findUnique({
+        where: { byr_id: data.byr_id },
+      });
+      if (existingPost) {
+        return { created: false, post: existingPost };
+      }
+    }
+  }
   const validatedPost = autoPostSchema.parse(data);
 
   const existingPost = await prisma.post.findUnique({
