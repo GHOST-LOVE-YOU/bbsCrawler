@@ -10,7 +10,6 @@ import { autoGetPost } from "@/lib/posts/server-utils";
 const BACKEND_AUTH_USERNAME = process.env.BACKEND_AUTH_USERNAME || "";
 const BACKEND_AUTH_PASSWORD = process.env.BACKEND_AUTH_PASSWORD || "";
 const BACKEND_URL = process.env.BACKEND_URL || "";
-const FETCHMODE = process.env.FETCH_MODE || "web";
 
 export const storePost = async (postDatas: crawlPost) => {
   try {
@@ -46,27 +45,20 @@ export const storePost = async (postDatas: crawlPost) => {
 
 /**
  * 以流式方式迭代帖子，避免一次性将所有本地 JSON 加载到内存。
+ * 默认使用网络模式，保持向后兼容性
  */
 export async function* iteratePosts(): AsyncGenerator<crawlPost> {
-  if (FETCHMODE === "local") {
-    for await (const { post } of iterateLocalPosts()) {
-      yield post;
-    }
-  } else {
-    yield* iterateWebPosts();
-  }
+  yield* iterateWebPosts();
 }
 
 /**
  * 本地模式流式迭代，返回帖子和文件路径，用于处理后删除文件
  */
 export async function* iterateLocalPostEntries(): AsyncGenerator<{ post: crawlPost; filePath: string }> {
-  if (FETCHMODE === "local") {
-    yield* iterateLocalPosts();
-  }
+  yield* iterateLocalPosts();
 }
 
-async function* iterateWebPosts(): AsyncGenerator<crawlPost> {
+export async function* iterateWebPosts(): AsyncGenerator<crawlPost> {
   try {
     const response: AxiosResponse<BackendResponse> = await axios.request(config);
     const items = response.data.items || [];
@@ -114,25 +106,21 @@ const config = {
 
 export const fetchPost = async (): Promise<crawlPost[]> => {
   try {
-    if (FETCHMODE === "local") {
-      return fetchPostLocal();
-    } else {
-      const response: AxiosResponse<BackendResponse> =
-        await axios.request(config);
-      return response.data.items;
-    }
+    const response: AxiosResponse<BackendResponse> =
+      await axios.request(config);
+    return response.data.items;
   } catch (error) {
     logger.error("获取帖子失败: " + String(error));
     return [];
   }
 };
 
-const fetchPostLocal = async (): Promise<crawlPost[]> => {
+export const fetchPostLocal = async (): Promise<crawlPost[]> => {
   logger.info("使用本地模式爬取帖子");
   try {
     const storageDir = path.join(process.cwd(), "storage");
     // 为保持兼容性，此函数仍一次性返回数组，但实现改为流式累积，
-    // 若数据量过大请改用 iteratePosts()。
+    // 若数据量过大请改用 iterateLocalPostEntries()。
     const posts: crawlPost[] = [];
     const dir = await fs.opendir(storageDir);
     try {
@@ -158,3 +146,5 @@ const fetchPostLocal = async (): Promise<crawlPost[]> => {
     return [];
   }
 };
+
+
