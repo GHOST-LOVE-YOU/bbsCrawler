@@ -28,8 +28,8 @@ type crawlPost = {
   byr_id: string;
   area: string;
   topic: string;
-  author: string | null;
-  time: string | null;
+  author: string | "";
+  time: string | "";
   page: string;
   comments: crawlComment[];
 };
