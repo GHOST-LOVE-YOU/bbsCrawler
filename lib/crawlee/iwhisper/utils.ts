@@ -93,7 +93,7 @@ async function* iterateLocalPosts(): AsyncGenerator<{ post: crawlPost; filePath:
   }
 }
 
-const targetUrl = "https://bbs.byr.cn/%23!board/IWhisper";
+const targetUrl = "https://bbs.byr.cn/#!board/IWhisper";
 
 const config = {
   method: "get",
