@@ -1,6 +1,6 @@
 import "server-only";
 
-import { PostArea } from "@prisma/client";
+import { PostArea, Prisma } from "@prisma/client";
 
 import prisma from "@/lib/db";
 import { autoGetBot } from "@/lib/user/server-utils";
@@ -122,20 +122,36 @@ export async function userGetPost(
   };
 }
 
+function parseKeywords(input: string): string[] {
+  return input
+    .split(/[\s,;|+]+/)
+    .map(k => k.trim())
+    .filter(k => k.length > 0);
+}
+
+function buildPostWhereFromKeywords(keywords: string[]): Prisma.PostWhereInput {
+  return {
+    AND: keywords.map(k => ({
+      topic: {
+        contains: k,
+        mode: "insensitive",
+      },
+    })),
+  };
+}
+
 export async function searchPostsByKeyword(keyword: string, page: number) {
   const pageSize = 50;
   const skip = pageSize * (page - 1);
+  const keywords = parseKeywords(keyword);
+  console.log("Parsed keywords:", keywords);
+  const whereClause = buildPostWhereFromKeywords(keywords);
 
   const [posts, totalCount] = await prisma.$transaction([
     prisma.post.findMany({
       skip,
       take: pageSize,
-      where: {
-        topic: {
-          contains: keyword,
-          mode: "insensitive", // Case-insensitive search
-        },
-      },
+      where: whereClause,
       orderBy: {
         createdAt: "desc", // Sort by creation date, most recent first
       },
@@ -185,17 +201,26 @@ export async function searchPostsByKeyword(keyword: string, page: number) {
   };
 }
 
+function buildCommentWhereFromKeywords(keywords: string[]): Prisma.CommentWhereInput {
+  return {
+    AND: keywords.map(k => ({
+      content: {
+        contains: k,
+        mode: "insensitive",
+      },
+    })),
+  };
+}
+
+
 export async function searchCommentsByKeyword(keyword: string, page: number) {
   const pageSize = 10;
+  const keywords = parseKeywords(keyword);
+  const whereClause = buildCommentWhereFromKeywords(keywords);
 
   // 首先获取所有匹配的评论
   const allMatchingComments = await prisma.comment.findMany({
-    where: {
-      content: {
-        contains: keyword,
-        mode: "insensitive",
-      },
-    },
+    where: whereClause,
     orderBy: {
       time: "desc",
     },
