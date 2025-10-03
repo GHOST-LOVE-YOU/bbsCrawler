@@ -93,10 +93,12 @@ async function* iterateLocalPosts(): AsyncGenerator<{ post: crawlPost; filePath:
   }
 }
 
+const targetUrl = "https://bbs.byr.cn/%23!board/IWhisper";
+
 const config = {
   method: "get",
   maxBodyLength: Infinity,
-  url: BACKEND_URL,
+  url: `${BACKEND_URL}/scrape?url=${encodeURIComponent(targetUrl)}`,
   headers: {
     Authorization: `Basic ${Buffer.from(
       `${BACKEND_AUTH_USERNAME}:${BACKEND_AUTH_PASSWORD}`
