@@ -13,12 +13,16 @@ const BACKEND_URL = process.env.BACKEND_URL || "";
 
 export const storePost = async (postDatas: crawlPost) => {
   try {
+    // 当 author 和 time 为空时（通常出现在 page > 1），使用默认值
+    const createdAt = postDatas.time || new Date().toISOString();
+    const author = postDatas.author || "Unknown";
+
     const result = await autoGetPost({
       byr_id: postDatas.byr_id,
       area: postDatas.area,
       topic: postDatas.topic,
-      createdAt: postDatas.time,
-      author: postDatas.author,
+      createdAt: createdAt,
+      author: author,
     });
 
     const post = result.post;
