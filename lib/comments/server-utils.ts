@@ -11,36 +11,48 @@ export async function autoAddComment(Comment: unknown, postId: string) {
   const validatedComment = commentSchema.parse(Comment);
   const user = await autoGetBot(validatedComment.author);
   const { author, floor, ...commentData } = validatedComment;
-  try {
-    const newComment = await prisma.comment.create({
-      data: {
-        ...commentData,
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-        post: {
-          connect: {
-            id: postId,
-          },
-        },
+
+  // 先检查评论是否已存在（通过 postId 和 sequence 唯一约束）
+  const existingComment = await prisma.comment.findUnique({
+    where: {
+      postId_sequence: {
+        postId: postId,
+        sequence: commentData.sequence,
       },
-    });
-    // 更新post的updatedAt
-    await prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        updatedAt: commentData.time,
-      },
-    });
-    // 有一个新评论发布了
-    await autoHandleNewComment(newComment);
-  } catch (e) {
+    },
+  });
+
+  if (existingComment) {
     return { message: "评论已存在", success: false };
   }
+
+  const newComment = await prisma.comment.create({
+    data: {
+      ...commentData,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+      post: {
+        connect: {
+          id: postId,
+        },
+      },
+    },
+  });
+  // 更新post的updatedAt
+  await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      updatedAt: commentData.time,
+    },
+  });
+  // 有一个新评论发布了
+  await autoHandleNewComment(newComment);
+
   logger.info("评论添加成功");
   return { message: "评论添加成功", success: true };
 }
